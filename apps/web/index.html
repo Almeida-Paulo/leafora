@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Leafora - plataforma Web3 para financiamento ecologico verificavel em Sui devnet.">
+    <title>Leafora | Regeneracao verificavel</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Leafora home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M38.5 8.8c-10.4.7-20 4.9-25.4 11.1-5 5.7-5.2 13.6-.4 18.1 4.9 4.7 12.5 4 18-1.8 6-6.4 8.6-16.2 7.8-27.4Z"/><path d="M13.3 35.8c5.9-8.9 12.2-14.3 20.9-20.4"/><path d="M19 29.5c4 .3 7.5 1.1 10.7 2.5"/><path d="M22.9 24.8c-.5-3.4-.4-6.4.4-9.2"/></svg>
+        </span>
+        <span>
+          <strong>Leafora</strong>
+          <small>The living ledger for regeneration</small>
+        </span>
+      </a>
+      <nav aria-label="Navegacao principal">
+        <a href="#marketplace">Projetos</a>
+        <a href="#registry">Registry</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#capture">Capture</a>
+      </nav>
+      <button class="wallet-button" id="walletButton" type="button">Conectar Sui wallet</button>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <img src="/assets/img/hero-proof.png" alt="Paisagem ecologica com linhas de prova e blockchain integradas ao campo">
+        <div class="hero-overlay"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Sui devnet ecological funding</p>
+          <h1>Regeneracao que pode ser vista, apoiada e verificada.</h1>
+          <p>Leafora leva evidencias do campo para a blockchain: fotos, coordenadas, hashes, milestones, NFTs de apoio e distribuicoes condicionais futuras.</p>
+          <div class="actions">
+            <a class="primary-action" href="#marketplace">Ver projetos</a>
+            <a class="secondary-action" href="#registry">Abrir registry</a>
+          </div>
+        </div>
+        <div class="hero-metrics">
+          <div><strong id="metricProjects">3</strong><span>projetos piloto</span></div>
+          <div><strong id="metricRaised">0 SUI</strong><span>captado em devnet/demo</span></div>
+          <div><strong id="metricEvidence">0</strong><span>evidencias</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="marketplace">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Marketplace</p>
+            <h2>Projetos ecologicos verificaveis</h2>
+          </div>
+          <label class="search">
+            <span>Buscar</span>
+            <input id="projectSearch" type="search" placeholder="Buscar por bioma, local ou impacto">
+          </label>
+        </div>
+        <div class="filters" id="filters"></div>
+        <div class="project-grid" id="projectGrid"></div>
+      </section>
+
+      <section class="section detail" id="projectDetail"></section>
+
+      <section class="section" id="registry">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Leafora Registry</p>
+            <h2>Evidencias publicas</h2>
+          </div>
+          <a class="text-link" href="#capture">Registrar evidencia</a>
+        </div>
+        <div class="registry-layout">
+          <div class="map-panel" aria-label="Mapa conceitual">
+            <span class="map-orbit"></span>
+            <span class="pin pin-a"></span>
+            <span class="pin pin-b"></span>
+            <span class="pin pin-c"></span>
+          </div>
+          <div class="evidence-list" id="evidenceList"></div>
+        </div>
+      </section>
+
+      <section class="section" id="dashboard">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Wallet dashboard</p>
+            <h2>Seus apoios e allocation points</h2>
+          </div>
+        </div>
+        <div class="dashboard-grid" id="dashboardGrid"></div>
+        <div class="support-list" id="supportList"></div>
+      </section>
+
+      <section class="section capture" id="capture">
+        <div>
+          <p class="eyebrow">Leafora Capture</p>
+          <h2>Preparar evidencia de campo</h2>
+          <p>Esta etapa calcula SHA-256 no browser. Em producao, o arquivo vai para IPFS/Walrus/Arweave e o pacote e ancorado no contrato da Sui devnet.</p>
+        </div>
+        <form id="captureForm">
+          <label>Projeto <select id="captureProject"></select></label>
+          <label>Arquivo <input id="captureFile" type="file" accept="image/*,.pdf" required></label>
+          <button class="primary-action" type="submit">Preparar evidencia</button>
+          <p class="form-status" id="captureStatus"></p>
+        </form>
+      </section>
+    </main>
+
+    <dialog id="supportDialog" class="support-dialog">
+      <form method="dialog" class="dialog-panel">
+        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">&times;</button>
+        <p class="eyebrow">Apoiar projeto</p>
+        <h2 id="supportTitle">Projeto</h2>
+        <p id="supportMessage"></p>
+        <div id="tierOptions" class="tier-options"></div>
+        <label class="risk-check">
+          <input id="riskAccepted" type="checkbox">
+          <span>Entendo que este apoio nao garante retorno, lucro, credito de carbono ou resultado certificado.</span>
+        </label>
+        <p class="form-status" id="supportStatus" role="status" aria-live="polite"></p>
+        <menu class="dialog-actions">
+          <button class="secondary-action" value="cancel" type="submit">Cancelar</button>
+          <button class="primary-action" id="confirmSupport" value="default" type="button">Assinar na devnet</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="walletDialog" class="wallet-dialog">
+      <form method="dialog" class="dialog-panel">
+        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">&times;</button>
+        <p class="eyebrow">Sui devnet</p>
+        <h2>Conectar wallet</h2>
+        <p class="wallet-notice">Use apenas wallet de teste em Sui devnet. A Leafora nao solicita seed phrase, chave privada ou fundos reais.</p>
+        <label class="risk-check">
+          <input id="walletRiskAccepted" type="checkbox">
+          <span>Entendo que este ambiente e para testes, sem valor financeiro real e sem promessa de retorno.</span>
+        </label>
+        <div id="walletList" class="wallet-list"></div>
+        <p class="form-status" id="walletStatus" role="status" aria-live="polite"></p>
+      </form>
+    </dialog>
+
+    <script type="module" src="/assets/js/app.js"></script>
+  </body>
+</html>

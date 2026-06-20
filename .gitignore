@@ -1,0 +1,63 @@
+# Dependencies/build
+node_modules/
+dist/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+
+# Local editor/system files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+!.env.example
+.env.local
+.env.*.local
+apps/api/.env
+apps/api/.env.*
+!apps/api/.env.example
+
+# Tooling
+*.log
+*.sqlite3
+
+# Local deploy configuration
+infra/nginx/*.conf
+!infra/nginx/*.conf.example
+
+# Secrets, certificates and credentials
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+*.kdbx
+secrets.*
+credentials.*
+service-account*.json
+*service_account*.json
+
+# Blockchain local secrets
+*.keystore
+*keystore*
+*.wallet
+wallet.json
+mnemonic*
+recovery*
+client.yaml
+.sui/
+sui_config/
+
+# Database/backups
+*.dump
+*.sql
+*.backup
