@@ -25,7 +25,7 @@ moderation queues or expensive query views.
 ## Stack
 
 ```text
-Python 3.11+
+Python 3.10+
 FastAPI
 PostgreSQL + PostGIS
 SQLAlchemy
@@ -87,4 +87,3 @@ Sui remains the source of truth for:
 
 The backend indexes and serves these records. It does not replace on-chain
 ownership.
-

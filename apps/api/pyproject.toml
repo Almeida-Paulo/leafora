@@ -2,7 +2,7 @@
 name = "leafora-api"
 version = "0.1.0"
 description = "Leafora backend API for ecological projects, evidence registry, and Sui indexing."
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = [
   "alembic>=1.16,<2.0",
   "fastapi>=0.115,<1.0",
@@ -22,8 +22,7 @@ dev = [
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
-

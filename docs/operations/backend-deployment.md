@@ -7,7 +7,7 @@ for Sui events.
 ## Runtime Dependencies
 
 ```text
-Python 3.11+
+Python 3.10+
 PostgreSQL
 PostGIS
 Nginx
@@ -72,4 +72,3 @@ Expected response:
 ```json
 {"status":"ok","service":"leafora-api"}
 ```
-

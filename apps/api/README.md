@@ -17,7 +17,7 @@ The backend is the operational layer that the blockchain should not handle:
 
 ## Runtime
 
-- Python 3.11+
+- Python 3.10+
 - FastAPI
 - PostgreSQL/PostGIS
 - SQLAlchemy
@@ -39,4 +39,3 @@ uvicorn app.main:create_app --factory --reload --host 0.0.0.0 --port 8000
 
 Run behind Nginx or a private network boundary. Public traffic should reach the
 API through TLS. Write endpoints require `X-Admin-Token`.
-
