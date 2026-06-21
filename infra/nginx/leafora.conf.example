@@ -31,7 +31,14 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    location /assets/ {
+    location ~* ^/assets/.*\.(js|css)$ {
+        try_files $uri =404;
+        access_log off;
+        expires -1;
+        add_header Cache-Control "no-cache";
+    }
+
+    location ~* ^/assets/.*\.(png|jpg|jpeg|webp|gif|ico|svg)$ {
         try_files $uri =404;
         access_log off;
         expires 30d;

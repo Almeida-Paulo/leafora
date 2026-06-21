@@ -1,6 +1,7 @@
 import { leaforaConfig } from "./config.js";
 
 const SUI_DEVNET_CHAIN = "sui:devnet";
+const SUI_SIGN_FEATURES = ["sui:signAndExecuteTransaction", "sui:signAndExecuteTransactionBlock"];
 
 export async function listSuiWallets() {
   const standardWallets = await discoverWalletStandard();
@@ -12,24 +13,23 @@ export async function listSuiWallets() {
       name: wallet.name || "Sui wallet",
       icon: wallet.icon || "",
       wallet,
-      canSign: Boolean(wallet.features?.["sui:signAndExecuteTransaction"]?.signAndExecuteTransaction),
+      canSign: hasSuiSigningFeature(wallet),
       supportsDevnet: walletSupportsChain(wallet, SUI_DEVNET_CHAIN)
     }));
 
-  const legacy = window.suiWallet || window.sui;
-  if (legacy?.requestPermissions && legacy?.getAccounts) {
+  for (const legacy of getLegacySuiProviders()) {
     providers.push({
-      id: "legacy:sui",
+      id: `legacy:${legacy.name}`,
       kind: "legacy",
       name: legacy.name || "Sui injected wallet",
       icon: "",
-      wallet: legacy,
-      canSign: Boolean(legacy.signAndExecuteTransactionBlock || legacy.signAndExecuteTransaction),
+      wallet: legacy.wallet,
+      canSign: Boolean(legacy.wallet.signAndExecuteTransactionBlock || legacy.wallet.signAndExecuteTransaction),
       supportsDevnet: true
     });
   }
 
-  return providers;
+  return dedupeProviders(providers);
 }
 
 export async function connectSuiWallet(provider) {
@@ -72,7 +72,7 @@ export async function supportOnDevnet({ walletSession, project, tier }) {
   }
 
   if (!walletSession.canSign) {
-    throw new Error("A wallet conectada nao expõe assinatura Sui compativel.");
+    throw new Error("A wallet conectada nao expoe assinatura Sui compativel.");
   }
 
   const readiness = getDevnetReadiness(project);
@@ -164,16 +164,17 @@ async function connectWalletStandard(provider) {
     address: account.address,
     chain: account.chains?.includes(SUI_DEVNET_CHAIN) ? SUI_DEVNET_CHAIN : account.chains?.[0] || "",
     supportsDevnet: Boolean(account.chains?.includes(SUI_DEVNET_CHAIN)),
-    canSign: Boolean(wallet.features?.["sui:signAndExecuteTransaction"])
+    canSign: hasSuiSigningFeature(wallet)
   };
 }
 
 function supportsAnySuiChain(wallet) {
   const hasConnect = Boolean(wallet.features?.["standard:connect"]?.connect);
-  const hasSign = Boolean(wallet.features?.["sui:signAndExecuteTransaction"]?.signAndExecuteTransaction);
+  const hasSuiFeature = Object.keys(wallet.features || {}).some((feature) => feature.startsWith("sui:"));
   const accountHasSui = (wallet.accounts || []).some((account) => (account.chains || []).some((chain) => chain.startsWith("sui:")));
   const declaresSui = (wallet.chains || []).some((chain) => chain.startsWith("sui:"));
-  return hasConnect && hasSign && (accountHasSui || declaresSui || wallet.name);
+  const nameLooksSui = /sui|slush/i.test(wallet.name || "");
+  return hasConnect && (hasSuiFeature || accountHasSui || declaresSui || nameLooksSui);
 }
 
 function walletSupportsChain(wallet, chainId) {
@@ -182,16 +183,49 @@ function walletSupportsChain(wallet, chainId) {
   return accountHasChain || declaresChain;
 }
 
-function discoverWalletStandard(timeoutMs = 250) {
+function hasSuiSigningFeature(wallet) {
+  return SUI_SIGN_FEATURES.some((featureName) => {
+    const feature = wallet.features?.[featureName];
+    return Boolean(feature?.signAndExecuteTransaction || feature?.signAndExecuteTransactionBlock || feature);
+  });
+}
+
+function getLegacySuiProviders() {
+  const candidates = [
+    ["slush", window.slush],
+    ["suiWallet", window.suiWallet],
+    ["sui", window.sui]
+  ];
+
+  return candidates
+    .filter(([, wallet]) => wallet?.requestPermissions && wallet?.getAccounts)
+    .map(([name, wallet]) => ({ name, wallet }));
+}
+
+function dedupeProviders(providers) {
+  const seen = new Set();
+  return providers.filter((provider) => {
+    const key = provider.wallet || provider.name;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function discoverWalletStandard(timeoutMs = 800) {
   return new Promise((resolve) => {
     const wallets = [];
-    const register = (wallet) => {
-      if (wallet && !wallets.includes(wallet)) wallets.push(wallet);
+    const register = (...registeredWallets) => {
+      registeredWallets.flat().forEach((wallet) => {
+        if (wallet && !wallets.includes(wallet)) wallets.push(wallet);
+      });
     };
+    const api = Object.freeze({ register });
+
     const onRegister = (event) => {
       try {
         if (typeof event.detail === "function") {
-          event.detail(register);
+          event.detail(api);
         } else if (event.detail?.wallet) {
           register(event.detail.wallet);
         } else if (Array.isArray(event.detail?.wallets)) {
@@ -203,7 +237,7 @@ function discoverWalletStandard(timeoutMs = 250) {
     };
 
     window.addEventListener("wallet-standard:register-wallet", onRegister);
-    window.dispatchEvent(new Event("wallet-standard:app-ready"));
+    window.dispatchEvent(new CustomEvent("wallet-standard:app-ready", { detail: api }));
 
     window.setTimeout(() => {
       window.removeEventListener("wallet-standard:register-wallet", onRegister);
