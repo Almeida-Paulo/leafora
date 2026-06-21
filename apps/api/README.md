@@ -32,7 +32,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 cp .env.example .env
-uvicorn app.main:create_app --factory --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:create_app --factory --reload --host 0.0.0.0 --port 18473
 ```
 
 ## Production

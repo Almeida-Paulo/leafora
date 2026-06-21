@@ -21,7 +21,7 @@ Cloudflare
   HTTPS / Full strict
     Nginx :443
       /       -> apps/web
-      /api/   -> 127.0.0.1:8000
+      /api/   -> 127.0.0.1:18473
 ```
 
 The Nginx template is maintained at:
@@ -75,4 +75,3 @@ systemctl reload nginx
 
 `infra/deploy/update-server.sh` encodes this flow for the current single-server
 deployment model.
-

@@ -7,7 +7,7 @@ User=leafora
 Group=leafora
 WorkingDirectory=/var/www/leafora/apps/api
 EnvironmentFile=/etc/leafora/api.env
-ExecStart=/var/www/leafora/apps/api/.venv/bin/uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000
+ExecStart=/var/www/leafora/apps/api/.venv/bin/uvicorn app.main:create_app --factory --host 127.0.0.1 --port 18473
 Restart=always
 RestartSec=5
 

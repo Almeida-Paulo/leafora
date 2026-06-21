@@ -5,7 +5,7 @@ from os import getenv
 class Settings:
     env: str = getenv("LEAFORA_ENV", "development")
     api_host: str = getenv("LEAFORA_API_HOST", "0.0.0.0")
-    api_port: int = int(getenv("LEAFORA_API_PORT", "8000"))
+    api_port: int = int(getenv("LEAFORA_API_PORT", "18473"))
     database_url: str = getenv(
         "LEAFORA_DATABASE_URL",
         "postgresql+psycopg://DB_USER:DB_PASSWORD@127.0.0.1:5432/DB_NAME",

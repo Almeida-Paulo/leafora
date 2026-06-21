@@ -56,7 +56,7 @@ infra/systemd/leafora-api.service
 Default binding:
 
 ```text
-127.0.0.1:8000
+127.0.0.1:18473
 ```
 
 Nginx proxies `/api/` to this local service.
