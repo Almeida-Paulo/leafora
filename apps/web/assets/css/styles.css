@@ -24,6 +24,7 @@ button { cursor: pointer; }
 button:disabled { cursor: wait; opacity: 0.68; }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
+main { padding-bottom: clamp(64px, 8vw, 112px); }
 
 .topbar {
   position: sticky;
