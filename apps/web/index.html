@@ -20,9 +20,7 @@
       </a>
       <nav aria-label="Navegacao principal">
         <a href="#marketplace">Projetos</a>
-        <a href="#registry">Registry</a>
-        <a href="#dashboard">Dashboard</a>
-        <a href="#capture">Capture</a>
+        <a href="#verification">Como verificamos</a>
       </nav>
       <button class="wallet-button" id="walletButton" type="button">Conectar Sui wallet</button>
     </header>
@@ -37,7 +35,7 @@
           <p>Leafora leva evidencias do campo para a blockchain: fotos, coordenadas, hashes, milestones, NFTs de apoio e distribuicoes condicionais futuras.</p>
           <div class="actions">
             <a class="primary-action" href="#marketplace">Ver projetos</a>
-            <a class="secondary-action" href="#registry">Abrir registry</a>
+            <a class="secondary-action" href="#verification">Como verificamos</a>
           </div>
         </div>
         <div class="hero-metrics">
@@ -64,26 +62,40 @@
 
       <section class="section detail" id="projectDetail"></section>
 
-      <section class="section" id="registry">
+      <section class="section verification" id="verification">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Leafora Registry</p>
-            <h2>Evidencias publicas</h2>
+            <p class="eyebrow">Prova de campo</p>
+            <h2>Do registro local ao hash publico.</h2>
           </div>
-          <a class="text-link" href="#capture">Registrar evidencia</a>
         </div>
-        <div class="registry-layout">
-          <div class="map-panel" aria-label="Mapa conceitual">
-            <span class="map-orbit"></span>
-            <span class="pin pin-a"></span>
-            <span class="pin pin-b"></span>
-            <span class="pin pin-c"></span>
+        <div class="verification-layout">
+          <div class="verification-copy">
+            <p>A Leafora Registry nao e um registro solto: cada evidencia pertence a um projeto, milestone e local. O aplicativo de campo sera responsavel por capturar foto, video, GPS, timestamp, metadados e assinatura do pacote antes da ancoragem on-chain.</p>
+            <p>Na devnet, o site mostra as evidencias por projeto. Em producao, o fluxo passa por app mobile, armazenamento externo, revisao humana/remota e hash registrado em blockchain.</p>
           </div>
-          <div class="evidence-list" id="evidenceList"></div>
+          <div class="verification-grid">
+            <article class="verification-card">
+              <strong>Captura no app</strong>
+              <p>Imagem ou video registrado dentro do app, com coordenada, horario e pacote de metadados gerado no momento da captura.</p>
+            </article>
+            <article class="verification-card">
+              <strong>Hash verificavel</strong>
+              <p>O arquivo fica fora da chain, mas seu hash e metadados essenciais podem ser conferidos publicamente.</p>
+            </article>
+            <article class="verification-card">
+              <strong>Revisao por projeto</strong>
+              <p>Cada evidencia aparece no projeto correspondente, ligada a milestones, status e historico de verificacao.</p>
+            </article>
+            <article class="verification-card">
+              <strong>Escala futura</strong>
+              <p>IA, satelite, auditores e validadores podem ampliar a confianca sem mudar o nucleo do registro.</p>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section class="section" id="dashboard">
+      <section class="section" id="dashboard" hidden>
         <div class="section-heading">
           <div>
             <p class="eyebrow">Wallet dashboard</p>
@@ -92,20 +104,6 @@
         </div>
         <div class="dashboard-grid" id="dashboardGrid"></div>
         <div class="support-list" id="supportList"></div>
-      </section>
-
-      <section class="section capture" id="capture">
-        <div>
-          <p class="eyebrow">Leafora Capture</p>
-          <h2>Preparar evidencia de campo</h2>
-          <p>Esta etapa calcula SHA-256 no browser. Em producao, o arquivo vai para IPFS/Walrus/Arweave e o pacote e ancorado no contrato da Sui devnet.</p>
-        </div>
-        <form id="captureForm">
-          <label>Projeto <select id="captureProject"></select></label>
-          <label>Arquivo <input id="captureFile" type="file" accept="image/*,.pdf" required></label>
-          <button class="primary-action" type="submit">Preparar evidencia</button>
-          <p class="form-status" id="captureStatus"></p>
-        </form>
       </section>
     </main>
 

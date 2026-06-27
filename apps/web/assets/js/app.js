@@ -14,13 +14,9 @@ const els = {
   filters: document.querySelector("#filters"),
   grid: document.querySelector("#projectGrid"),
   detail: document.querySelector("#projectDetail"),
-  evidenceList: document.querySelector("#evidenceList"),
+  dashboardSection: document.querySelector("#dashboard"),
   dashboard: document.querySelector("#dashboardGrid"),
   supportList: document.querySelector("#supportList"),
-  captureProject: document.querySelector("#captureProject"),
-  captureForm: document.querySelector("#captureForm"),
-  captureFile: document.querySelector("#captureFile"),
-  captureStatus: document.querySelector("#captureStatus"),
   search: document.querySelector("#projectSearch"),
   dialog: document.querySelector("#supportDialog"),
   walletDialog: document.querySelector("#walletDialog"),
@@ -43,14 +39,11 @@ function init() {
   els.walletButton.addEventListener("click", openWalletDialog);
   els.walletRiskAccepted.addEventListener("change", renderWalletOptions);
   els.search.addEventListener("input", renderProjects);
-  els.captureForm.addEventListener("submit", onCaptureEvidence);
   els.confirmSupport.addEventListener("click", onConfirmSupport);
   renderFilters();
   renderProjects();
   renderDetail(projects[0]);
-  renderRegistry();
   renderDashboard();
-  renderCaptureOptions();
   renderMetrics();
   renderWalletButton();
 }
@@ -172,6 +165,7 @@ function renderProjects() {
 
 function renderDetail(project) {
   state.activeProject = project;
+  const evidence = state.evidence.filter((record) => record.projectId === project.id);
   els.detail.innerHTML = `
     <div class="detail-hero">
       <img src="${project.image}" alt="${escapeHtml(project.name)}">
@@ -193,6 +187,18 @@ function renderDetail(project) {
         <div class="tier-grid">
           ${project.tiers.map(([id, name, amount, points]) => `<button type="button" data-tier="${id}"><strong>${escapeHtml(name)}</strong><span>${formatSui(amount)}</span><small>${points} allocation points</small></button>`).join("")}
         </div>
+      </div>
+    </div>
+    <div class="project-evidence">
+      <div class="section-heading compact-heading">
+        <div>
+          <p class="eyebrow">Leafora Registry</p>
+          <h3>Evidencias deste projeto</h3>
+        </div>
+        <span>${evidence.length} registro${evidence.length === 1 ? "" : "s"}</span>
+      </div>
+      <div class="evidence-list">
+        ${evidence.length ? evidence.map(renderEvidenceRow).join("") : `<p class="empty">Nenhuma evidencia registrada para este projeto.</p>`}
       </div>
     </div>
   `;
@@ -263,8 +269,8 @@ async function onConfirmSupport() {
   }
 }
 
-function renderRegistry() {
-  els.evidenceList.innerHTML = state.evidence.map((record) => `
+function renderEvidenceRow(record) {
+  return `
     <article class="evidence-row">
       <div>
         <span class="status ${record.status.toLowerCase()}">${escapeHtml(record.status)}</span>
@@ -274,14 +280,22 @@ function renderRegistry() {
       </div>
       <span>#</span>
     </article>
-  `).join("");
+  `;
 }
 
 function renderDashboard() {
+  if (!state.wallet) {
+    els.dashboardSection.hidden = true;
+    els.dashboard.innerHTML = "";
+    els.supportList.innerHTML = "";
+    return;
+  }
+
+  els.dashboardSection.hidden = false;
   const amount = state.supports.reduce((sum, item) => sum + item.amount, 0);
   const points = state.supports.reduce((sum, item) => sum + item.points, 0);
   els.dashboard.innerHTML = `
-    <article class="stat-card"><h3>${state.wallet ? shortAddress(state.wallet.address) : "Wallet nao conectada"}</h3><p>Sui devnet. Use uma wallet configurada para devnet.</p></article>
+    <article class="stat-card"><h3>${shortAddress(state.wallet.address)}</h3><p>Sui devnet. Use uma wallet configurada para devnet.</p></article>
     <article class="stat-card"><h3>${formatSui(amount)}</h3><p>Apoio assinado neste browser.</p></article>
     <article class="stat-card"><h3>${points.toLocaleString("en-US")}</h3><p>Allocation points condicionais.</p></article>
   `;
@@ -306,33 +320,6 @@ function renderWalletButton() {
   const label = state.wallet.walletName ? `${state.wallet.walletName} ${shortAddress(state.wallet.address)}` : shortAddress(state.wallet.address);
   els.walletButton.textContent = label;
   els.walletButton.classList.toggle("wrong-network", !state.wallet.supportsDevnet);
-}
-
-function renderCaptureOptions() {
-  els.captureProject.innerHTML = projects.map((project) => `<option value="${project.id}">${escapeHtml(project.name)}</option>`).join("");
-}
-
-async function onCaptureEvidence(event) {
-  event.preventDefault();
-  const file = els.captureFile.files[0];
-  if (!file) return;
-  els.captureStatus.textContent = "Calculando hash SHA-256...";
-  const hash = await sha256(file);
-  const projectId = els.captureProject.value;
-  state.evidence.unshift({
-    id: `EV-${Date.now()}`,
-    projectId,
-    title: file.name,
-    status: "Pending",
-    hash: `0x${hash}`,
-    geohash: await approximateGeohash(getProject(projectId).location),
-    timestamp: new Date().toISOString(),
-    source: "Leafora Capture browser package"
-  });
-  els.captureStatus.textContent = "Evidencia preparada. O upload descentralizado e a ancoragem on-chain entram apos vendorarmos o SDK Sui.";
-  els.captureForm.reset();
-  renderRegistry();
-  renderMetrics();
 }
 
 function renderMetrics() {
@@ -369,26 +356,6 @@ function saveSupports() {
 
 function getProject(id) {
   return projects.find((project) => project.id === id) || projects[0];
-}
-
-async function sha256(file) {
-  const buffer = await file.arrayBuffer();
-  const digest = await crypto.subtle.digest("SHA-256", buffer);
-  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
-function approximateGeohash(fallback) {
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      resolve(fallback.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8));
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => resolve(`${pos.coords.latitude < 0 ? "s" : "n"}${pos.coords.longitude < 0 ? "w" : "e"}${Math.abs(pos.coords.latitude).toFixed(3).replace(".", "")}${Math.abs(pos.coords.longitude).toFixed(3).replace(".", "")}`.slice(0, 10)),
-      () => resolve(fallback.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8)),
-      { enableHighAccuracy: true, timeout: 5000 }
-    );
-  });
 }
 
 function formatSui(value) {
