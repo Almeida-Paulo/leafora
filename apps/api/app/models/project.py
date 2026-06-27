@@ -15,6 +15,8 @@ class Project(Base, TimestampMixin):
     country: Mapped[str] = mapped_column(String(80), default="BR")
     region: Mapped[str] = mapped_column(String(120), default="")
     location_label: Mapped[str] = mapped_column(String(240))
+    image_uri: Mapped[str] = mapped_column(Text, default="")
+    display_status: Mapped[str] = mapped_column(String(80), default="")
     objective: Mapped[str] = mapped_column(Text)
     impact_summary: Mapped[str] = mapped_column(Text)
     story: Mapped[str] = mapped_column(Text)
@@ -31,4 +33,15 @@ class Project(Base, TimestampMixin):
 
     evidence_records = relationship("EvidenceRecord", back_populates="project")
     supports = relationship("Support", back_populates="project")
-
+    milestones = relationship(
+        "ProjectMilestone",
+        back_populates="project",
+        cascade="all, delete-orphan",
+        order_by="ProjectMilestone.display_order",
+    )
+    tiers = relationship(
+        "ProjectTier",
+        back_populates="project",
+        cascade="all, delete-orphan",
+        order_by="ProjectTier.display_order",
+    )

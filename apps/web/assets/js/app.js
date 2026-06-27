@@ -1,5 +1,7 @@
-import { projects } from "./projects.js";
+import { projects as seedProjects } from "./projects.js";
 import { connectSuiWallet, explorerAddress, getDevnetReadiness, listSuiWallets, supportOnDevnet } from "./sui-devnet.js";
+
+let projects = seedProjects;
 
 const state = {
   wallet: null,
@@ -35,17 +37,39 @@ let pendingSupport = null;
 
 init();
 
-function init() {
+async function init() {
   els.walletButton.addEventListener("click", openWalletDialog);
   els.walletRiskAccepted.addEventListener("change", renderWalletOptions);
   els.search.addEventListener("input", renderProjects);
   els.confirmSupport.addEventListener("click", onConfirmSupport);
+  await loadProjectCatalog();
   renderFilters();
   renderProjects();
   renderDetail(projects[0]);
   renderDashboard();
   renderMetrics();
   renderWalletButton();
+}
+
+async function loadProjectCatalog() {
+  try {
+    const response = await fetch("/api/projects", { headers: { Accept: "application/json" } });
+    if (!response.ok) return;
+
+    const apiProjects = await response.json();
+    const activeProjects = apiProjects
+      .filter((project) => project.status !== "archived")
+      .map(projectFromApi)
+      .filter(Boolean);
+
+    if (activeProjects.length) {
+      projects = activeProjects;
+      state.activeProject = projects[0];
+      state.evidence = projects.flatMap((project) => project.evidence.map(toEvidence(project.id)));
+    }
+  } catch (_error) {
+    // Static demo data remains available when the API is offline or empty.
+  }
 }
 
 async function openWalletDialog() {
@@ -330,6 +354,62 @@ function renderMetrics() {
 
 function toEvidence(projectId) {
   return ([id, title, status, hash, geohash, timestamp, source]) => ({ id, projectId, title, status, hash, geohash, timestamp, source });
+}
+
+function projectFromApi(project) {
+  const tiers = (project.tiers || [])
+    .filter((tier) => tier.is_active)
+    .sort((a, b) => a.display_order - b.display_order)
+    .map((tier) => [
+      tier.slug,
+      tier.name,
+      mistToSui(tier.amount_mist),
+      tier.allocation_points,
+      tier.chain_tier,
+      tier.metadata_uri,
+      tier.description
+    ]);
+
+  return {
+    id: project.slug,
+    name: project.name,
+    category: project.category,
+    biome: project.biome,
+    location: project.location_label,
+    image: project.image_uri || imageForBiome(project.biome),
+    status: project.display_status || project.status,
+    goalSui: mistToSui(project.funding_goal_mist),
+    raisedSui: mistToSui(project.raised_mist),
+    supporters: 0,
+    impact: project.impact_summary,
+    objective: project.objective,
+    story: project.story,
+    risks: project.risks,
+    chain: {
+      projectId: project.sui_project_id,
+      vaultId: project.sui_vault_id
+    },
+    milestones: (project.milestones || [])
+      .sort((a, b) => a.display_order - b.display_order)
+      .map((milestone) => [
+        milestone.title,
+        mistToSui(milestone.target_amount_mist),
+        milestone.status
+      ]),
+    evidence: [],
+    tiers: tiers.length ? tiers : seedProjects[0].tiers
+  };
+}
+
+function imageForBiome(biome) {
+  const normalized = String(biome || "").toLowerCase();
+  if (normalized.includes("cerrado")) return "/assets/img/project-cerrado.png";
+  if (normalized.includes("mang")) return "/assets/img/project-mangrove.png";
+  return "/assets/img/project-spring.png";
+}
+
+function mistToSui(value) {
+  return Number(value || 0) / 1_000_000_000;
 }
 
 function setSupportBusy(isBusy, message = "") {

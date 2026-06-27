@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="description" content="Leafora internal operations panel.">
+    <title>Leafora Panel</title>
+    <link rel="stylesheet" href="/assets/admin.css">
+  </head>
+  <body>
+    <header class="shell-header">
+      <a class="brand" href="#catalog" aria-label="Leafora Panel">
+        <span class="brand-mark">L</span>
+        <span>
+          <strong>Leafora Panel</strong>
+          <small>Project operations console</small>
+        </span>
+      </a>
+      <nav aria-label="Panel navigation">
+        <a href="#catalog">Catalog</a>
+        <a href="#editor">Editor</a>
+        <a href="#chain">Chain</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <aside class="sidebar" id="catalog">
+          <div class="panel">
+            <p class="eyebrow">Access</p>
+            <h1>Admin session</h1>
+            <label>
+              API origin
+              <input id="apiBase" type="url" value="/api" autocomplete="off">
+            </label>
+            <label>
+              Admin token
+              <input id="adminToken" type="password" autocomplete="off" placeholder="X-Admin-Token">
+            </label>
+            <div class="actions">
+              <button class="primary" id="saveSession" type="button">Save session</button>
+              <button class="ghost" id="clearSession" type="button">Clear</button>
+            </div>
+            <p class="status" id="sessionStatus">Session not configured.</p>
+          </div>
+
+          <div class="panel">
+            <div class="heading-row">
+              <div>
+                <p class="eyebrow">Catalog</p>
+                <h2>Projects</h2>
+              </div>
+              <button class="icon-button" id="refreshProjects" type="button" title="Refresh projects">↻</button>
+            </div>
+            <div class="project-list" id="projectList"></div>
+          </div>
+        </aside>
+
+        <section class="editor" id="editor">
+          <form class="panel project-form" id="projectForm">
+            <div class="heading-row">
+              <div>
+                <p class="eyebrow">Project editor</p>
+                <h2 id="editorTitle">New project</h2>
+              </div>
+              <button class="ghost" id="newProject" type="button">New</button>
+            </div>
+
+            <div class="grid two">
+              <label>
+                Slug
+                <input name="slug" required placeholder="nascente-mg">
+              </label>
+              <label>
+                Status
+                <select name="status">
+                  <option value="draft">draft</option>
+                  <option value="review">review</option>
+                  <option value="active">active</option>
+                  <option value="paused">paused</option>
+                  <option value="completed">completed</option>
+                  <option value="archived">archived</option>
+                </select>
+              </label>
+              <label>
+                Name
+                <input name="name" required placeholder="Guardioes da Nascente">
+              </label>
+              <label>
+                Display status
+                <input name="display_status" placeholder="Field evidence">
+              </label>
+              <label>
+                Category
+                <input name="category" required placeholder="Agua e reflorestamento">
+              </label>
+              <label>
+                Biome
+                <input name="biome" required placeholder="Mata Atlantica">
+              </label>
+              <label>
+                Country
+                <input name="country" value="BR">
+              </label>
+              <label>
+                Region
+                <input name="region" placeholder="MG">
+              </label>
+              <label>
+                Location label
+                <input name="location_label" required placeholder="Serra da Mantiqueira, MG">
+              </label>
+              <label>
+                Funding goal (SUI)
+                <input name="funding_goal_sui" inputmode="decimal" required placeholder="12500">
+              </label>
+              <label class="span-2">
+                Image URI
+                <input name="image_uri" placeholder="/assets/img/project-spring.png">
+              </label>
+            </div>
+
+            <label>
+              Objective
+              <textarea name="objective" required rows="3"></textarea>
+            </label>
+            <label>
+              Impact summary
+              <textarea name="impact_summary" required rows="2"></textarea>
+            </label>
+            <label>
+              Story
+              <textarea name="story" required rows="5"></textarea>
+            </label>
+            <label>
+              Risks
+              <textarea name="risks" required rows="3"></textarea>
+            </label>
+            <div class="grid two">
+              <label>
+                Metadata URI
+                <input name="metadata_uri" placeholder="ipfs://...">
+              </label>
+              <label>
+                Metadata hash
+                <input name="metadata_hash" placeholder="0x...">
+              </label>
+              <label>
+                Verification level
+                <input name="verification_level" type="number" min="0" step="1" value="0">
+              </label>
+              <label>
+                Raised override (SUI)
+                <input name="raised_sui" inputmode="decimal" placeholder="0">
+              </label>
+            </div>
+
+            <section class="subsection">
+              <div class="heading-row">
+                <div>
+                  <p class="eyebrow">Support tiers</p>
+                  <h3>NFT tiers and allocation points</h3>
+                </div>
+                <button class="ghost" id="addTier" type="button">Add tier</button>
+              </div>
+              <div class="rows" id="tierRows"></div>
+            </section>
+
+            <section class="subsection">
+              <div class="heading-row">
+                <div>
+                  <p class="eyebrow">Execution</p>
+                  <h3>Milestones</h3>
+                </div>
+                <button class="ghost" id="addMilestone" type="button">Add milestone</button>
+              </div>
+              <div class="rows" id="milestoneRows"></div>
+            </section>
+
+            <div class="actions footer-actions">
+              <button class="primary" type="submit">Save project</button>
+              <button class="ghost" id="duplicateDemo" type="button">Load demo structure</button>
+            </div>
+            <p class="status" id="projectStatus"></p>
+          </form>
+
+          <form class="panel chain-form" id="chainForm">
+            <div class="heading-row" id="chain">
+              <div>
+                <p class="eyebrow">Sui devnet</p>
+                <h2>Chain binding</h2>
+              </div>
+              <span class="pill" id="chainSlug">No project selected</span>
+            </div>
+            <p class="muted">Use this after a project exists on-chain. The wallet-signed publish flow will reuse this binding model.</p>
+            <div class="grid three">
+              <label>
+                Package ID
+                <input name="sui_package_id" placeholder="0x...">
+              </label>
+              <label>
+                Project object ID
+                <input name="sui_project_id" placeholder="0x...">
+              </label>
+              <label>
+                Vault object ID
+                <input name="sui_vault_id" placeholder="0x...">
+              </label>
+            </div>
+            <div class="actions footer-actions">
+              <button class="primary" type="submit">Save chain binding</button>
+            </div>
+            <p class="status" id="chainStatus"></p>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <template id="tierTemplate">
+      <article class="row-card tier-row">
+        <button class="remove-row" type="button" aria-label="Remove tier">×</button>
+        <div class="grid six">
+          <label>Slug <input data-field="slug" required></label>
+          <label>Name <input data-field="name" required></label>
+          <label>Amount SUI <input data-field="amount_sui" inputmode="decimal" required></label>
+          <label>Points <input data-field="allocation_points" type="number" min="0" step="1" required></label>
+          <label>Chain tier <input data-field="chain_tier" type="number" min="0" step="1" value="0"></label>
+          <label>Order <input data-field="display_order" type="number" min="0" step="1" value="0"></label>
+        </div>
+        <label>Metadata URI <input data-field="metadata_uri"></label>
+        <label>Description <textarea data-field="description" rows="2"></textarea></label>
+      </article>
+    </template>
+
+    <template id="milestoneTemplate">
+      <article class="row-card milestone-row">
+        <button class="remove-row" type="button" aria-label="Remove milestone">×</button>
+        <div class="grid four">
+          <label>Title <input data-field="title" required></label>
+          <label>Target SUI <input data-field="target_sui" inputmode="decimal" required></label>
+          <label>Status <input data-field="status" value="planned"></label>
+          <label>Order <input data-field="display_order" type="number" min="0" step="1" value="0"></label>
+        </div>
+        <label>Description <textarea data-field="description" rows="2"></textarea></label>
+      </article>
+    </template>
+
+    <script type="module" src="/assets/admin.js"></script>
+  </body>
+</html>

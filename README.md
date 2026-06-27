@@ -10,6 +10,7 @@ regeneration projects.
 apps/
   web/          Public dApp interface
   api/          Backend API, database models and Sui indexing boundary
+  admin/        Internal project operations panel
   capture/      Future field evidence capture application
 
 blockchain/
@@ -61,6 +62,14 @@ Backend API for:
 - support records;
 - validator/admin workflows;
 - future project creator accounts.
+
+### `apps/admin`
+
+Internal operations panel for:
+
+- curated project creation and editorial updates;
+- support tier and milestone management;
+- Sui devnet object binding after on-chain project creation.
 
 ### `blockchain/sui/leafora`
 
