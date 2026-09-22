@@ -1,456 +1,777 @@
-import { projects as seedProjects } from "./projects.js";
-import { connectSuiWallet, explorerAddress, getDevnetReadiness, listSuiWallets, supportOnDevnet } from "./sui-devnet.js";
+import {
+  escapeHtml,
+  formatDate,
+  formatHash,
+  formatSui,
+  loadProjectCatalog,
+  loadProjectEvidence,
+  milestoneLabel,
+  projectPath,
+  projectProgress,
+  renderProjectCard,
+  safeMediaUrl,
+  shortAddress,
+  statusLabel
+} from "./catalog.js";
+import {
+  connectSuiWallet,
+  explorerAddress,
+  explorerTransaction,
+  getDevnetReadiness,
+  listSuiWallets,
+  supportOnDevnet
+} from "./sui-devnet.js";
 
-let projects = seedProjects;
+const STORAGE_KEY = "leafora:signed-supports:v1";
+const views = [...document.querySelectorAll("[data-view]")];
+const navToggle = document.querySelector("#navToggle");
+const primaryNav = document.querySelector("#primaryNav");
+const walletDialog = document.querySelector("#walletDialog");
+const walletList = document.querySelector("#walletList");
+const walletStatus = document.querySelector("#walletStatus");
+const walletRiskAccepted = document.querySelector("#walletRiskAccepted");
+const supportDialog = document.querySelector("#supportDialog");
+const supportTitle = document.querySelector("#supportTitle");
+const supportMessage = document.querySelector("#supportMessage");
+const supportStatus = document.querySelector("#supportStatus");
+const tierOptions = document.querySelector("#tierOptions");
+const riskAccepted = document.querySelector("#riskAccepted");
+const confirmSupport = document.querySelector("#confirmSupport");
 
 const state = {
+  projects: [],
+  filter: "Todos",
+  sort: "featured",
+  search: "",
   wallet: null,
-  filter: "All",
-  activeProject: projects[0],
-  supports: loadSupports(),
-  evidence: projects.flatMap((project) => project.evidence.map(toEvidence(project.id)))
+  supports: loadSignedSupports(),
+  pendingSupport: null,
+  supportIntent: null,
+  routeVersion: 0
 };
 
-const els = {
-  walletButton: document.querySelector("#walletButton"),
-  filters: document.querySelector("#filters"),
-  grid: document.querySelector("#projectGrid"),
-  detail: document.querySelector("#projectDetail"),
-  dashboardSection: document.querySelector("#dashboard"),
-  dashboard: document.querySelector("#dashboardGrid"),
-  supportList: document.querySelector("#supportList"),
-  search: document.querySelector("#projectSearch"),
-  dialog: document.querySelector("#supportDialog"),
-  walletDialog: document.querySelector("#walletDialog"),
-  walletList: document.querySelector("#walletList"),
-  walletStatus: document.querySelector("#walletStatus"),
-  walletRiskAccepted: document.querySelector("#walletRiskAccepted"),
-  supportTitle: document.querySelector("#supportTitle"),
-  supportMessage: document.querySelector("#supportMessage"),
-  supportStatus: document.querySelector("#supportStatus"),
-  tierOptions: document.querySelector("#tierOptions"),
-  confirmSupport: document.querySelector("#confirmSupport"),
-  riskAccepted: document.querySelector("#riskAccepted")
-};
+bindEvents();
+initialize();
 
-let pendingSupport = null;
-
-init();
-
-async function init() {
-  els.walletButton.addEventListener("click", openWalletDialog);
-  els.walletRiskAccepted.addEventListener("change", renderWalletOptions);
-  els.search.addEventListener("input", renderProjects);
-  els.confirmSupport.addEventListener("click", onConfirmSupport);
-  await loadProjectCatalog();
-  renderFilters();
-  renderProjects();
-  renderDetail(projects[0]);
-  renderDashboard();
-  renderMetrics();
-  renderWalletButton();
+async function initialize() {
+  renderLoadingStates();
+  state.projects = await loadProjectCatalog();
+  renderHome();
+  renderMarketplace();
+  renderRoute({ scroll: false });
+  renderWalletState();
 }
 
-async function loadProjectCatalog() {
-  try {
-    const response = await fetch("/api/projects", { headers: { Accept: "application/json" } });
-    if (!response.ok) return;
+function bindEvents() {
+  navToggle?.addEventListener("click", () => {
+    const open = navToggle.getAttribute("aria-expanded") !== "true";
+    navToggle.setAttribute("aria-expanded", String(open));
+    primaryNav?.classList.toggle("open", open);
+  });
 
-    const apiProjects = await response.json();
-    const activeProjects = apiProjects
-      .filter((project) => project.status !== "archived")
-      .map(projectFromApi)
-      .filter(Boolean);
+  window.addEventListener("popstate", () => renderRoute({ scroll: false }));
 
-    if (activeProjects.length) {
-      projects = activeProjects;
-      state.activeProject = projects[0];
-      state.evidence = projects.flatMap((project) => project.evidence.map(toEvidence(project.id)));
+  document.addEventListener("click", (event) => {
+    const routeLink = event.target.closest("a[data-route]");
+    if (routeLink && shouldHandleRouteClick(event, routeLink)) {
+      event.preventDefault();
+      navigateTo(routeLink.href);
+      return;
     }
-  } catch (_error) {
-    // Static demo data remains available when the API is offline or empty.
-  }
+
+    const supportButton = event.target.closest("[data-support]");
+    if (supportButton && !supportButton.disabled) {
+      openSupportDialog(supportButton.dataset.support, supportButton.dataset.tier || "");
+      return;
+    }
+
+    const walletButton = event.target.closest("[data-wallet-connect]");
+    if (walletButton) openWalletDialog();
+  });
+
+  document.querySelector("#projectSearch")?.addEventListener("input", (event) => {
+    state.search = event.target.value.trim();
+    renderMarketplaceGrid();
+  });
+
+  document.querySelector("#projectSort")?.addEventListener("change", (event) => {
+    state.sort = event.target.value;
+    renderMarketplaceGrid();
+  });
+
+  document.querySelector("#filters")?.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-filter]");
+    if (!button) return;
+    state.filter = button.dataset.filter || "Todos";
+    updateMarketplaceUrl();
+    renderMarketplaceGrid();
+  });
+
+  walletRiskAccepted?.addEventListener("change", updateWalletProviderState);
+  confirmSupport?.addEventListener("click", confirmPendingSupport);
+  supportDialog?.addEventListener("close", resetSupportDialog);
+  walletDialog?.addEventListener("close", () => {
+    walletStatus.textContent = "";
+    if (!state.wallet) state.supportIntent = null;
+  });
 }
 
-async function openWalletDialog() {
-  els.walletStatus.textContent = "Procurando wallets Sui instaladas...";
-  els.walletRiskAccepted.checked = false;
-  els.walletDialog.showModal();
-  await renderWalletOptions();
+function renderLoadingStates() {
+  const loading = '<div class="loading-state"><span></span><p>Carregando projetos...</p></div>';
+  const featured = document.querySelector("#featuredProjectGrid");
+  const catalog = document.querySelector("#projectGrid");
+  if (featured) featured.innerHTML = loading;
+  if (catalog) catalog.innerHTML = loading;
 }
 
-async function renderWalletOptions() {
-  const accepted = els.walletRiskAccepted.checked;
-  let providers = [];
-  try {
-    providers = await listSuiWallets();
-  } catch (error) {
-    els.walletStatus.textContent = error.message;
+function renderHome() {
+  const featured = document.querySelector("#featuredProjectGrid");
+  if (featured) {
+    featured.innerHTML = state.projects.length
+      ? state.projects.slice(0, 3).map(renderProjectCard).join("")
+      : emptyState("Nenhum projeto publicado", "A curadoria ainda nao publicou projetos neste ambiente.");
   }
 
-  if (!providers.length) {
-    els.walletList.innerHTML = `<p class="empty">Nenhuma wallet Sui detectada neste navegador.</p>`;
-    els.walletStatus.textContent = "Instale uma wallet Sui, desbloqueie a conta e selecione devnet.";
+  const biomes = uniqueValues(state.projects.map((project) => project.biome));
+  const impactIndex = document.querySelector("#impactIndex");
+  if (impactIndex) {
+    impactIndex.innerHTML = biomes.length
+      ? biomes.map((biome, index) => `
+          <a href="/projects?biome=${encodeURIComponent(biome)}" data-route>
+            <span>${String(index + 1).padStart(2, "0")}</span>
+            <strong>${escapeHtml(biome)}</strong>
+            <i aria-hidden="true">&rarr;</i>
+          </a>
+        `).join("")
+      : '<p class="muted-copy">Biomas em processo de catalogacao.</p>';
+  }
+
+  setText("#metricProjects", state.projects.length);
+  setText("#metricRaised", formatSui(totalRaised()));
+  setText("#metricEvidence", totalEvidence());
+}
+
+function renderMarketplace() {
+  const biomes = uniqueValues(state.projects.map((project) => project.biome));
+  const filters = document.querySelector("#filters");
+  if (filters) {
+    filters.innerHTML = ["Todos", ...biomes].map((biome) => `
+      <button type="button" data-filter="${escapeHtml(biome)}" class="${state.filter === biome ? "active" : ""}" aria-pressed="${state.filter === biome}">
+        ${escapeHtml(biome)}
+      </button>
+    `).join("");
+  }
+
+  setText("#marketProjectCount", state.projects.length);
+  setText("#marketBiomeCount", biomes.length);
+  setText("#marketEvidenceCount", totalEvidence());
+  renderMarketplaceGrid();
+}
+
+function renderMarketplaceGrid() {
+  const query = normalizeText(state.search);
+  const matching = state.projects.filter((project) => {
+    const matchesBiome = state.filter === "Todos" || project.biome === state.filter;
+    const haystack = normalizeText([
+      project.name,
+      project.category,
+      project.biome,
+      project.location,
+      project.impact,
+      project.objective
+    ].join(" "));
+    return matchesBiome && (!query || haystack.includes(query));
+  });
+
+  const sorted = [...matching].sort(projectSorter(state.sort));
+  const grid = document.querySelector("#projectGrid");
+  if (grid) {
+    grid.innerHTML = sorted.length
+      ? sorted.map(renderProjectCard).join("")
+      : emptyState("Nenhum projeto encontrado", "Altere a busca ou remova o filtro para consultar outras iniciativas.");
+  }
+
+  setText("#resultCount", `${sorted.length} ${sorted.length === 1 ? "projeto encontrado" : "projetos encontrados"}`);
+  document.querySelectorAll("#filters [data-filter]").forEach((button) => {
+    const active = button.dataset.filter === state.filter;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function renderRoute({ scroll = true } = {}) {
+  const route = parseRoute(window.location.pathname);
+  state.routeVersion += 1;
+  const version = state.routeVersion;
+
+  if (route.view === "projects") applyMarketplaceQuery();
+
+  views.forEach((view) => {
+    view.hidden = view.dataset.view !== route.view;
+  });
+
+  document.querySelectorAll("[data-nav]").forEach((link) => {
+    const current = link.dataset.nav === route.nav;
+    if (current) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+
+  updateDocumentMetadata(route);
+  closeNavigation();
+
+  if (route.view === "project") renderProjectDetail(route.slug, version);
+  if (route.view === "dashboard") renderDashboard();
+  if (scroll) window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+}
+
+async function renderProjectDetail(slug, version) {
+  const container = document.querySelector("#projectDetail");
+  if (!container) return;
+  const project = state.projects.find((item) => item.id === slug);
+
+  if (!project) {
+    container.innerHTML = `
+      <section class="not-found">
+        <p class="eyebrow">Projeto nao encontrado</p>
+        <h1>Esta iniciativa nao esta disponivel.</h1>
+        <p>Ela pode estar em curadoria, arquivada ou ter sido acessada por um endereco incorreto.</p>
+        <a class="primary-action" href="/projects" data-route>Voltar ao marketplace</a>
+      </section>
+    `;
     return;
   }
 
-  els.walletList.innerHTML = providers.map((provider, index) => `
-    <button class="wallet-option" type="button" data-wallet-index="${index}" ${accepted ? "" : "disabled"}>
-      <span class="wallet-icon">${provider.icon ? `<img src="${escapeHtml(provider.icon)}" alt="">` : "SUI"}</span>
-      <span>
-        <strong>${escapeHtml(provider.name)}</strong>
-        <small>${provider.supportsDevnet ? "Sui devnet detectada" : "Verifique a rede na wallet"}</small>
-      </span>
-      <em>${provider.canSign ? "Assinatura" : "Somente leitura"}</em>
-    </button>
-  `).join("");
+  container.innerHTML = '<div class="loading-state page-loading"><span></span><p>Carregando o projeto...</p></div>';
+  const evidence = await loadProjectEvidence(project);
+  if (version !== state.routeVersion) return;
 
-  els.walletStatus.textContent = accepted
-    ? "Escolha a wallet para continuar."
-    : "Aceite o aviso de teste para habilitar a conexao.";
+  const progress = projectProgress(project);
+  const readiness = getDevnetReadiness(project);
+  const tiers = project.tiers.map(normalizeTier).filter((tier) => tier.slug && tier.amount > 0);
+  const supportDisabled = !tiers.length || !readiness.ready ? "disabled aria-disabled=\"true\"" : "";
+  const supportLabel = !tiers.length
+    ? "Apoio em preparacao"
+    : readiness.ready
+      ? "Apoiar este projeto"
+      : "Assinatura em configuracao";
 
-  els.walletList.querySelectorAll("[data-wallet-index]").forEach((button) => {
-    button.addEventListener("click", () => onConnectWallet(providers[Number(button.dataset.walletIndex)]));
-  });
-}
+  container.innerHTML = `
+    <nav class="breadcrumb" aria-label="Caminho">
+      <a href="/projects" data-route>Projetos</a><span aria-hidden="true">/</span><span>${escapeHtml(project.name)}</span>
+    </nav>
 
-async function onConnectWallet(provider) {
-  try {
-    if (!els.walletRiskAccepted.checked && els.walletDialog.open) {
-      els.walletRiskAccepted.focus();
-      return;
-    }
-    els.walletStatus.textContent = "Aguardando confirmacao na wallet...";
-    state.wallet = await connectSuiWallet(provider);
-    els.walletButton.title = explorerAddress(state.wallet.address);
-    els.walletDialog.close();
-    renderWalletButton();
-    renderDashboard();
-  } catch (error) {
-    if (els.walletDialog.open) {
-      els.walletStatus.textContent = error.message;
-    } else {
-      alert(error.message);
-    }
-  }
-}
+    <section class="project-hero-layout">
+      <div class="project-detail-media">
+        <img src="${safeMediaUrl(project.image)}" alt="${escapeHtml(project.name)}">
+        <div class="media-badges"><span class="status-badge">${escapeHtml(statusLabel(project.status))}</span><span class="chain-badge">SUI DEVNET</span></div>
+      </div>
+      <div class="project-detail-copy">
+        <div class="project-kicker"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(project.biome)}</span></div>
+        <h1>${escapeHtml(project.name)}</h1>
+        <p class="detail-location">${escapeHtml(project.location)}</p>
+        <p class="detail-objective">${escapeHtml(project.objective)}</p>
+        <dl class="project-facts">
+          <div><dt>Impacto esperado</dt><dd>${escapeHtml(project.impact)}</dd></div>
+          <div><dt>Evidencias publicas</dt><dd>${evidence.length}</dd></div>
+          <div><dt>Apoiadores registrados</dt><dd>${project.supporters || 0}</dd></div>
+        </dl>
+      </div>
+      <aside class="funding-panel" aria-label="Captacao do projeto">
+        <p class="funding-label">Captacao em Sui devnet</p>
+        <strong class="funding-total">${formatSui(project.raisedSui)}</strong>
+        <div class="funding-progress-line"><span>de ${formatSui(project.goalSui)}</span><b>${progress}%</b></div>
+        <div class="progress large" aria-label="${progress}% da meta"><span style="width:${progress}%"></span></div>
+        <button class="primary-action wide" data-support="${escapeHtml(project.id)}" ${supportDisabled} type="button">${supportLabel}</button>
+        <p class="readiness-note ${readiness.ready ? "ready" : "pending"}">${readiness.ready ? "Projeto configurado para assinatura na devnet." : "Assinatura on-chain em configuracao para este projeto."}</p>
+        <p class="risk-caption">Apoio experimental, sem promessa de lucro, retorno financeiro ou emissao de credito ambiental.</p>
+      </aside>
+    </section>
 
-function renderFilters() {
-  const filters = ["All", ...new Set(projects.map((project) => project.biome))];
-  els.filters.innerHTML = filters.map((filter) => `<button type="button" class="${filter === state.filter ? "active" : ""}" data-filter="${escapeHtml(filter)}">${escapeHtml(filter)}</button>`).join("");
-  els.filters.querySelectorAll("button").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.filter = button.dataset.filter;
-      renderFilters();
-      renderProjects();
-    });
-  });
-}
+    <nav class="project-subnav" aria-label="Secoes do projeto">
+      <a href="#visao-geral">Visao geral</a>
+      <a href="#etapas">Etapas</a>
+      <a href="#evidencias">Evidencias</a>
+      <a href="#riscos">Riscos</a>
+    </nav>
 
-function renderProjects() {
-  const q = els.search.value.trim().toLowerCase();
-  const visible = projects.filter((project) => {
-    const byFilter = state.filter === "All" || project.biome === state.filter;
-    const text = [project.name, project.category, project.biome, project.location, project.impact].join(" ").toLowerCase();
-    return byFilter && text.includes(q);
-  });
-
-  els.grid.innerHTML = visible.map((project) => {
-    const progress = Math.min(100, Math.round((project.raisedSui / project.goalSui) * 100));
-    return `
-      <article class="project-card">
-        <div class="project-media">
-          <img src="${project.image}" alt="${escapeHtml(project.name)}">
-          <span class="status">${escapeHtml(project.status)}</span>
-        </div>
-        <div class="project-body">
-          <div class="title-row"><h3>${escapeHtml(project.name)}</h3><span>${escapeHtml(project.biome)}</span></div>
-          <p class="location">${escapeHtml(project.location)}</p>
-          <p>${escapeHtml(project.objective)}</p>
-          <strong class="impact">${escapeHtml(project.impact)}</strong>
-          <div class="progress-label"><span>${formatSui(project.raisedSui)}</span><span>${progress}% de ${formatSui(project.goalSui)}</span></div>
-          <div class="progress"><span style="width:${progress}%"></span></div>
-          <div class="card-actions">
-            <button class="primary-action compact" data-support="${project.id}" type="button">Apoiar</button>
-            <button class="secondary-action compact" data-detail="${project.id}" type="button">Detalhes</button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
-
-  els.grid.querySelectorAll("[data-detail]").forEach((button) => {
-    button.addEventListener("click", () => renderDetail(getProject(button.dataset.detail)));
-  });
-  els.grid.querySelectorAll("[data-support]").forEach((button) => {
-    button.addEventListener("click", () => openSupport(getProject(button.dataset.support)));
-  });
-}
-
-function renderDetail(project) {
-  state.activeProject = project;
-  const evidence = state.evidence.filter((record) => record.projectId === project.id);
-  els.detail.innerHTML = `
-    <div class="detail-hero">
-      <img src="${project.image}" alt="${escapeHtml(project.name)}">
-      <div>
-        <p class="eyebrow">${escapeHtml(project.category)}</p>
-        <h2>${escapeHtml(project.name)}</h2>
-        <p class="location">${escapeHtml(project.location)}</p>
+    <section class="project-content" id="visao-geral">
+      <div class="project-story">
+        <p class="eyebrow">Sobre o projeto</p>
+        <h2>Uma iniciativa com escopo, territorio e execucao acompanhaveis.</h2>
         <p>${escapeHtml(project.story)}</p>
-        <p class="risk">${escapeHtml(project.risks)}</p>
       </div>
-    </div>
-    <div class="detail-grid">
-      <div class="panel">
-        <h3>Milestones</h3>
-        ${project.milestones.map(([title, amount, status]) => `<div class="milestone"><span class="${status}"></span><div><strong>${escapeHtml(title)}</strong><p>${formatSui(amount)} - ${status}</p></div></div>`).join("")}
+      <aside class="project-support-tiers" aria-labelledby="tiersTitle">
+        <p class="eyebrow">Faixas de apoio</p>
+        <h2 id="tiersTitle">Escolha sua participacao</h2>
+        ${tiers.length ? tiers.map((tier) => tierSummary(project, tier, readiness.ready)).join("") : '<p class="muted-copy">As faixas deste projeto ainda nao foram publicadas.</p>'}
+      </aside>
+    </section>
+
+    <section class="project-section" id="etapas">
+      <div class="section-heading project-section-heading"><div><p class="eyebrow">Execucao</p><h2>Milestones do projeto</h2></div><p>${project.milestones.length} etapas publicadas</p></div>
+      <div class="milestone-timeline">
+        ${project.milestones.length ? project.milestones.map(renderMilestone).join("") : emptyState("Etapas em definicao", "A curadoria ainda nao publicou o cronograma deste projeto.")}
       </div>
-      <div class="panel">
-        <h3>NFT tiers</h3>
-        <div class="tier-grid">
-          ${project.tiers.map(([id, name, amount, points]) => `<button type="button" data-tier="${id}"><strong>${escapeHtml(name)}</strong><span>${formatSui(amount)}</span><small>${points} allocation points</small></button>`).join("")}
-        </div>
-      </div>
-    </div>
-    <div class="project-evidence">
-      <div class="section-heading compact-heading">
-        <div>
-          <p class="eyebrow">Leafora Registry</p>
-          <h3>Evidencias deste projeto</h3>
-        </div>
-        <span>${evidence.length} registro${evidence.length === 1 ? "" : "s"}</span>
+    </section>
+
+    <section class="project-section evidence-section" id="evidencias">
+      <div class="section-heading project-section-heading">
+        <div><p class="eyebrow">Trilha de verificacao</p><h2>Evidencias vinculadas ao projeto</h2></div>
+        <a class="text-action" href="/method" data-route>Entender a prova <span aria-hidden="true">&rarr;</span></a>
       </div>
       <div class="evidence-list">
-        ${evidence.length ? evidence.map(renderEvidenceRow).join("") : `<p class="empty">Nenhuma evidencia registrada para este projeto.</p>`}
+        ${evidence.length ? evidence.map(renderEvidence).join("") : emptyState("Nenhuma evidencia publicada", "Os registros aparecerao aqui depois da captura, revisao e vinculacao ao projeto.")}
       </div>
-    </div>
+    </section>
+
+    <section class="risk-band" id="riscos">
+      <div><p class="eyebrow">Riscos declarados</p><h2>Transparencia inclui explicar o que pode nao sair como previsto.</h2></div>
+      <p>${escapeHtml(project.risks)}</p>
+    </section>
   `;
-  els.detail.querySelectorAll("[data-tier]").forEach((button) => {
-    button.addEventListener("click", () => openSupport(project, button.dataset.tier));
-  });
-  location.hash = "projectDetail";
 }
 
-function openSupport(project, tierId = project.tiers[0][0]) {
-  const tier = project.tiers.find((item) => item[0] === tierId) || project.tiers[0];
-  pendingSupport = { project, tier };
-  els.supportTitle.textContent = project.name;
-  els.supportMessage.textContent = "Apoio em Sui devnet. Sem promessa de retorno, credito de carbono ou lucro.";
-  els.supportStatus.textContent = getDevnetReadiness(pendingSupport?.project || project).message;
-  els.tierOptions.innerHTML = project.tiers.map(([id, name, amount, points, chainTier, metadataUri, description]) => `
-    <label class="tier-option ${id === tier[0] ? "selected" : ""}">
-      <input type="radio" name="tier" value="${id}" ${id === tier[0] ? "checked" : ""}>
-      <span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(description)}</small></span>
-      <em>${formatSui(amount)} / ${points} pts</em>
+function renderMilestone(item, index) {
+  const title = Array.isArray(item) ? item[0] : item?.title;
+  const target = Array.isArray(item) ? item[1] : item?.targetAmount;
+  const status = Array.isArray(item) ? item[2] : item?.status;
+  const description = Array.isArray(item) ? item[3] : item?.description;
+  const normalizedStatus = String(status || "planned").toLowerCase();
+  return `
+    <article class="milestone-item ${escapeHtml(normalizedStatus)}">
+      <div class="milestone-index"><span>${String(index + 1).padStart(2, "0")}</span></div>
+      <div class="milestone-copy">
+        <span class="milestone-status">${escapeHtml(milestoneLabel(status))}</span>
+        <h3>${escapeHtml(title || "Etapa sem titulo")}</h3>
+        ${description ? `<p>${escapeHtml(description)}</p>` : ""}
+      </div>
+      <strong>${formatSui(target)}</strong>
+    </article>
+  `;
+}
+
+function renderEvidence(record) {
+  const txUrl = record.txDigest ? explorerTransaction(encodeURIComponent(record.txDigest)) : "";
+  return `
+    <article class="evidence-row">
+      <div class="evidence-primary">
+        <span class="evidence-status">${escapeHtml(statusLabel(record.status))}</span>
+        <h3>${escapeHtml(record.title)}</h3>
+        <p>${escapeHtml(record.id)} · ${escapeHtml(formatDate(record.timestamp))}</p>
+      </div>
+      <dl>
+        <div><dt>Geohash</dt><dd>${escapeHtml(record.geohash)}</dd></div>
+        <div><dt>Hash do arquivo</dt><dd title="${escapeHtml(record.contentHash)}">${escapeHtml(formatHash(record.contentHash))}</dd></div>
+        <div><dt>Origem</dt><dd>${escapeHtml(record.source)}</dd></div>
+      </dl>
+      ${txUrl ? `<a class="text-action" href="${escapeHtml(txUrl)}" target="_blank" rel="noopener noreferrer">Ver transacao <span aria-hidden="true">&nearr;</span></a>` : '<span class="anchoring-state">Ancoragem pendente</span>'}
+    </article>
+  `;
+}
+
+function tierSummary(project, tier, supportReady) {
+  return `
+    <button class="tier-summary" type="button" data-support="${escapeHtml(project.id)}" data-tier="${escapeHtml(tier.slug)}" ${supportReady ? "" : "disabled aria-disabled=\"true\""}>
+      <span><strong>${escapeHtml(tier.name)}</strong><small>${escapeHtml(tier.description || "Participacao registrada no projeto.")}</small></span>
+      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString("pt-BR")} Allocation Points</small></span>
+    </button>
+  `;
+}
+
+function openSupportDialog(projectId, tierSlug = "") {
+  const project = state.projects.find((item) => item.id === projectId);
+  if (!project) return;
+  const tiers = project.tiers.map(normalizeTier).filter((tier) => tier.slug && tier.amount > 0);
+  if (!tiers.length) return;
+
+  if (!state.wallet) {
+    state.supportIntent = { projectId, tierSlug };
+    openWalletDialog();
+    return;
+  }
+
+  const selectedTier = tiers.find((tier) => tier.slug === tierSlug) || tiers[0];
+  state.pendingSupport = { project, tiers };
+  supportTitle.textContent = project.name;
+  supportMessage.textContent = "Escolha uma faixa. A wallet mostrara os dados finais antes de qualquer assinatura.";
+  supportStatus.textContent = publicReadinessMessage(project);
+  supportStatus.className = `form-status ${getDevnetReadiness(project).ready ? "success" : "warning"}`;
+  riskAccepted.checked = false;
+  tierOptions.innerHTML = tiers.map((tier) => `
+    <label class="tier-option">
+      <input type="radio" name="supportTier" value="${escapeHtml(tier.slug)}" ${tier.slug === selectedTier.slug ? "checked" : ""}>
+      <span><strong>${escapeHtml(tier.name)}</strong><small>${escapeHtml(tier.description || "Participacao registrada no projeto.")}</small></span>
+      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString("pt-BR")} pontos</small></span>
     </label>
   `).join("");
-  els.tierOptions.querySelectorAll("input").forEach((input) => {
-    input.addEventListener("change", () => {
-      pendingSupport.tier = project.tiers.find((item) => item[0] === input.value);
-      els.tierOptions.querySelectorAll(".tier-option").forEach((node) => node.classList.remove("selected"));
-      input.closest(".tier-option").classList.add("selected");
-    });
-  });
-  els.riskAccepted.checked = false;
-  els.dialog.showModal();
+  supportDialog.showModal();
 }
 
-async function onConfirmSupport() {
-  if (!els.riskAccepted.checked) {
-    els.riskAccepted.focus();
+async function confirmPendingSupport() {
+  const pending = state.pendingSupport;
+  if (!pending) return;
+  const selectedSlug = tierOptions.querySelector('input[name="supportTier"]:checked')?.value;
+  const tier = pending.tiers.find((item) => item.slug === selectedSlug);
+
+  if (!riskAccepted.checked) {
+    setSupportStatus("Confirme que compreendeu os riscos antes de continuar.", "error");
+    return;
+  }
+  if (!tier) {
+    setSupportStatus("Selecione uma faixa de apoio valida.", "error");
     return;
   }
   if (!state.wallet) {
-    await openWalletDialog();
-    els.supportStatus.textContent = "Conecte uma wallet Sui devnet e confirme o apoio novamente.";
+    setSupportStatus("Conecte uma Sui wallet antes de assinar.", "error");
     return;
   }
-  const [id, name, amount, points, chainTier, metadataUri] = pendingSupport.tier;
-  setSupportBusy(true, "Preparando transacao na Sui devnet...");
+  if (!getDevnetReadiness(pending.project).ready) {
+    setSupportStatus(publicReadinessMessage(pending.project), "warning");
+    return;
+  }
+
+  setSupportBusy(true);
+  setSupportStatus("Aguardando confirmacao na wallet...", "");
   try {
-    const result = await supportOnDevnet({ walletSession: state.wallet, project: pendingSupport.project, tier: { id, name, amount, points, chainTier, metadataUri } });
-    state.supports.unshift({
-      projectName: pendingSupport.project.name,
-      tierName: name,
-      amount,
-      points,
+    const result = await supportOnDevnet({
+      walletSession: state.wallet,
+      project: pending.project,
+      tier
+    });
+    const support = {
       digest: result.digest,
       explorerUrl: result.explorerUrl,
+      address: state.wallet.address,
+      projectId: pending.project.id,
+      projectName: pending.project.name,
+      tierName: tier.name,
+      amount: tier.amount,
+      points: tier.points,
       createdAt: new Date().toISOString()
-    });
-    saveSupports();
-    els.supportStatus.textContent = `Transacao assinada: ${shortAddress(result.digest)}.`;
-    setTimeout(() => {
-      if (els.dialog.open) els.dialog.close();
-    }, 900);
+    };
+    saveSignedSupport(support);
+    setSupportStatus(`Transacao confirmada: ${formatHash(result.digest)}`, "success");
+    renderHome();
     renderDashboard();
-    renderMetrics();
   } catch (error) {
-    els.supportStatus.textContent = error.message;
+    setSupportStatus(error instanceof Error ? error.message : "Nao foi possivel concluir a assinatura.", "error");
   } finally {
     setSupportBusy(false);
   }
 }
 
-function renderEvidenceRow(record) {
+async function openWalletDialog() {
+  walletRiskAccepted.checked = false;
+  walletStatus.textContent = "Buscando wallets Sui autorizadas neste navegador...";
+  walletStatus.className = "form-status";
+  walletList.innerHTML = '<div class="wallet-loading"><span></span>Consultando providers...</div>';
+  walletDialog.showModal();
+
+  try {
+    const providers = await listSuiWallets();
+    if (!walletDialog.open) return;
+    if (!providers.length) {
+      walletList.innerHTML = `
+        <div class="wallet-empty">
+          <strong>Nenhuma Sui wallet detectada.</strong>
+          <p>Instale ou habilite uma wallet compativel, desbloqueie a conta e selecione a rede devnet.</p>
+        </div>
+      `;
+      walletStatus.textContent = "A extensao deve ter permissao para funcionar neste site.";
+      return;
+    }
+
+    walletList.innerHTML = providers.map((provider, index) => `
+      <button type="button" class="wallet-provider" data-wallet-index="${index}" disabled>
+        ${provider.icon ? `<img src="${safeMediaUrl(provider.icon)}" alt="">` : '<span class="wallet-provider-mark" aria-hidden="true">S</span>'}
+        <span><strong>${escapeHtml(provider.name)}</strong><small>${provider.supportsDevnet ? "Sui devnet detectada" : "Confirme a rede devnet na wallet"}</small></span>
+        <i aria-hidden="true">&rarr;</i>
+      </button>
+    `).join("");
+    walletStatus.textContent = "Confirme o aviso para habilitar a conexao.";
+
+    walletList.querySelectorAll("[data-wallet-index]").forEach((button) => {
+      button.addEventListener("click", () => connectProvider(providers[Number(button.dataset.walletIndex)], button));
+    });
+  } catch (error) {
+    walletList.innerHTML = "";
+    walletStatus.textContent = error instanceof Error ? error.message : "Nao foi possivel consultar as wallets.";
+    walletStatus.className = "form-status error";
+  }
+}
+
+async function connectProvider(provider, button) {
+  if (!walletRiskAccepted.checked) {
+    walletStatus.textContent = "Confirme o aviso de ambiente de testes antes de conectar.";
+    walletStatus.className = "form-status error";
+    return;
+  }
+
+  const buttons = [...walletList.querySelectorAll("button")];
+  buttons.forEach((item) => { item.disabled = true; });
+  button.classList.add("busy");
+  walletStatus.textContent = `Aguardando autorizacao na ${provider.name}...`;
+  walletStatus.className = "form-status";
+
+  try {
+    state.wallet = await connectSuiWallet(provider);
+    renderWalletState();
+    walletDialog.close();
+    const intent = state.supportIntent;
+    state.supportIntent = null;
+    if (intent) window.setTimeout(() => openSupportDialog(intent.projectId, intent.tierSlug), 0);
+  } catch (error) {
+    walletStatus.textContent = error instanceof Error ? error.message : "A wallet recusou ou nao concluiu a conexao.";
+    walletStatus.className = "form-status error";
+    button.classList.remove("busy");
+    updateWalletProviderState();
+  }
+}
+
+function updateWalletProviderState() {
+  const enabled = Boolean(walletRiskAccepted?.checked);
+  walletList?.querySelectorAll("button").forEach((button) => {
+    button.disabled = !enabled;
+  });
+  if (enabled && walletStatus.textContent.includes("Confirme o aviso")) {
+    walletStatus.textContent = "Selecione a wallet que deseja conectar.";
+  }
+}
+
+function renderWalletState() {
+  document.querySelectorAll("[data-wallet-connect]").forEach((button) => {
+    if (!state.wallet) {
+      button.textContent = button.closest("#walletGate") ? "Conectar Sui wallet" : "Conectar wallet";
+      button.classList.remove("connected", "wrong-network");
+      button.removeAttribute("title");
+      return;
+    }
+
+    button.textContent = shortAddress(state.wallet.address);
+    button.classList.add("connected");
+    button.classList.toggle("wrong-network", !state.wallet.supportsDevnet);
+    button.title = state.wallet.supportsDevnet
+      ? `${state.wallet.walletName} conectada em Sui devnet`
+      : `${state.wallet.walletName} conectada fora da Sui devnet`;
+  });
+  renderDashboard();
+}
+
+function renderDashboard() {
+  const gate = document.querySelector("#walletGate");
+  const connected = document.querySelector("#connectedDashboard");
+  if (!gate || !connected) return;
+
+  gate.hidden = Boolean(state.wallet);
+  connected.hidden = !state.wallet;
+  if (!state.wallet) return;
+
+  const ownSupports = state.supports.filter((support) => support.address === state.wallet.address);
+  const totalAmount = ownSupports.reduce((sum, support) => sum + positiveNumber(support.amount), 0);
+  const totalPoints = ownSupports.reduce((sum, support) => sum + Math.max(0, Math.trunc(positiveNumber(support.points))), 0);
+  const uniqueProjects = new Set(ownSupports.map((support) => support.projectId)).size;
+  const dashboard = document.querySelector("#dashboardGrid");
+  const addressUrl = explorerAddress(encodeURIComponent(state.wallet.address));
+
+  dashboard.innerHTML = `
+    <article class="stat-card wallet-card">
+      <span>Wallet conectada</span>
+      <strong>${escapeHtml(shortAddress(state.wallet.address))}</strong>
+      <a href="${escapeHtml(addressUrl)}" target="_blank" rel="noopener noreferrer">Abrir no explorer <span aria-hidden="true">&nearr;</span></a>
+    </article>
+    <article class="stat-card"><span>Apoio assinado</span><strong>${formatSui(totalAmount)}</strong><small>Historico local confirmado por digest</small></article>
+    <article class="stat-card"><span>Allocation Points</span><strong>${totalPoints.toLocaleString("pt-BR")}</strong><small>Somente transacoes assinadas nesta wallet</small></article>
+    <article class="stat-card"><span>Projetos apoiados</span><strong>${uniqueProjects}</strong><small>NFTs dependem da emissao on-chain do contrato</small></article>
+  `;
+
+  const supportList = document.querySelector("#supportList");
+  supportList.innerHTML = ownSupports.length
+    ? ownSupports.map(renderSignedSupport).join("")
+    : emptyState("Nenhum apoio assinado nesta wallet", "Explore o marketplace e escolha um projeto configurado para a Sui devnet.", '<a class="primary-action compact" href="/projects" data-route>Explorar projetos</a>');
+}
+
+function renderSignedSupport(support) {
+  const explorerUrl = explorerTransaction(encodeURIComponent(support.digest));
   return `
-    <article class="evidence-row">
-      <div>
-        <span class="status ${record.status.toLowerCase()}">${escapeHtml(record.status)}</span>
-        <h3>${escapeHtml(record.title)}</h3>
-        <p>${escapeHtml(getProject(record.projectId).name)} - geohash ${escapeHtml(record.geohash)} - ${formatDate(record.timestamp)}</p>
-        <code>${record.hash.slice(0, 24)}...${record.hash.slice(-10)}</code>
-      </div>
-      <span>#</span>
+    <article class="support-row">
+      <div><span>${escapeHtml(formatDate(support.createdAt))}</span><h3>${escapeHtml(support.projectName)}</h3><p>${escapeHtml(support.tierName)} · ${positiveNumber(support.points).toLocaleString("pt-BR")} Allocation Points</p></div>
+      <strong>${formatSui(support.amount)}</strong>
+      <a class="text-action" href="${escapeHtml(explorerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(formatHash(support.digest))} <span aria-hidden="true">&nearr;</span></a>
     </article>
   `;
 }
 
-function renderDashboard() {
-  if (!state.wallet) {
-    els.dashboardSection.hidden = true;
-    els.dashboard.innerHTML = "";
-    els.supportList.innerHTML = "";
-    return;
-  }
-
-  els.dashboardSection.hidden = false;
-  const amount = state.supports.reduce((sum, item) => sum + item.amount, 0);
-  const points = state.supports.reduce((sum, item) => sum + item.points, 0);
-  els.dashboard.innerHTML = `
-    <article class="stat-card"><h3>${shortAddress(state.wallet.address)}</h3><p>Sui devnet. Use uma wallet configurada para devnet.</p></article>
-    <article class="stat-card"><h3>${formatSui(amount)}</h3><p>Apoio assinado neste browser.</p></article>
-    <article class="stat-card"><h3>${points.toLocaleString("en-US")}</h3><p>Allocation points condicionais.</p></article>
-  `;
-  els.supportList.innerHTML = state.supports.length
-    ? state.supports.map((item) => `
-      <article class="support-row">
-        <strong>${escapeHtml(item.tierName)} - ${escapeHtml(item.projectName)}</strong>
-        <p>${formatSui(item.amount)} / ${item.points} pts / ${escapeHtml(shortAddress(item.digest))}</p>
-        ${item.explorerUrl ? `<a class="text-link" href="${escapeHtml(item.explorerUrl)}" target="_blank" rel="noreferrer">Ver no explorer</a>` : ""}
-      </article>
-    `).join("")
-    : `<p class="empty">Nenhum apoio assinado nesta wallet/browser.</p>`;
-}
-
-function renderWalletButton() {
-  if (!state.wallet) {
-    els.walletButton.textContent = "Conectar Sui wallet";
-    els.walletButton.classList.remove("wrong-network");
-    return;
-  }
-
-  const label = state.wallet.walletName ? `${state.wallet.walletName} ${shortAddress(state.wallet.address)}` : shortAddress(state.wallet.address);
-  els.walletButton.textContent = label;
-  els.walletButton.classList.toggle("wrong-network", !state.wallet.supportsDevnet);
-}
-
-function renderMetrics() {
-  document.querySelector("#metricProjects").textContent = String(projects.length);
-  document.querySelector("#metricRaised").textContent = formatSui(projects.reduce((sum, p) => sum + p.raisedSui, 0) + state.supports.reduce((sum, s) => sum + s.amount, 0));
-  document.querySelector("#metricEvidence").textContent = String(state.evidence.length);
-}
-
-function toEvidence(projectId) {
-  return ([id, title, status, hash, geohash, timestamp, source]) => ({ id, projectId, title, status, hash, geohash, timestamp, source });
-}
-
-function projectFromApi(project) {
-  const tiers = (project.tiers || [])
-    .filter((tier) => tier.is_active)
-    .sort((a, b) => a.display_order - b.display_order)
-    .map((tier) => [
-      tier.slug,
-      tier.name,
-      mistToSui(tier.amount_mist),
-      tier.allocation_points,
-      tier.chain_tier,
-      tier.metadata_uri,
-      tier.description
-    ]);
-
-  return {
-    id: project.slug,
-    name: project.name,
-    category: project.category,
-    biome: project.biome,
-    location: project.location_label,
-    image: project.image_uri || imageForBiome(project.biome),
-    status: project.display_status || project.status,
-    goalSui: mistToSui(project.funding_goal_mist),
-    raisedSui: mistToSui(project.raised_mist),
-    supporters: 0,
-    impact: project.impact_summary,
-    objective: project.objective,
-    story: project.story,
-    risks: project.risks,
-    chain: {
-      projectId: project.sui_project_id,
-      vaultId: project.sui_vault_id
-    },
-    milestones: (project.milestones || [])
-      .sort((a, b) => a.display_order - b.display_order)
-      .map((milestone) => [
-        milestone.title,
-        mistToSui(milestone.target_amount_mist),
-        milestone.status
-      ]),
-    evidence: [],
-    tiers: tiers.length ? tiers : seedProjects[0].tiers
-  };
-}
-
-function imageForBiome(biome) {
-  const normalized = String(biome || "").toLowerCase();
-  if (normalized.includes("cerrado")) return "/assets/img/project-cerrado.png";
-  if (normalized.includes("mang")) return "/assets/img/project-mangrove.png";
-  return "/assets/img/project-spring.png";
-}
-
-function mistToSui(value) {
-  return Number(value || 0) / 1_000_000_000;
-}
-
-function setSupportBusy(isBusy, message = "") {
-  els.confirmSupport.disabled = isBusy;
-  els.confirmSupport.textContent = isBusy ? "Aguardando wallet..." : "Assinar na devnet";
-  if (message) els.supportStatus.textContent = message;
-}
-
-function loadSupports() {
+function saveSignedSupport(support) {
+  if (!support?.digest || state.supports.some((item) => item.digest === support.digest)) return;
+  state.supports = [support, ...state.supports].slice(0, 100);
   try {
-    return JSON.parse(localStorage.getItem("leafora.supports") || "[]");
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state.supports));
+  } catch (_error) {
+    // A confirmacao on-chain continua valida mesmo se o navegador bloquear armazenamento local.
+  }
+}
+
+function loadSignedSupports() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
+    if (!Array.isArray(parsed)) return [];
+    const seen = new Set();
+    return parsed.filter((item) => {
+      if (!item?.digest || seen.has(item.digest)) return false;
+      seen.add(item.digest);
+      return true;
+    });
   } catch (_error) {
     return [];
   }
 }
 
-function saveSupports() {
-  try {
-    localStorage.setItem("leafora.supports", JSON.stringify(state.supports.slice(0, 25)));
-  } catch (_error) {
-    // Dashboard persistence is helpful, but signing must not depend on storage.
+function normalizeTier(tier) {
+  if (!Array.isArray(tier)) return { slug: "", name: "", amount: 0, points: 0, chainTier: 0, metadataUri: "", description: "" };
+  return {
+    slug: String(tier[0] || ""),
+    name: String(tier[1] || tier[0] || "Faixa"),
+    amount: positiveNumber(tier[2]),
+    points: Math.max(0, Math.trunc(positiveNumber(tier[3]))),
+    chainTier: Math.max(0, Math.trunc(positiveNumber(tier[4]))),
+    metadataUri: String(tier[5] || ""),
+    description: String(tier[6] || "")
+  };
+}
+
+function parseRoute(pathname) {
+  const path = String(pathname || "/").replace(/\/+$/, "") || "/";
+  if (path === "/") return { view: "home", nav: "" };
+  if (path === "/projects") return { view: "projects", nav: "projects" };
+  if (path === "/method") return { view: "method", nav: "method" };
+  if (path === "/dashboard") return { view: "dashboard", nav: "dashboard" };
+  if (path.startsWith("/project/")) {
+    let slug = "";
+    try {
+      slug = decodeURIComponent(path.slice("/project/".length));
+    } catch (_error) {
+      slug = "";
+    }
+    return { view: "project", nav: "projects", slug };
   }
+  return { view: "home", nav: "" };
 }
 
-function getProject(id) {
-  return projects.find((project) => project.id === id) || projects[0];
+function navigateTo(href) {
+  const url = new URL(href, window.location.origin);
+  if (url.origin !== window.location.origin) return;
+  window.history.pushState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  renderRoute();
 }
 
-function formatSui(value) {
-  return `${Number(value).toLocaleString("en-US", { maximumFractionDigits: 2 })} SUI`;
+function shouldHandleRouteClick(event, link) {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+  if (link.target && link.target !== "_self") return false;
+  const url = new URL(link.href, window.location.origin);
+  return url.origin === window.location.origin;
 }
 
-function formatDate(value) {
-  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
+function applyMarketplaceQuery() {
+  const biome = new URLSearchParams(window.location.search).get("biome");
+  const validBiomes = new Set(state.projects.map((project) => project.biome));
+  state.filter = biome && validBiomes.has(biome) ? biome : "Todos";
+  renderMarketplace();
 }
 
-function shortAddress(value) {
-  if (!value) return "";
-  return value.length > 16 ? `${value.slice(0, 6)}...${value.slice(-4)}` : value;
+function updateMarketplaceUrl() {
+  if (parseRoute(window.location.pathname).view !== "projects") return;
+  const url = new URL(window.location.href);
+  if (state.filter === "Todos") url.searchParams.delete("biome");
+  else url.searchParams.set("biome", state.filter);
+  window.history.replaceState({}, "", `${url.pathname}${url.search}`);
 }
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+function updateDocumentMetadata(route) {
+  const descriptions = {
+    home: "Leafora conecta pessoas a projetos ecologicos verificaveis por meio de uma experiencia Web3 simples e transparente.",
+    projects: "Explore projetos ecologicos selecionados, suas metas, impactos e evidencias publicas na Leafora.",
+    method: "Conheca a infraestrutura de verificacao e prova de campo da Leafora.",
+    dashboard: "Acompanhe os apoios e registros associados a sua Sui wallet na Leafora."
+  };
+  const project = route.view === "project" ? state.projects.find((item) => item.id === route.slug) : null;
+  const titles = {
+    home: "Leafora | Regeneracao verificavel",
+    projects: "Projetos | Leafora",
+    method: "Como funciona | Leafora",
+    dashboard: "Dashboard | Leafora"
+  };
+  document.title = project ? `${project.name} | Leafora` : titles[route.view] || titles.home;
+  const description = document.querySelector('meta[name="description"]');
+  if (description) description.content = project?.objective || descriptions[route.view] || descriptions.home;
+}
+
+function projectSorter(sort) {
+  if (sort === "progress") return (a, b) => projectProgress(b) - projectProgress(a);
+  if (sort === "goal") return (a, b) => positiveNumber(b.goalSui) - positiveNumber(a.goalSui);
+  if (sort === "name") return (a, b) => a.name.localeCompare(b.name, "pt-BR");
+  return () => 0;
+}
+
+function totalRaised() {
+  return state.projects.reduce((sum, project) => sum + positiveNumber(project.raisedSui), 0);
+}
+
+function totalEvidence() {
+  return state.projects.reduce((sum, project) => sum + (Array.isArray(project.evidence) ? project.evidence.length : 0), 0);
+}
+
+function uniqueValues(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function normalizeText(value) {
+  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function positiveNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : 0;
+}
+
+function setText(selector, value) {
+  const element = document.querySelector(selector);
+  if (element) element.textContent = String(value);
+}
+
+function setSupportStatus(message, statusClass) {
+  supportStatus.textContent = message;
+  supportStatus.className = `form-status ${statusClass || ""}`.trim();
+}
+
+function setSupportBusy(busy) {
+  confirmSupport.disabled = busy;
+  confirmSupport.textContent = busy ? "Aguardando wallet..." : "Assinar na devnet";
+  tierOptions.querySelectorAll("input").forEach((input) => { input.disabled = busy; });
+}
+
+function publicReadinessMessage(project) {
+  return getDevnetReadiness(project).ready
+    ? "Projeto pronto para assinatura na Sui devnet."
+    : "A assinatura on-chain deste projeto ainda esta em configuracao na devnet.";
+}
+
+function resetSupportDialog() {
+  state.pendingSupport = null;
+  supportStatus.textContent = "";
+  tierOptions.innerHTML = "";
+  riskAccepted.checked = false;
+  setSupportBusy(false);
+}
+
+function closeNavigation() {
+  navToggle?.setAttribute("aria-expanded", "false");
+  primaryNav?.classList.remove("open");
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function emptyState(title, message, action = "") {
+  return `<div class="empty-state"><strong>${escapeHtml(title)}</strong><p>${escapeHtml(message)}</p>${action}</div>`;
 }

@@ -2,117 +2,242 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Leafora - plataforma Web3 para financiamento ecologico verificavel em Sui devnet.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#071c1a">
+    <meta name="description" content="Leafora conecta pessoas a projetos ecologicos verificaveis por meio de uma experiencia Web3 simples e transparente.">
     <title>Leafora | Regeneracao verificavel</title>
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/assets/css/styles.css">
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="#home" aria-label="Leafora home">
+    <header class="topbar" id="siteHeader">
+      <a class="brand" href="/" data-route aria-label="Leafora - pagina inicial">
         <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 48 48"><path d="M38.5 8.8c-10.4.7-20 4.9-25.4 11.1-5 5.7-5.2 13.6-.4 18.1 4.9 4.7 12.5 4 18-1.8 6-6.4 8.6-16.2 7.8-27.4Z"/><path d="M13.3 35.8c5.9-8.9 12.2-14.3 20.9-20.4"/><path d="M19 29.5c4 .3 7.5 1.1 10.7 2.5"/><path d="M22.9 24.8c-.5-3.4-.4-6.4.4-9.2"/></svg>
         </span>
-        <span>
+        <span class="brand-copy">
           <strong>Leafora</strong>
           <small>The living ledger for regeneration</small>
         </span>
       </a>
-      <nav aria-label="Navegacao principal">
-        <a href="#marketplace">Projetos</a>
-        <a href="#verification">Como verificamos</a>
+
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="primary-nav" id="primaryNav" aria-label="Navegacao principal">
+        <a href="/projects" data-route data-nav="projects">Projetos</a>
+        <a href="/method" data-route data-nav="method">Como funciona</a>
+        <a href="/dashboard" data-route data-nav="dashboard">Dashboard</a>
+        <button class="wallet-button nav-wallet" data-wallet-connect type="button">Conectar wallet</button>
       </nav>
-      <button class="wallet-button" id="walletButton" type="button">Conectar Sui wallet</button>
+
+      <div class="header-actions">
+        <span class="network-pill"><i aria-hidden="true"></i>Sui Devnet</span>
+        <button class="wallet-button" data-wallet-connect type="button">Conectar wallet</button>
+      </div>
     </header>
 
-    <main id="home">
-      <section class="hero">
-        <img src="/assets/img/hero-proof.png" alt="Paisagem ecologica com linhas de prova e blockchain integradas ao campo">
-        <div class="hero-overlay"></div>
-        <div class="hero-copy">
-          <p class="eyebrow">Sui devnet ecological funding</p>
-          <h1>Regeneracao que pode ser vista, apoiada e verificada.</h1>
-          <p>Leafora leva evidencias do campo para a blockchain: fotos, coordenadas, hashes, milestones, NFTs de apoio e distribuicoes condicionais futuras.</p>
-          <div class="actions">
-            <a class="primary-action" href="#marketplace">Ver projetos</a>
-            <a class="secondary-action" href="#verification">Como verificamos</a>
+    <main id="app">
+      <div class="view" data-view="home">
+        <section class="hero">
+          <img src="/assets/img/hero-proof.png" alt="Paisagem ecologica com linhas de prova e blockchain integradas ao campo">
+          <div class="hero-overlay"></div>
+          <div class="hero-copy">
+            <p class="eyebrow">Sui devnet ecological funding</p>
+            <h1>Regeneracao que pode ser vista, apoiada e verificada.</h1>
+            <p>Leafora leva evidencias do campo para a blockchain: fotos, coordenadas, hashes, milestones, NFTs de apoio e distribuicoes condicionais futuras.</p>
+            <div class="actions">
+              <a class="primary-action" href="/projects" data-route>Explorar projetos</a>
+              <a class="secondary-action" href="/method" data-route>Entender a verificacao</a>
+            </div>
           </div>
-        </div>
-        <div class="hero-metrics">
-          <div><strong id="metricProjects">3</strong><span>projetos piloto</span></div>
-          <div><strong id="metricRaised">0 SUI</strong><span>captado em devnet/demo</span></div>
-          <div><strong id="metricEvidence">0</strong><span>evidencias</span></div>
-        </div>
-      </section>
-
-      <section class="section" id="marketplace">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Marketplace</p>
-            <h2>Projetos ecologicos verificaveis</h2>
+          <div class="hero-metrics" aria-label="Indicadores da plataforma">
+            <div><strong id="metricProjects">0</strong><span>projetos selecionados</span></div>
+            <div><strong id="metricRaised">0 SUI</strong><span>apoio registrado</span></div>
+            <div><strong id="metricEvidence">0</strong><span>evidencias vinculadas</span></div>
           </div>
-          <label class="search">
-            <span>Buscar</span>
-            <input id="projectSearch" type="search" placeholder="Buscar por bioma, local ou impacto">
-          </label>
-        </div>
-        <div class="filters" id="filters"></div>
-        <div class="project-grid" id="projectGrid"></div>
-      </section>
+        </section>
 
-      <section class="section detail" id="projectDetail"></section>
+        <section class="market-section" id="marketplace">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Marketplace de impacto</p>
+              <h2>Projetos em destaque</h2>
+              <p class="section-lead">Iniciativas selecionadas pela curadoria Leafora, com metas, localizacao e execucao acompanhaveis.</p>
+            </div>
+            <a class="text-action" href="/projects" data-route>Ver todos os projetos <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <div class="project-grid" id="featuredProjectGrid" aria-live="polite"></div>
+        </section>
 
-      <section class="section verification" id="verification">
-        <div class="section-heading">
+        <section class="impact-band" aria-labelledby="impactBandTitle">
+          <div class="impact-band-copy">
+            <p class="eyebrow">Capital para regeneracao</p>
+            <h2 id="impactBandTitle">Escolha o impacto que voce quer acompanhar.</h2>
+          </div>
+          <div class="impact-index" id="impactIndex"></div>
+        </section>
+
+        <section class="flow-section" aria-labelledby="flowTitle">
+          <div class="flow-intro">
+            <p class="eyebrow">Da selecao a prova</p>
+            <h2 id="flowTitle">Apoio direto, com uma trilha publica de execucao.</h2>
+            <p>A home apresenta oportunidades. Os detalhes tecnicos, riscos, etapas e evidencias permanecem dentro de cada projeto, onde fazem sentido.</p>
+            <a class="text-action" href="/method" data-route>Conhecer a infraestrutura <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <ol class="flow-list">
+            <li><span>01</span><div><strong>Explore</strong><p>Compare objetivo, local, impacto e meta de captacao.</p></div></li>
+            <li><span>02</span><div><strong>Apoie</strong><p>Escolha uma faixa e confirme a transacao pela sua wallet.</p></div></li>
+            <li><span>03</span><div><strong>Acompanhe</strong><p>Consulte milestones e evidencias vinculadas ao projeto.</p></div></li>
+          </ol>
+        </section>
+      </div>
+
+      <div class="view" data-view="projects" hidden>
+        <section class="page-intro marketplace-intro">
           <div>
+            <p class="eyebrow">Leafora Marketplace</p>
+            <h1>Encontre projetos que transformam territorio em impacto verificavel.</h1>
+          </div>
+          <div class="market-summary" aria-label="Resumo do marketplace">
+            <span><strong id="marketProjectCount">0</strong> projetos</span>
+            <span><strong id="marketBiomeCount">0</strong> biomas</span>
+            <span><strong id="marketEvidenceCount">0</strong> evidencias</span>
+          </div>
+        </section>
+
+        <section class="catalog-section" aria-labelledby="catalogTitle">
+          <div class="catalog-toolbar">
+            <label class="search-field">
+              <span class="visually-hidden">Buscar projetos</span>
+              <input id="projectSearch" type="search" placeholder="Buscar por projeto, local, bioma ou impacto" autocomplete="off">
+            </label>
+            <label class="sort-field">
+              <span>Ordenar</span>
+              <select id="projectSort">
+                <option value="featured">Destaques</option>
+                <option value="progress">Mais avancados</option>
+                <option value="goal">Maior meta</option>
+                <option value="name">Nome</option>
+              </select>
+            </label>
+          </div>
+          <div class="catalog-meta">
+            <div class="filters" id="filters" aria-label="Filtrar por bioma"></div>
+            <p id="resultCount" aria-live="polite"></p>
+          </div>
+          <h2 class="visually-hidden" id="catalogTitle">Catalogo de projetos</h2>
+          <div class="project-grid" id="projectGrid"></div>
+        </section>
+      </div>
+
+      <div class="view" data-view="project" hidden>
+        <div id="projectDetail" class="project-page" aria-live="polite"></div>
+      </div>
+
+      <div class="view" data-view="method" hidden>
+        <section class="page-intro method-intro">
+          <div>
+            <p class="eyebrow">Infraestrutura de confianca</p>
+            <h1>Do projeto selecionado ao registro verificavel.</h1>
+          </div>
+          <p>A Leafora organiza captacao, acompanhamento e evidencia em uma trilha unica. Cada registro pertence a um projeto, local e etapa definidos.</p>
+        </section>
+
+        <section class="method-stage" aria-labelledby="methodCurrentTitle">
+          <div class="method-label">
+            <span class="availability current">Devnet atual</span>
+            <h2 id="methodCurrentTitle">Uma base controlada para testar o fluxo completo.</h2>
+          </div>
+          <div class="method-steps">
+            <article><span>01</span><h3>Curadoria</h3><p>A equipe Leafora valida o escopo antes de publicar qualquer projeto.</p></article>
+            <article><span>02</span><h3>Apoio Web3</h3><p>A wallet assina a participacao em Sui devnet, sem custodia de chaves pela plataforma.</p></article>
+            <article><span>03</span><h3>Vinculo digital</h3><p>NFTs de apoiador e Allocation Points identificam a participacao em cada iniciativa.</p></article>
+            <article><span>04</span><h3>Evidencia por projeto</h3><p>Hashes, data, geolocalizacao e status aparecem no historico do projeto correspondente.</p></article>
+          </div>
+        </section>
+
+        <section class="proof-section" aria-labelledby="proofTitle">
+          <div class="proof-copy">
             <p class="eyebrow">Prova de campo</p>
-            <h2>Do registro local ao hash publico.</h2>
+            <h2 id="proofTitle">O arquivo permanece acessivel. Sua integridade fica demonstravel.</h2>
+            <p>Fotos e videos nao precisam ocupar a blockchain. O conteudo e armazenado fora da chain, enquanto hashes e compromissos de metadados permitem detectar alteracoes.</p>
           </div>
-        </div>
-        <div class="verification-layout">
-          <div class="verification-copy">
-            <p>A Leafora Registry nao e um registro solto: cada evidencia pertence a um projeto, milestone e local. O aplicativo de campo sera responsavel por capturar foto, video, GPS, timestamp, metadados e assinatura do pacote antes da ancoragem on-chain.</p>
-            <p>Na devnet, o site mostra as evidencias por projeto. Em producao, o fluxo passa por app mobile, armazenamento externo, revisao humana/remota e hash registrado em blockchain.</p>
-          </div>
-          <div class="verification-grid">
-            <article class="verification-card">
-              <strong>Captura no app</strong>
-              <p>Imagem ou video registrado dentro do app, com coordenada, horario e pacote de metadados gerado no momento da captura.</p>
-            </article>
-            <article class="verification-card">
-              <strong>Hash verificavel</strong>
-              <p>O arquivo fica fora da chain, mas seu hash e metadados essenciais podem ser conferidos publicamente.</p>
-            </article>
-            <article class="verification-card">
-              <strong>Revisao por projeto</strong>
-              <p>Cada evidencia aparece no projeto correspondente, ligada a milestones, status e historico de verificacao.</p>
-            </article>
-            <article class="verification-card">
-              <strong>Escala futura</strong>
-              <p>IA, satelite, auditores e validadores podem ampliar a confianca sem mudar o nucleo do registro.</p>
-            </article>
-          </div>
-        </div>
-      </section>
+          <dl class="proof-ledger">
+            <div><dt>Captura</dt><dd>Foto ou video produzido dentro do aplicativo autorizado.</dd></div>
+            <div><dt>Contexto</dt><dd>Projeto, milestone, coordenadas e data de captura.</dd></div>
+            <div><dt>Integridade</dt><dd>Hash do arquivo, hash dos metadados e assinatura do dispositivo.</dd></div>
+            <div><dt>Revisao</dt><dd>Status publico definido por curadoria e validadores autorizados.</dd></div>
+            <div><dt>Ancoragem</dt><dd>Referencia on-chain que preserva a trilha de auditoria.</dd></div>
+          </dl>
+        </section>
 
-      <section class="section" id="dashboard" hidden>
-        <div class="section-heading">
+        <section class="roadmap-band" aria-labelledby="roadmapTitle">
           <div>
-            <p class="eyebrow">Wallet dashboard</p>
-            <h2>Seus apoios e allocation points</h2>
+            <span class="availability future">Evolucao planejada</span>
+            <h2 id="roadmapTitle">Monitoramento continuo e conformidade progressiva.</h2>
           </div>
-        </div>
-        <div class="dashboard-grid" id="dashboardGrid"></div>
-        <div class="support-list" id="supportList"></div>
-      </section>
+          <div class="roadmap-columns">
+            <p>Aplicativo offline, verificacao humana/remota, imagens de satelite e deteccao de inconsistencias por inteligencia artificial.</p>
+            <p>Metodologias, creditos de carbono e selos ambientais entram somente com auditoria e aderencia aos padroes aplicaveis.</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="view" data-view="dashboard" hidden>
+        <section class="dashboard-shell">
+          <div class="section-heading dashboard-heading">
+            <div>
+              <p class="eyebrow">Area do apoiador</p>
+              <h1>Seu portfolio Leafora</h1>
+              <p class="section-lead">Apoios, NFTs e registros associados a wallet conectada.</p>
+            </div>
+            <span class="network-pill large"><i aria-hidden="true"></i>Sui Devnet</span>
+          </div>
+
+          <div class="wallet-gate" id="walletGate">
+            <div>
+              <span class="gate-mark" aria-hidden="true">L</span>
+              <p class="eyebrow">Wallet necessaria</p>
+              <h2>Conecte sua wallet para acessar o dashboard.</h2>
+              <p>O conteudo pessoal nao aparece na area publica. A Leafora solicita apenas a conexao e as assinaturas necessarias para cada acao.</p>
+            </div>
+            <button class="primary-action" data-wallet-connect type="button">Conectar Sui wallet</button>
+          </div>
+
+          <div id="connectedDashboard" hidden>
+            <div class="dashboard-grid" id="dashboardGrid"></div>
+            <section class="activity-section" aria-labelledby="activityTitle">
+              <div class="section-heading compact-heading">
+                <div><p class="eyebrow">Atividade</p><h2 id="activityTitle">Apoios assinados</h2></div>
+              </div>
+              <div class="support-list" id="supportList"></div>
+            </section>
+          </div>
+        </section>
+      </div>
     </main>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <strong>Leafora</strong>
+        <p>Capital, comunidade e evidencia para regeneracao verificavel.</p>
+      </div>
+      <nav aria-label="Navegacao do rodape">
+        <a href="/projects" data-route>Projetos</a>
+        <a href="/method" data-route>Como funciona</a>
+        <a href="/dashboard" data-route>Dashboard</a>
+      </nav>
+      <div class="footer-network"><span>SUI</span><p>Ambiente publico de testes em devnet.</p></div>
+    </footer>
 
     <dialog id="supportDialog" class="support-dialog">
       <form method="dialog" class="dialog-panel">
         <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">&times;</button>
         <p class="eyebrow">Apoiar projeto</p>
         <h2 id="supportTitle">Projeto</h2>
-        <p id="supportMessage"></p>
+        <p id="supportMessage" class="dialog-description"></p>
         <div id="tierOptions" class="tier-options"></div>
         <label class="risk-check">
           <input id="riskAccepted" type="checkbox">
@@ -129,9 +254,9 @@
     <dialog id="walletDialog" class="wallet-dialog">
       <form method="dialog" class="dialog-panel">
         <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">&times;</button>
-        <p class="eyebrow">Sui devnet</p>
+        <div class="dialog-network"><span class="network-pill"><i aria-hidden="true"></i>Sui Devnet</span></div>
         <h2>Conectar wallet</h2>
-        <p class="wallet-notice">Use apenas wallet de teste em Sui devnet. A Leafora nao solicita seed phrase, chave privada ou fundos reais.</p>
+        <p class="wallet-notice">Use somente uma wallet de teste. A Leafora nunca solicita seed phrase, chave privada ou transferencia direta de fundos.</p>
         <label class="risk-check">
           <input id="walletRiskAccepted" type="checkbox">
           <span>Entendo que este ambiente e para testes, sem valor financeiro real e sem promessa de retorno.</span>

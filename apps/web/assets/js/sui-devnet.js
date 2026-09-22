@@ -120,6 +120,13 @@ export function getDevnetReadiness(project) {
     };
   }
 
+  if (!leaforaConfig.browserSigningEnabled) {
+    return {
+      ready: false,
+      message: "Assinatura no browser ainda desabilitada. Vendorize e revise o adapter Sui antes de habilitar browserSigningEnabled."
+    };
+  }
+
   return {
     ready: true,
     message: "Pronto para assinatura na Sui devnet. Confira a rede na wallet antes de confirmar."

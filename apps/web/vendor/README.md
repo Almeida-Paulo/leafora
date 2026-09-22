@@ -28,6 +28,10 @@ export async function supportProject({ config, walletSession, project, tier }) {
 }
 ```
 
+After the adapter has been reviewed, hashed and placed in this directory, set
+`browserSigningEnabled` to `true` in `apps/web/assets/js/config.js`. Keep the
+flag disabled in every environment where the reviewed adapter is absent.
+
 Rules:
 
 - use only official Mysten/Sui sources;

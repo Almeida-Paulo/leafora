@@ -7,6 +7,7 @@ export const leaforaConfig = {
   moduleName: "leafora",
   supportFunction: "support_project",
   evidenceFunction: "submit_evidence",
+  browserSigningEnabled: false,
   defaultGasBudgetMist: "50000000",
   explorerBaseUrl: "https://suiexplorer.com"
 };
