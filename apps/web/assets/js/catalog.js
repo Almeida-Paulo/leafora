@@ -59,23 +59,18 @@ export function renderProjectCard(project) {
     project.chain?.projectId &&
     project.chain?.vaultId
   );
-  const supportLabel = supportReady ? "Apoiar" : "Em preparacao";
-  const supportAttributes = supportReady
-    ? `data-support="${escapeHtml(project.id)}"`
-    : "disabled aria-disabled=\"true\"";
 
   return `
     <article class="project-card">
       <a class="project-media" href="${projectPath(project.id)}" data-route aria-label="Ver ${escapeHtml(project.name)}">
         <img src="${safeMediaUrl(project.image)}" alt="${escapeHtml(project.name)}">
         <span class="status-badge">${escapeHtml(statusLabel(project.status))}</span>
-        <span class="chain-badge">SUI DEVNET</span>
+        <span class="chain-badge">${project.fromApi ? "SUI DEVNET" : "DEMONSTRACAO"}</span>
       </a>
       <div class="project-body">
         <div class="project-kicker"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(project.biome)}</span></div>
         <h3><a href="${projectPath(project.id)}" data-route>${escapeHtml(project.name)}</a></h3>
         <p class="location">${escapeHtml(project.location)}</p>
-        <p class="project-objective">${escapeHtml(project.objective)}</p>
         <div class="impact-line"><span>Impacto esperado</span><strong>${escapeHtml(project.impact)}</strong></div>
         <div class="funding-line">
           <span><strong>${formatSui(project.raisedSui)}</strong> captados</span>
@@ -85,8 +80,8 @@ export function renderProjectCard(project) {
         <div class="project-card-footer">
           <span>Meta ${formatSui(project.goalSui)}</span>
           <div class="card-actions">
-            <a class="secondary-action compact" href="${projectPath(project.id)}" data-route>Detalhes</a>
-            <button class="primary-action compact" ${supportAttributes} type="button">${supportLabel}</button>
+            ${supportReady ? `<button class="primary-action compact" data-support="${escapeHtml(project.id)}" type="button">Apoiar</button>` : ""}
+            <a class="project-open" href="${projectPath(project.id)}" data-route aria-label="Conhecer ${escapeHtml(project.name)}">Conhecer <span aria-hidden="true">&nearr;</span></a>
           </div>
         </div>
       </div>

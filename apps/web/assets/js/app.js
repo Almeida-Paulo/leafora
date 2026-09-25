@@ -47,6 +47,7 @@ const state = {
   supports: loadSignedSupports(),
   pendingSupport: null,
   supportIntent: null,
+  catalogLoaded: false,
   routeVersion: 0
 };
 
@@ -55,7 +56,11 @@ initialize();
 
 async function initialize() {
   renderLoadingStates();
+  renderRoute({ scroll: false });
+  renderWalletState();
+  if (window.location.hash) scrollToRoute(false);
   state.projects = await loadProjectCatalog();
+  state.catalogLoaded = true;
   renderHome();
   renderMarketplace();
   renderRoute({ scroll: false });
@@ -63,6 +68,7 @@ async function initialize() {
 }
 
 function bindEvents() {
+  bindRoadmapPreview();
   navToggle?.addEventListener("click", () => {
     const open = navToggle.getAttribute("aria-expanded") !== "true";
     navToggle.setAttribute("aria-expanded", String(open));
@@ -70,6 +76,17 @@ function bindEvents() {
   });
 
   window.addEventListener("popstate", () => renderRoute({ scroll: false }));
+  window.addEventListener("hashchange", () => {
+    if (parseRoute(window.location.pathname).view === "roadmap") {
+      renderRoute({ scroll: true });
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && primaryNav?.classList.contains("open")) {
+      closeNavigation();
+      navToggle?.focus();
+    }
+  });
 
   document.addEventListener("click", (event) => {
     const routeLink = event.target.closest("a[data-route]");
@@ -116,6 +133,79 @@ function bindEvents() {
   });
 }
 
+function bindRoadmapPreview() {
+  const tabs = [...document.querySelectorAll("[data-preview-tab]")];
+  const selectTab = (tab) => {
+    tabs.forEach((item) => {
+      const selected = item === tab;
+      item.setAttribute("aria-selected", String(selected));
+      item.tabIndex = selected ? 0 : -1;
+      document.getElementById(item.getAttribute("aria-controls")).hidden = !selected;
+    });
+  };
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => selectTab(tab));
+    tab.addEventListener("keydown", (event) => {
+      let next;
+      if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+      if (event.key === "ArrowLeft") next = (index + tabs.length - 1) % tabs.length;
+      if (event.key === "Home") next = 0;
+      if (event.key === "End") next = tabs.length - 1;
+      if (next === undefined) return;
+      event.preventDefault();
+      selectTab(tabs[next]);
+      tabs[next].focus();
+    });
+  });
+
+}
+
+function setRoadmapStep(id) {
+  const links = [...document.querySelectorAll("[data-phase-link]")];
+  const index = Math.max(0, links.findIndex((link) => link.dataset.phaseLink === id));
+  const current = links[index];
+  if (!current) return;
+  links.forEach((link) => {
+    const selected = link === current;
+    if (selected) link.setAttribute("aria-current", "step");
+    else link.removeAttribute("aria-current");
+    document.getElementById(link.dataset.phaseLink).hidden = !selected;
+  });
+  const nav = current.parentElement;
+  const left = current.offsetLeft - nav.offsetLeft - (nav.clientWidth - current.clientWidth) / 2;
+  nav.scrollTo({ left: Math.max(0, left), behavior: "instant" });
+  setText("#phasePosition", `${String(index + 1).padStart(2, "0")} / ${String(links.length).padStart(2, "0")}`);
+  const previous = document.querySelector("#previousPhase");
+  const next = document.querySelector("#nextPhase");
+  previous.hidden = index === 0;
+  next.hidden = index === links.length - 1;
+  if (index > 0) previous.href = links[index - 1].href;
+  if (index < links.length - 1) {
+    next.href = links[index + 1].href;
+    next.textContent = `Pr\u00f3xima: ${links[index + 1].querySelector("strong").textContent} \u2192`;
+  }
+  if ((previous.hidden && document.activeElement === previous) || (next.hidden && document.activeElement === next)) {
+    current.focus({ preventScroll: true });
+  }
+}
+
+function scrollToRoute(animate = true) {
+  let target = null;
+  try {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (id) target = document.getElementById(id);
+  } catch (_error) {
+    // A malformed fragment must not prevent navigation to the page itself.
+  }
+  if (target?.classList.contains("roadmap-phase")) target = document.querySelector(".roadmap-nav");
+  if (target && !target.closest("[hidden]")) {
+    target.scrollIntoView({ block: "start", behavior: animate && !prefersReducedMotion() ? "smooth" : "instant" });
+  } else {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+}
+
 function renderLoadingStates() {
   const loading = '<div class="loading-state"><span></span><p>Carregando projetos...</p></div>';
   const featured = document.querySelector("#featuredProjectGrid");
@@ -132,23 +222,10 @@ function renderHome() {
       : emptyState("Nenhum projeto publicado", "A curadoria ainda nao publicou projetos neste ambiente.");
   }
 
-  const biomes = uniqueValues(state.projects.map((project) => project.biome));
-  const impactIndex = document.querySelector("#impactIndex");
-  if (impactIndex) {
-    impactIndex.innerHTML = biomes.length
-      ? biomes.map((biome, index) => `
-          <a href="/projects?biome=${encodeURIComponent(biome)}" data-route>
-            <span>${String(index + 1).padStart(2, "0")}</span>
-            <strong>${escapeHtml(biome)}</strong>
-            <i aria-hidden="true">&rarr;</i>
-          </a>
-        `).join("")
-      : '<p class="muted-copy">Biomas em processo de catalogacao.</p>';
-  }
-
   setText("#metricProjects", state.projects.length);
   setText("#metricRaised", formatSui(totalRaised()));
   setText("#metricEvidence", totalEvidence());
+  setText("#catalogOrigin", state.projects.some((project) => project.fromApi) ? "Catalogo de projetos em devnet" : "Projetos ilustrativos / dados de demonstracao");
 }
 
 function renderMarketplace() {
@@ -199,7 +276,7 @@ function renderMarketplaceGrid() {
   });
 }
 
-function renderRoute({ scroll = true } = {}) {
+function renderRoute({ scroll = true, focus = false } = {}) {
   const route = parseRoute(window.location.pathname);
   state.routeVersion += 1;
   const version = state.routeVersion;
@@ -218,15 +295,27 @@ function renderRoute({ scroll = true } = {}) {
 
   updateDocumentMetadata(route);
   closeNavigation();
+  if (route.view === "roadmap") setRoadmapStep(window.location.hash.slice(1) || "apoio");
 
   if (route.view === "project") renderProjectDetail(route.slug, version);
   if (route.view === "dashboard") renderDashboard();
-  if (scroll) window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  if (focus) {
+    const heading = document.querySelector(`[data-view="${route.view}"] h1`);
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+  }
+  if (scroll) scrollToRoute(false);
 }
 
 async function renderProjectDetail(slug, version) {
   const container = document.querySelector("#projectDetail");
   if (!container) return;
+  if (!state.catalogLoaded) {
+    container.innerHTML = '<div class="loading-state page-loading"><span></span><p>Carregando o projeto...</p></div>';
+    return;
+  }
   const project = state.projects.find((item) => item.id === slug);
 
   if (!project) {
@@ -539,6 +628,9 @@ function updateWalletProviderState() {
 }
 
 function renderWalletState() {
+  document.querySelectorAll("[data-wallet-only]").forEach((item) => {
+    item.hidden = !state.wallet;
+  });
   document.querySelectorAll("[data-wallet-connect]").forEach((button) => {
     if (!state.wallet) {
       button.textContent = button.closest("#walletGate") ? "Conectar Sui wallet" : "Conectar wallet";
@@ -644,6 +736,7 @@ function parseRoute(pathname) {
   if (path === "/") return { view: "home", nav: "" };
   if (path === "/projects") return { view: "projects", nav: "projects" };
   if (path === "/method") return { view: "method", nav: "method" };
+  if (path === "/roadmap") return { view: "roadmap", nav: "roadmap" };
   if (path === "/dashboard") return { view: "dashboard", nav: "dashboard" };
   if (path.startsWith("/project/")) {
     let slug = "";
@@ -661,7 +754,7 @@ function navigateTo(href) {
   const url = new URL(href, window.location.origin);
   if (url.origin !== window.location.origin) return;
   window.history.pushState({}, "", `${url.pathname}${url.search}${url.hash}`);
-  renderRoute();
+  renderRoute({ focus: !url.hash });
 }
 
 function shouldHandleRouteClick(event, link) {
@@ -688,16 +781,18 @@ function updateMarketplaceUrl() {
 
 function updateDocumentMetadata(route) {
   const descriptions = {
-    home: "Leafora conecta pessoas a projetos ecologicos verificaveis por meio de uma experiencia Web3 simples e transparente.",
+    home: "Conheca a Leafora: apoio direto a projetos de regeneracao, acompanhamento transparente e uma nova economia para a natureza.",
     projects: "Explore projetos ecologicos selecionados, suas metas, impactos e evidencias publicas na Leafora.",
     method: "Conheca a infraestrutura de verificacao e prova de campo da Leafora.",
+    roadmap: "Da etapa de apoio em devnet ao Leafora Capture, verificacao, selos, creditos certificados e um futuro mercado de ativos ambientais.",
     dashboard: "Acompanhe os apoios e registros associados a sua Sui wallet na Leafora."
   };
   const project = route.view === "project" ? state.projects.find((item) => item.id === route.slug) : null;
   const titles = {
-    home: "Leafora | Regeneracao verificavel",
+    home: "Leafora | Apoie a regeneracao",
     projects: "Projetos | Leafora",
     method: "Como funciona | Leafora",
+    roadmap: "Roadmap | Leafora",
     dashboard: "Dashboard | Leafora"
   };
   document.title = project ? `${project.name} | Leafora` : titles[route.view] || titles.home;
