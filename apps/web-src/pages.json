@@ -2,27 +2,27 @@
   "home": {
     "path": "/",
     "title": ["Leafora | Apoio a projetos ecológicos com transparência", "Leafora | Support ecological projects with transparency"],
-    "description": ["Conheça a Leafora: apoio direto a projetos ecológicos, restauração ambiental e agricultura regenerativa, com metas, etapas e evidências por projeto.", "Discover Leafora: direct support for ecological restoration and regenerative agriculture, with project goals, milestones and evidence. Currently in testing."]
+    "description": ["A Leafora aproxima você de quem recupera a natureza. Conheça os projetos e a proposta de apoiar com pequenos valores e acompanhar os resultados. Em testes.", "Leafora connects you with people restoring nature. Explore projects and our plans for small contributions with progress you can follow. Currently in testing."]
   },
   "projects": {
     "path": "/projects/",
     "title": ["Projetos ecológicos para apoiar e acompanhar | Leafora", "Explore ecological restoration projects | Leafora"],
-    "description": ["Explore projetos de restauração, água e biodiversidade. Consulte localização, metas, plano de execução e evidências no catálogo de testes da Leafora.", "Explore restoration, water and biodiversity projects. Review locations, funding goals, milestones and evidence in Leafora's test catalog."]
+    "description": ["Conheça os projetos do catálogo de testes da Leafora. Veja o que cada iniciativa pretende recuperar e como planeja usar os recursos antes de escolher seu apoio.", "Explore Leafora's test catalog. Learn what each project aims to restore and how it plans to use funds before choosing one to support."]
   },
   "method": {
     "path": "/method/",
     "title": ["Como funciona: apoio, evidências e blockchain | Leafora", "How it works: project support, evidence and blockchain | Leafora"],
-    "description": ["Entenda como escolher um projeto, testar o apoio por carteira e acompanhar registros. Conheça o plano de captura de fotos, GPS e data com integridade verificável.", "Learn how to choose a project, test wallet contributions and track evidence. Discover the plan for field photos, GPS and timestamps with verifiable integrity."]
+    "description": ["Entenda como você poderá apoiar um projeto na Leafora e acompanhar seu trabalho. Conheça os testes atuais e como o aplicativo registrará a execução no campo.", "Learn how you will be able to support a Leafora project and follow its work. Explore current trials and how the app will record progress in the field."]
   },
   "roadmap": {
     "path": "/roadmap/",
     "title": ["Roadmap: Capture, selos e mercado ambiental | Leafora", "Roadmap: Capture, environmental labels and marketplace | Leafora"],
-    "description": ["Veja as etapas da Leafora: apoio em testes, aplicativo de campo, verificação, selos ambientais, créditos de carbono e futuro mercado de ativos ambientais.", "Explore Leafora's stages: test contributions, field capture app, verification, environmental labels, carbon credits and a future environmental asset marketplace."]
+    "description": ["Veja como a Leafora pretende evoluir dos pequenos apoios a um mercado de créditos de carbono, com registros de campo e selos ligados a projetos auditados.", "See how Leafora plans to grow from small project contributions to a carbon credit marketplace, with field records and labels linked to audited projects."]
   },
   "dashboard": {
     "path": "/dashboard/",
     "title": ["Meu portfólio | Leafora", "My portfolio | Leafora"],
-    "description": ["Consulte o histórico local de apoios e pontos de participação da carteira conectada à Leafora.", "Review the local history of contributions and participation points for your connected Leafora wallet."]
+    "description": ["Consulte os apoios feitos neste navegador com sua carteira e os pontos de participação registrados na Leafora.", "Review contributions made in this browser with your wallet and the participation points recorded in Leafora."]
   },
   "not-found": {
     "path": "/404/",

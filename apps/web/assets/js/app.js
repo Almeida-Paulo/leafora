@@ -468,7 +468,7 @@ function tierSummary(project, tier, supportReady) {
   return `
     <button class="tier-summary" type="button" data-support="${escapeHtml(project.id)}" data-tier="${escapeHtml(tier.slug)}" ${supportReady ? "" : "disabled aria-disabled=\"true\""}>
       <span><strong>${escapeHtml(tier.name)}</strong><small>${escapeHtml(tier.description || t("Participacao registrada no projeto."))}</small></span>
-      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString(locale)} Allocation Points</small></span>
+      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString(locale)} ${t("Allocation Points")}</small></span>
     </button>
   `;
 }
@@ -678,7 +678,7 @@ function renderDashboard() {
       <a href="${escapeHtml(addressUrl)}" target="_blank" rel="noopener noreferrer">${t("Abrir no explorer")} <span aria-hidden="true">&nearr;</span></a>
     </article>
     <article class="stat-card"><span>${t("Apoio assinado")}</span><strong>${formatSui(totalAmount)}</strong><small>${t("Historico local confirmado por digest")}</small></article>
-    <article class="stat-card"><span>Allocation Points</span><strong>${totalPoints.toLocaleString(locale)}</strong><small>${t("Somente transacoes assinadas nesta wallet")}</small></article>
+    <article class="stat-card"><span>${t("Allocation Points")}</span><strong>${totalPoints.toLocaleString(locale)}</strong><small>${t("Somente transacoes assinadas nesta wallet")}</small></article>
     <article class="stat-card"><span>${t("Projetos apoiados")}</span><strong>${uniqueProjects}</strong><small>${t("NFTs dependem da emissao on-chain do contrato")}</small></article>
   `;
 
@@ -692,7 +692,7 @@ function renderSignedSupport(support) {
   const explorerUrl = explorerTransaction(encodeURIComponent(support.digest));
   return `
     <article class="support-row">
-      <div><span>${escapeHtml(formatDate(support.createdAt))}</span><h3>${escapeHtml(support.projectName)}</h3><p>${escapeHtml(support.tierName)} · ${positiveNumber(support.points).toLocaleString(locale)} Allocation Points</p></div>
+      <div><span>${escapeHtml(formatDate(support.createdAt))}</span><h3>${escapeHtml(support.projectName)}</h3><p>${escapeHtml(support.tierName)} · ${positiveNumber(support.points).toLocaleString(locale)} ${t("Allocation Points")}</p></div>
       <strong>${formatSui(support.amount)}</strong>
       <a class="text-action" href="${escapeHtml(explorerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(formatHash(support.digest))} <span aria-hidden="true">&nearr;</span></a>
     </article>

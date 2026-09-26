@@ -163,7 +163,6 @@
       <div class="view" data-view="method" hidden>
         <section class="page-intro method-intro">
           <div>
-            <p class="eyebrow">Apoio direto e acompanhamento público</p>
             <h1>Como funciona a Leafora</h1>
           </div>
           <p>Uma plataforma para conhecer e apoiar projetos ecológicos: recuperação de nascentes e mata nativa, agricultura regenerativa, recuperação de pastagens e conservação da biodiversidade. Cada projeto reúne sua meta, plano de execução e evidências em uma página.</p>
@@ -207,10 +206,11 @@
       <div class="view" data-view="roadmap" hidden>
         <section class="roadmap-hero">
           <div class="roadmap-hero-inner">
-            <p class="eyebrow">Leafora / O que estamos construindo</p>
             <h1>Roadmap</h1>
           </div>
-          <div class="roadmap-lead"><p>Do apoio aos projetos ao mercado de ativos ambientais.</p><span>Começamos pelo catálogo e pelo apoio em rede de testes. Depois vêm o aplicativo de campo, a verificação, os selos e a preparação para créditos e negociação. Cada etapa abaixo explica o que será entregue e o que precisa ser validado antes de avançar.</span><div class="roadmap-caption"><span class="live-dot" aria-hidden="true"></span>Agora: testes em Sui devnet</div></div>
+          <div class="roadmap-lead">
+            <p>Começamos pelo catálogo e pelo apoio em rede de testes. Depois vêm o aplicativo de campo, a verificação, os selos e a preparação para créditos e negociação. Cada etapa abaixo explica o que será entregue e o que precisa ser validado antes de avançar.</p>
+          </div>
         </section>
 
         <nav class="roadmap-nav" aria-label="Etapas do roadmap">
@@ -228,7 +228,13 @@
           <div class="phase-inner">
             <div class="phase-heading"><span class="phase-number">01</span><div><span class="phase-status status-now">Etapa atual &middot; Devnet</span><h2 id="phaseSupportTitle">Apoiar &eacute; o ponto de partida.</h2><p>Um lugar para conhecer projetos ecol&oacute;gicos, escolher uma causa e acompanhar o destino do apoio.</p></div></div>
             <div class="phase-body two-columns">
-              <div><ul class="feature-list"><li>Projetos selecionados, com localiza&ccedil;&atilde;o, metas, etapas e uso dos recursos.</li><li>Apoio direto por carteira, com faixas acess&iacute;veis nas iniciativas habilitadas.</li><li>Portf&oacute;lio do apoiador, NFTs e Allocation Points no fluxo de testes.</li></ul><p class="phase-note">Apoios atuais usam SUI de teste. A assinatura depende da configura&ccedil;&atilde;o de cada projeto; n&atilde;o h&aacute; promessa de retorno financeiro.</p><a class="text-action" href="/projects" data-route>Explorar o marketplace <span aria-hidden="true">&nearr;</span></a></div>
+              <div>
+                <p>Projetos selecionados, com localiza&ccedil;&atilde;o, metas, etapas e uso dos recursos.</p>
+                <p>Apoio direto por carteira, com faixas acess&iacute;veis nas iniciativas habilitadas.</p>
+                <p>Portf&oacute;lio do apoiador, NFTs e Allocation Points no fluxo de testes.</p>
+                <p class="phase-note">Apoios atuais usam SUI de teste. A assinatura depende da configura&ccedil;&atilde;o de cada projeto; n&atilde;o h&aacute; promessa de retorno financeiro.</p>
+                <a class="text-action" href="/projects" data-route>Explorar o marketplace <span aria-hidden="true">&nearr;</span></a>
+              </div>
               <figure class="support-preview"><img src="/assets/img/project-spring.png" alt="Ilustracao de um projeto de recuperacao de nascentes" loading="lazy"><div class="support-preview-label"><span>PROJETO ILUSTRATIVO / MATA ATL&Acirc;NTICA</span><strong>Um apoio.<br>Novas ra&iacute;zes.</strong><a href="/projects" data-route>Explore o cat&aacute;logo <span aria-hidden="true">&nearr;</span></a></div><figcaption>Cat&aacute;logo em devnet &middot; sem valor financeiro real</figcaption></figure>
             </div>
           </div>
@@ -236,7 +242,7 @@
 
         <section class="roadmap-phase phase-capture" id="capture" aria-labelledby="phaseCaptureTitle" hidden>
           <div class="phase-inner">
-            <div class="phase-heading"><span class="phase-number">02</span><div><span class="phase-status status-next">Pr&oacute;xima etapa &middot; Planejada</span><h2 id="phaseCaptureTitle">Leafora Capture</h2><p>A hist&oacute;ria do projeto come&ccedil;a no campo.<br>A evid&ecirc;ncia tamb&eacute;m.</p></div></div>
+            <div class="phase-heading"><span class="phase-number">02</span><div><span class="phase-status status-next">Pr&oacute;xima etapa &middot; Planejada</span><h2 id="phaseCaptureTitle">Leafora Capture</h2><p>A hist&oacute;ria do projeto come&ccedil;a no campo.</p></div></div>
             <div class="phase-body capture-layout">
               <div class="capture-copy"><p>Um aplicativo para operadores autorizados registrarem o que acontece, onde acontece e quando acontece. Primeiro no Android; iOS em uma etapa posterior.</p><dl class="capture-features"><div><dt>Origem</dt><dd>Foto e v&iacute;deo capturados no app, vinculados a projeto, etapa e operador.</dd></div><div><dt>Contexto</dt><dd>Coordenadas, precis&atilde;o do GPS, data e hora da captura. O momento da ancoragem fica registrado separadamente.</dd></div><div><dt>Integridade</dt><dd>Hashes e assinaturas para detectar altera&ccedil;&otilde;es. M&iacute;dia fora da blockchain, registro verific&aacute;vel na Sui.</dd></div><div><dt>Continuidade</dt><dd>Fila offline protegida, sincroniza&ccedil;&atilde;o e controle de registros duplicados.</dd></div></dl><p class="phase-note">A captura sustenta a prova. Revis&atilde;o humana e verifica&ccedil;&atilde;o independente continuam fazendo parte da confian&ccedil;a.</p></div>
               <figure class="capture-preview">
@@ -276,14 +282,19 @@
 
         <section class="roadmap-phase phase-verification" id="verificacao" aria-labelledby="phaseVerificationTitle" hidden>
           <div class="phase-inner"><div class="phase-heading"><span class="phase-number">03</span><div><span class="phase-status">Planejada</span><h2 id="phaseVerificationTitle">Mais projetos. Mais confian&ccedil;a.</h2><p>Expandir o acesso com crit&eacute;rios claros para quem executa, acompanha e verifica.</p></div></div>
-            <div class="phase-body verification-grid"><article><img src="/assets/img/project-cerrado.png" alt="" loading="lazy"><span class="feature-index">01 / PARTICIPA&Ccedil;&Atilde;O</span><h3>Criadores por convite</h3><p>Produtores, cooperativas e organiza&ccedil;&otilde;es poder&atilde;o propor projetos. A curadoria autoriza captura, publica&ccedil;&atilde;o e capta&ccedil;&atilde;o em etapas distintas.</p></article><article><img src="/assets/img/hero-proof.png" alt="" loading="lazy"><span class="feature-index">02 / MONITORAMENTO</span><h3>Campo, sat&eacute;lite e IA</h3><p>Comparar registros no tempo, localizar inconsist&ecirc;ncias e apoiar o monitoramento. Alertas automatizados seguem para revis&atilde;o humana.</p></article><article><img src="/assets/img/project-mangrove.png" alt="" loading="lazy"><span class="feature-index">03 / INTEGRIDADE</span><h3>Verifica&ccedil;&atilde;o independente</h3><p>Metodologias, auditores e relat&oacute;rios. Hist&oacute;rico de decis&otilde;es, contesta&ccedil;&otilde;es e suspens&otilde;es, sem apagar registros anteriores.</p></article></div>
+            <div class="phase-body verification-grid"><article><img src="/assets/img/project-cerrado.png" alt="" loading="lazy"><h3>Criadores por convite</h3><p>Produtores, cooperativas e organiza&ccedil;&otilde;es poder&atilde;o propor projetos. A curadoria autoriza captura, publica&ccedil;&atilde;o e capta&ccedil;&atilde;o em etapas distintas.</p></article><article><img src="/assets/img/hero-proof.png" alt="" loading="lazy"><h3>Campo, sat&eacute;lite e IA</h3><p>Comparar registros no tempo, localizar inconsist&ecirc;ncias e apoiar o monitoramento. Alertas automatizados seguem para revis&atilde;o humana.</p></article><article><img src="/assets/img/project-mangrove.png" alt="" loading="lazy"><h3>Verifica&ccedil;&atilde;o independente</h3><p>Metodologias, auditores e relat&oacute;rios. Hist&oacute;rico de decis&otilde;es, contesta&ccedil;&otilde;es e suspens&otilde;es, sem apagar registros anteriores.</p></article></div>
             <div class="phase-scope"><strong>Territ&oacute;rios de atua&ccedil;&atilde;o</strong><p>Agricultura regenerativa &middot; recupera&ccedil;&atilde;o de pastagens degradadas &middot; restaura&ccedil;&atilde;o de mata nativa &middot; &aacute;gua &middot; biodiversidade</p></div>
           </div>
         </section>
 
         <section class="roadmap-phase phase-seals" id="selos" aria-labelledby="phaseSealsTitle" hidden>
           <div class="phase-inner"><div class="phase-heading"><span class="phase-number">04</span><div><span class="phase-status">Planejada</span><h2 id="phaseSealsTitle">Selos com um projeto por tr&aacute;s.</h2><p>Uma afirma&ccedil;&atilde;o ambiental precisa de um v&iacute;nculo que possa ser consultado.</p></div></div>
-            <div class="phase-body seal-layout"><div><p>Selos ambientais para empresas, lastreados documentalmente em projetos em opera&ccedil;&atilde;o e auditados. Cada selo dever&aacute; identificar o apoio, o per&iacute;odo e o resultado que sustenta a declara&ccedil;&atilde;o.</p><ul class="feature-list"><li>Identificador digital ou NFT vinculado ao projeto e &agrave; empresa.</li><li>P&aacute;gina p&uacute;blica de comprova&ccedil;&atilde;o, acess&iacute;vel por QR code.</li><li>Escopo, evid&ecirc;ncias, respons&aacute;vel pela verifica&ccedil;&atilde;o e validade.</li><li>Renova&ccedil;&atilde;o, suspens&atilde;o e revoga&ccedil;&atilde;o com hist&oacute;rico.</li></ul><p class="phase-note">O selo comprovar&aacute; uma declara&ccedil;&atilde;o espec&iacute;fica. Apoiar um projeto n&atilde;o significa, por si s&oacute;, compensar emiss&otilde;es ou ser uma empresa carbono neutro.</p></div>
+            <div class="phase-body seal-layout"><div>
+                <p>Selos ambientais para empresas, lastreados documentalmente em projetos em opera&ccedil;&atilde;o e auditados. Cada selo dever&aacute; identificar o apoio, o per&iacute;odo e o resultado que sustenta a declara&ccedil;&atilde;o.</p>
+                <p>P&aacute;gina p&uacute;blica de comprova&ccedil;&atilde;o, acess&iacute;vel por QR code.</p>
+                <p>Renova&ccedil;&atilde;o, suspens&atilde;o e revoga&ccedil;&atilde;o com hist&oacute;rico.</p>
+                <p class="phase-note">O selo comprovar&aacute; uma declara&ccedil;&atilde;o espec&iacute;fica. Apoiar um projeto n&atilde;o significa, por si s&oacute;, compensar emiss&otilde;es ou ser uma empresa carbono neutro.</p>
+              </div>
               <figure class="seal-preview"><div class="seal-stamp"><span>LEAFORA</span><strong>Apoio<br>verific&aacute;vel.</strong><span>PROJETO &middot; EVID&Ecirc;NCIA &middot; IMPACTO</span></div><div class="seal-caption"><span>PREVIA DE SELO</span><strong>Uma marca. Uma trilha de comprova&ccedil;&atilde;o.</strong><p>Projeto vinculado &middot; auditoria &middot; validade</p></div><figcaption>Conceito visual &middot; n&atilde;o &eacute; uma certifica&ccedil;&atilde;o emitida</figcaption></figure>
             </div>
           </div>
@@ -291,7 +302,11 @@
 
         <section class="roadmap-phase phase-credits" id="creditos" aria-labelledby="phaseCreditsTitle" hidden>
           <div class="phase-inner"><div class="phase-heading"><span class="phase-number">05</span><div><span class="phase-status">Planejada</span><h2 id="phaseCreditsTitle">Impacto medido. Cr&eacute;ditos rastre&aacute;veis.</h2><p>Conectar projetos eleg&iacute;veis &agrave;s metodologias e aos programas de certifica&ccedil;&atilde;o aplic&aacute;veis.</p></div></div>
-            <div class="phase-body two-columns"><div><p>Preparar os dados de campo para mensura&ccedil;&atilde;o, relato e verifica&ccedil;&atilde;o. A emiss&atilde;o de cr&eacute;ditos depende da comprova&ccedil;&atilde;o do resultado e das regras do programa escolhido.</p><ul class="feature-list"><li>Linha de base, adicionalidade, perman&ecirc;ncia e risco de deslocamento de emiss&otilde;es.</li><li>Origem, metodologia, per&iacute;odo, lote e n&uacute;meros de s&eacute;rie rastre&aacute;veis.</li><li>Concilia&ccedil;&atilde;o com o registro emissor para prevenir duplicidade.</li></ul></div><div class="credit-passport"><div class="passport-heading"><span>PASSAPORTE DO ATIVO</span><span>Estrutura planejada</span></div><dl><div><dt>Origem</dt><dd>Projeto + registro emissor</dd></div><div><dt>Qualidade</dt><dd>Metodologia + verifica&ccedil;&atilde;o</dd></div><div><dt>Identidade</dt><dd>Lote + per&iacute;odo + n&uacute;mero de s&eacute;rie</dd></div><div><dt>Ciclo de vida</dt><dd>Emiss&atilde;o &rarr; transfer&ecirc;ncia &rarr; aposentadoria</dd></div></dl></div></div>
+            <div class="phase-body two-columns"><div>
+                <p>Preparar os dados de campo para mensura&ccedil;&atilde;o, relato e verifica&ccedil;&atilde;o. A emiss&atilde;o de cr&eacute;ditos depende da comprova&ccedil;&atilde;o do resultado e das regras do programa escolhido.</p>
+                <p>Linha de base, adicionalidade, perman&ecirc;ncia e risco de deslocamento de emiss&otilde;es.</p>
+                <p>Origem, metodologia, per&iacute;odo, lote e n&uacute;meros de s&eacute;rie rastre&aacute;veis.</p>
+              </div><div class="credit-passport"><div class="passport-heading"><span>PASSAPORTE DO ATIVO</span><span>Estrutura planejada</span></div><dl><div><dt>Origem</dt><dd>Projeto + registro emissor</dd></div><div><dt>Qualidade</dt><dd>Metodologia + verifica&ccedil;&atilde;o</dd></div><div><dt>Identidade</dt><dd>Lote + per&iacute;odo + n&uacute;mero de s&eacute;rie</dd></div><div><dt>Ciclo de vida</dt><dd>Emiss&atilde;o &rarr; transfer&ecirc;ncia &rarr; aposentadoria</dd></div></dl></div></div>
             <div class="standards-note"><strong>Refer&ecirc;ncias t&eacute;cnicas</strong><p>GHG Protocol para contabiliza&ccedil;&atilde;o e relato; Verra VCS, Gold Standard e outros programas conforme o projeto. S&atilde;o refer&ecirc;ncias para estudo e adequa&ccedil;&atilde;o futura, sem afilia&ccedil;&atilde;o ou certifica&ccedil;&atilde;o impl&iacute;cita.</p></div>
           </div>
         </section>
@@ -307,7 +322,7 @@
         </section>
 
         <nav class="phase-pagination" aria-label="Continuar pelo roadmap"><a id="previousPhase" data-route hidden><span aria-hidden="true">&larr;</span> Etapa anterior</a><span id="phasePosition" aria-live="polite">01 / 06</span><a id="nextPhase" href="/roadmap#capture" data-route>Pr&oacute;xima: Capture <span aria-hidden="true">&rarr;</span></a></nav>
-        <section class="roadmap-faq" aria-labelledby="roadmapFaqTitle"><div><p class="eyebrow">Sem atalhos. Com clareza.</p><h2 id="roadmapFaqTitle">Antes do<br>pr&oacute;ximo passo.</h2></div><div class="faq-list"><details><summary>O que posso experimentar hoje?</summary><p>O cat&aacute;logo de projetos, suas p&aacute;ginas e a conex&atilde;o de carteira em Sui devnet. Apoios assinados dependem de cada projeto estar habilitado. Os recursos da rede de testes n&atilde;o t&ecirc;m valor financeiro real.</p></details><details><summary>O aplicativo j&aacute; est&aacute; dispon&iacute;vel?</summary><p>Ainda n&atilde;o. As telas nesta p&aacute;gina s&atilde;o pr&eacute;vias do conceito. O Leafora Capture est&aacute; planejado inicialmente para Android, com acesso concedido pela curadoria aos operadores de cada projeto.</p></details><details><summary>Um NFT de apoio &eacute; um cr&eacute;dito de carbono?</summary><p>N&atilde;o. NFT de apoio, Allocation Points, selo ambiental e cr&eacute;dito certificado t&ecirc;m finalidades e requisitos distintos. Um apoio n&atilde;o garante lucro, compensa&ccedil;&atilde;o de emiss&otilde;es ou cr&eacute;ditos futuros.</p></details><details><summary>Quando chegam as pr&oacute;ximas etapas?</summary><p>N&atilde;o h&aacute; datas confirmadas. Cada etapa depende de testes, projetos-piloto, recursos, parcerias e, quando necess&aacute;rio, auditorias e autoriza&ccedil;&otilde;es. O roadmap ser&aacute; atualizado conforme esses marcos forem atingidos.</p></details></div></section>
+        <section class="roadmap-faq" aria-labelledby="roadmapFaqTitle"><div><h2 id="roadmapFaqTitle">Antes do</h2></div><div class="faq-list"><details><summary>O que posso experimentar hoje?</summary><p>O cat&aacute;logo de projetos, suas p&aacute;ginas e a conex&atilde;o de carteira em Sui devnet. Apoios assinados dependem de cada projeto estar habilitado. Os recursos da rede de testes n&atilde;o t&ecirc;m valor financeiro real.</p></details><details><summary>O aplicativo j&aacute; est&aacute; dispon&iacute;vel?</summary><p>Ainda n&atilde;o. As telas nesta p&aacute;gina s&atilde;o pr&eacute;vias do conceito. O Leafora Capture est&aacute; planejado inicialmente para Android, com acesso concedido pela curadoria aos operadores de cada projeto.</p></details><details><summary>Um NFT de apoio &eacute; um cr&eacute;dito de carbono?</summary><p>N&atilde;o. NFT de apoio, Allocation Points, selo ambiental e cr&eacute;dito certificado t&ecirc;m finalidades e requisitos distintos. Um apoio n&atilde;o garante lucro, compensa&ccedil;&atilde;o de emiss&otilde;es ou cr&eacute;ditos futuros.</p></details><details><summary>Quando chegam as pr&oacute;ximas etapas?</summary><p>N&atilde;o h&aacute; datas confirmadas. Cada etapa depende de testes, projetos-piloto, recursos, parcerias e, quando necess&aacute;rio, auditorias e autoriza&ccedil;&otilde;es. O roadmap ser&aacute; atualizado conforme esses marcos forem atingidos.</p></details></div></section>
         <section class="roadmap-closing"><p class="eyebrow">O futuro se constr&oacute;i no presente</p><h2>Comece por uma causa.</h2><a class="primary-action" href="/projects" data-route>Conhe&ccedil;a os projetos <span aria-hidden="true">&nearr;</span></a></section>
       </div>
 
@@ -325,7 +340,6 @@
           <div class="wallet-gate" id="walletGate">
             <div>
               <span class="gate-mark" aria-hidden="true">L</span>
-              <p class="eyebrow">Wallet necessaria</p>
               <h2>Conecte sua wallet para acessar o dashboard.</h2>
               <p>O conteudo pessoal nao aparece na area publica. A Leafora solicita apenas a conexao e as assinaturas necessarias para cada acao.</p>
             </div>
