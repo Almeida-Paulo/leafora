@@ -4,19 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
     <meta name="theme-color" content="#ffffff">
-    <meta name="description" content="Conheça a Leafora: apoio direto a projetos ecológicos, restauração ambiental e agricultura regenerativa, com metas, etapas e evidências por projeto.">
-    <title>Leafora | Apoio a projetos ecológicos com transparência</title>
+    <meta name="description" content="Explore projetos de restauração, água e biodiversidade. Consulte localização, metas, plano de execução e evidências no catálogo de testes da Leafora.">
+    <title>Projetos ecológicos para apoiar e acompanhar | Leafora</title>
     <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
     <link rel="preload" href="/assets/fonts/manrope-latin-v20.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/assets/css/styles.css">
   <meta property="og:type" content="website">
 <meta property="og:site_name" content="Leafora">
-<meta property="og:title" content="Leafora | Apoio a projetos ecológicos com transparência">
-<meta property="og:description" content="Conheça a Leafora: apoio direto a projetos ecológicos, restauração ambiental e agricultura regenerativa, com metas, etapas e evidências por projeto.">
+<meta property="og:title" content="Projetos ecológicos para apoiar e acompanhar | Leafora">
+<meta property="og:description" content="Explore projetos de restauração, água e biodiversidade. Consulte localização, metas, plano de execução e evidências no catálogo de testes da Leafora.">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary">
 <meta name="robots" content="index,follow">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Leafora", "inLanguage": "pt-BR", "description": "Conheça a Leafora: apoio direto a projetos ecológicos, restauração ambiental e agricultura regenerativa, com metas, etapas e evidências por projeto."}</script>
 </head>
   <body>
     <a class="skip-link" href="#app">Ir para o conteúdo</a>
@@ -36,7 +35,7 @@
       </button>
 
       <nav class="primary-nav" id="primaryNav" aria-label="Navegação principal">
-        <a href="/projects/" data-route data-nav="projects">Projetos</a>
+        <a href="/projects/" data-route data-nav="projects" aria-current="page">Projetos</a>
         <a href="/method/" data-route data-nav="method">Como funciona</a>
         <a href="/roadmap/" data-route data-nav="roadmap">Roadmap</a>
         <a href="/dashboard/" data-route data-nav="dashboard" data-wallet-only hidden>Meu portfólio</a>
@@ -45,15 +44,15 @@
 
       <div class="header-actions">
         <nav class="language-switch" aria-label="Idioma">
-          <a href="/" data-language="pt-BR" lang="pt-BR" aria-label="Português" aria-current="true">PT</a>
-          <a href="/en/" data-language="en" lang="en" aria-label="English">EN</a>
+          <a href="/projects/" data-language="pt-BR" lang="pt-BR" aria-label="Português" aria-current="true">PT</a>
+          <a href="/en/projects/" data-language="en" lang="en" aria-label="English">EN</a>
         </nav>
         <button class="wallet-button" data-wallet-connect type="button">Conectar carteira</button>
       </div>
     </header>
 
     <main id="app" tabindex="-1">
-      <div class="view" data-view="home">
+      <div class="view" data-view="home" hidden>
         <section class="hero">
           <img src="/assets/img/hero-proof.png" alt="Ilustração de uma paisagem de restauração ambiental">
           <div class="hero-overlay"></div>
@@ -117,7 +116,7 @@
         </section>
       </div>
 
-      <div class="view" data-view="projects" hidden>
+      <div class="view" data-view="projects">
         <section class="page-intro marketplace-intro">
           <div>
             <p class="eyebrow">Leafora Marketplace</p>

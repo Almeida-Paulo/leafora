@@ -1,5 +1,7 @@
 import { projects as seedProjects } from "./projects.js";
 import { leaforaConfig } from "./config.js";
+import { locale, routePath, t } from "./i18n.js";
+import { formatUsd, usdAmount } from "./funding.js";
 
 const fallbackImages = {
   cerrado: "/assets/img/project-cerrado.png",
@@ -62,26 +64,24 @@ export function renderProjectCard(project) {
 
   return `
     <article class="project-card">
-      <a class="project-media" href="${projectPath(project.id)}" data-route aria-label="Ver ${escapeHtml(project.name)}">
+      <a class="project-media" href="${projectPath(project.id)}" data-route aria-label="${escapeHtml(t("Ver {project}", { project: project.name }))}">
         <img src="${safeMediaUrl(project.image)}" alt="${escapeHtml(project.name)}">
-        <span class="status-badge">${escapeHtml(statusLabel(project.status))}</span>
-        <span class="chain-badge">${project.fromApi ? "SUI DEVNET" : "DEMONSTRACAO"}</span>
       </a>
       <div class="project-body">
         <div class="project-kicker"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(project.biome)}</span></div>
         <h3><a href="${projectPath(project.id)}" data-route>${escapeHtml(project.name)}</a></h3>
         <p class="location">${escapeHtml(project.location)}</p>
-        <div class="impact-line"><span>Impacto esperado</span><strong>${escapeHtml(project.impact)}</strong></div>
+        <div class="impact-line"><span>${t("Impacto esperado")}</span><strong>${escapeHtml(project.impact)}</strong></div>
         <div class="funding-line">
-          <span><strong>${formatSui(project.raisedSui)}</strong> captados</span>
+          <span><strong>${formatUsd(project.fundingUsd?.raised)}</strong> ${t("captados")}</span>
           <span>${progress}%</span>
         </div>
-        <div class="progress" aria-label="${progress}% da meta"><span style="width:${progress}%"></span></div>
+        <div class="progress" aria-label="${t("{progress}% da meta", { progress })}"><span style="width:${progress}%"></span></div>
         <div class="project-card-footer">
-          <span>Meta ${formatSui(project.goalSui)}</span>
+          <span>${t("Meta")} ${formatUsd(project.fundingUsd?.goal)}</span>
           <div class="card-actions">
-            ${supportReady ? `<button class="primary-action compact" data-support="${escapeHtml(project.id)}" type="button">Apoiar</button>` : ""}
-            <a class="project-open" href="${projectPath(project.id)}" data-route aria-label="Conhecer ${escapeHtml(project.name)}">Conhecer <span aria-hidden="true">&nearr;</span></a>
+            ${supportReady ? `<button class="primary-action compact" data-support="${escapeHtml(project.id)}" type="button">${t("Apoiar")}</button>` : ""}
+            <a class="project-open" href="${projectPath(project.id)}" data-route aria-label="${escapeHtml(t("Conhecer {project}", { project: project.name }))}">${t("Conhecer")} <span aria-hidden="true">&nearr;</span></a>
           </div>
         </div>
       </div>
@@ -90,30 +90,31 @@ export function renderProjectCard(project) {
 }
 
 export function projectPath(projectId) {
-  return `/project/${encodeURIComponent(String(projectId || ""))}`;
+  return routePath(`/project/${encodeURIComponent(String(projectId || ""))}`);
 }
 
 export function projectProgress(project) {
-  const raised = finiteNumber(project?.raisedSui);
-  const goal = finiteNumber(project?.goalSui);
+  const raised = project?.fromApi ? finiteNumber(project.raisedSui) : usdAmount(project?.fundingUsd?.raised);
+  const goal = project?.fromApi ? finiteNumber(project.goalSui) : usdAmount(project?.fundingUsd?.goal);
+  if (raised === null || goal === null) return 0;
   if (goal <= 0) return 0;
   return Math.min(100, Math.max(0, Math.round((raised / goal) * 100)));
 }
 
 export function formatSui(value) {
-  return `${finiteNumber(value).toLocaleString("pt-BR", { maximumFractionDigits: 2 })} SUI`;
+  return `${finiteNumber(value).toLocaleString(locale, { maximumFractionDigits: 2 })} SUI`;
 }
 
 export function formatDate(value) {
-  if (!value) return "Data indisponivel";
+  if (!value) return t("Data indisponivel");
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Data indisponivel";
-  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+  if (Number.isNaN(date.getTime())) return t("Data indisponivel");
+  return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(date);
 }
 
 export function formatHash(value) {
   const hash = String(value || "");
-  if (!hash) return "Hash pendente";
+  if (!hash) return t("Hash pendente");
   return hash.length > 28 ? `${hash.slice(0, 14)}...${hash.slice(-10)}` : hash;
 }
 
@@ -149,25 +150,25 @@ export function safeMediaUrl(value) {
 export function statusLabel(value) {
   const status = String(value || "").toLowerCase();
   const labels = {
-    active: "Ativo",
-    draft: "Em curadoria",
-    documented: "Documentado",
-    validated: "Validado",
-    "field evidence": "Com evidencias",
-    approved: "Aprovada",
-    pending: "Em revisao",
-    rejected: "Rejeitada"
+    active: t("Ativo"),
+    draft: t("Em curadoria"),
+    documented: t("Documentado"),
+    validated: t("Validado"),
+    "field evidence": t("Com evidencias"),
+    approved: t("Aprovada"),
+    pending: t("Em revisao"),
+    rejected: t("Rejeitada")
   };
-  return labels[status] || value || "Em curadoria";
+  return labels[status] || value || t("Em curadoria");
 }
 
 export function milestoneLabel(value) {
   const labels = {
-    completed: "Concluida",
-    active: "Em execucao",
-    planned: "Planejada"
+    completed: t("Concluida"),
+    active: t("Em execucao"),
+    planned: t("Planejada")
   };
-  return labels[String(value || "").toLowerCase()] || value || "Planejada";
+  return labels[String(value || "").toLowerCase()] || value || t("Planejada");
 }
 
 function normalizeProjects(items) {
@@ -186,23 +187,23 @@ function normalizeProjects(items) {
 }
 
 function normalizeProject(project) {
-  const biome = textOr(project.biome, "Bioma nao informado");
+  const biome = textOr(project.biome, t("Bioma nao informado"));
   return {
     ...project,
     id: textOr(project.id, ""),
-    name: textOr(project.name, "Projeto sem nome"),
-    category: textOr(project.category, "Regeneracao ecologica"),
+    name: textOr(project.name, t("Projeto sem nome")),
+    category: textOr(project.category, t("Regeneracao ecologica")),
     biome,
-    location: textOr(project.location, "Localizacao em validacao"),
+    location: textOr(project.location, t("Localizacao em validacao")),
     image: textOr(project.image, imageForBiome(biome)),
-    status: textOr(project.status, "Em curadoria"),
+    status: textOr(project.status, t("Em curadoria")),
     goalSui: finiteNumber(project.goalSui),
     raisedSui: finiteNumber(project.raisedSui),
     supporters: Math.max(0, Math.trunc(finiteNumber(project.supporters))),
-    impact: textOr(project.impact, "Impacto em validacao"),
-    objective: textOr(project.objective, "Objetivo em validacao pela curadoria."),
-    story: textOr(project.story, "As informacoes detalhadas deste projeto estao em preparacao."),
-    risks: textOr(project.risks, "Riscos em processo de avaliacao."),
+    impact: textOr(project.impact, t("Impacto em validacao")),
+    objective: textOr(project.objective, t("Objetivo em validacao pela curadoria.")),
+    story: textOr(project.story, t("As informacoes detalhadas deste projeto estao em preparacao.")),
+    risks: textOr(project.risks, t("Riscos em processo de avaliacao.")),
     chain: project.chain || { projectId: "", vaultId: "" },
     milestones: dedupeRows(project.milestones),
     evidence: Array.isArray(project.evidence) ? project.evidence.filter(Boolean) : [],
@@ -232,11 +233,11 @@ function normalizeEvidence(items) {
     seen.add(id);
     normalized.push({
       id,
-      title: textOr(record.title, "Evidencia sem titulo"),
+      title: textOr(record.title, t("Evidencia sem titulo")),
       status: textOr(record.status, "Pending"),
       contentHash: textOr(record.contentHash, ""),
       metadataHash: textOr(record.metadataHash, ""),
-      geohash: textOr(record.geohash, "Nao publicado"),
+      geohash: textOr(record.geohash, t("Nao publicado")),
       timestamp: record.timestamp || null,
       source: textOr(record.source, "Leafora Registry"),
       txDigest: textOr(record.txDigest, "")

@@ -21,6 +21,8 @@ import {
   listSuiWallets,
   supportOnDevnet
 } from "./sui-devnet.js";
+import { language, locale, routePath, t, translatedFilter, updateSeo } from "./i18n.js";
+import { formatUsd, fundingNote, totalUsd } from "./funding.js";
 
 const STORAGE_KEY = "leafora:signed-supports:v1";
 const views = [...document.querySelectorAll("[data-view]")];
@@ -40,7 +42,7 @@ const confirmSupport = document.querySelector("#confirmSupport");
 
 const state = {
   projects: [],
-  filter: "Todos",
+  filter: t("Todos"),
   sort: "featured",
   search: "",
   wallet: null,
@@ -119,7 +121,7 @@ function bindEvents() {
   document.querySelector("#filters")?.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-filter]");
     if (!button) return;
-    state.filter = button.dataset.filter || "Todos";
+    state.filter = button.dataset.filter || t("Todos");
     updateMarketplaceUrl();
     renderMarketplaceGrid();
   });
@@ -183,7 +185,7 @@ function setRoadmapStep(id) {
   if (index > 0) previous.href = links[index - 1].href;
   if (index < links.length - 1) {
     next.href = links[index + 1].href;
-    next.textContent = `Pr\u00f3xima: ${links[index + 1].querySelector("strong").textContent} \u2192`;
+    next.textContent = t("Próxima: {phase}", { phase: links[index + 1].querySelector("strong").textContent }) + " →";
   }
   if ((previous.hidden && document.activeElement === previous) || (next.hidden && document.activeElement === next)) {
     current.focus({ preventScroll: true });
@@ -207,7 +209,7 @@ function scrollToRoute(animate = true) {
 }
 
 function renderLoadingStates() {
-  const loading = '<div class="loading-state"><span></span><p>Carregando projetos...</p></div>';
+  const loading = `<div class="loading-state"><span></span><p>${t("Carregando projetos...")}</p></div>`;
   const featured = document.querySelector("#featuredProjectGrid");
   const catalog = document.querySelector("#projectGrid");
   if (featured) featured.innerHTML = loading;
@@ -219,20 +221,21 @@ function renderHome() {
   if (featured) {
     featured.innerHTML = state.projects.length
       ? state.projects.slice(0, 3).map(renderProjectCard).join("")
-      : emptyState("Nenhum projeto publicado", "A curadoria ainda nao publicou projetos neste ambiente.");
+      : emptyState(t("Nenhum projeto publicado"), t("A curadoria ainda nao publicou projetos neste ambiente."));
   }
 
   setText("#metricProjects", state.projects.length);
-  setText("#metricRaised", formatSui(totalRaised()));
+  setText("#metricRaised", formatUsd(totalUsd(state.projects)));
   setText("#metricEvidence", totalEvidence());
-  setText("#catalogOrigin", state.projects.some((project) => project.fromApi) ? "Catalogo de projetos em devnet" : "Projetos ilustrativos / dados de demonstracao");
+  setText("#catalogOrigin", state.projects.some((project) => project.fromApi) ? t("Catalogo de projetos em devnet") : t("Projetos ilustrativos / dados de demonstracao"));
+  setText("#homeFundingNote", state.projects.length ? fundingNote(state.projects[0]) : "");
 }
 
 function renderMarketplace() {
   const biomes = uniqueValues(state.projects.map((project) => project.biome));
   const filters = document.querySelector("#filters");
   if (filters) {
-    filters.innerHTML = ["Todos", ...biomes].map((biome) => `
+    filters.innerHTML = [t("Todos"), ...biomes].map((biome) => `
       <button type="button" data-filter="${escapeHtml(biome)}" class="${state.filter === biome ? "active" : ""}" aria-pressed="${state.filter === biome}">
         ${escapeHtml(biome)}
       </button>
@@ -242,13 +245,14 @@ function renderMarketplace() {
   setText("#marketProjectCount", state.projects.length);
   setText("#marketBiomeCount", biomes.length);
   setText("#marketEvidenceCount", totalEvidence());
+  setText("#marketFundingNote", state.projects.length ? fundingNote(state.projects[0]) : "");
   renderMarketplaceGrid();
 }
 
 function renderMarketplaceGrid() {
   const query = normalizeText(state.search);
   const matching = state.projects.filter((project) => {
-    const matchesBiome = state.filter === "Todos" || project.biome === state.filter;
+    const matchesBiome = state.filter === t("Todos") || project.biome === state.filter;
     const haystack = normalizeText([
       project.name,
       project.category,
@@ -265,10 +269,10 @@ function renderMarketplaceGrid() {
   if (grid) {
     grid.innerHTML = sorted.length
       ? sorted.map(renderProjectCard).join("")
-      : emptyState("Nenhum projeto encontrado", "Altere a busca ou remova o filtro para consultar outras iniciativas.");
+      : emptyState(t("Nenhum projeto encontrado"), t("Altere a busca ou remova o filtro para consultar outras iniciativas."));
   }
 
-  setText("#resultCount", `${sorted.length} ${sorted.length === 1 ? "projeto encontrado" : "projetos encontrados"}`);
+  setText("#resultCount", `${sorted.length} ${sorted.length === 1 ? t("projeto encontrado") : t("projetos encontrados")}`);
   document.querySelectorAll("#filters [data-filter]").forEach((button) => {
     const active = button.dataset.filter === state.filter;
     button.classList.toggle("active", active);
@@ -313,7 +317,7 @@ async function renderProjectDetail(slug, version) {
   const container = document.querySelector("#projectDetail");
   if (!container) return;
   if (!state.catalogLoaded) {
-    container.innerHTML = '<div class="loading-state page-loading"><span></span><p>Carregando o projeto...</p></div>';
+    container.innerHTML = `<div class="loading-state page-loading"><span></span><p>${t("Carregando o projeto...")}</p></div>`;
     return;
   }
   const project = state.projects.find((item) => item.id === slug);
@@ -321,16 +325,16 @@ async function renderProjectDetail(slug, version) {
   if (!project) {
     container.innerHTML = `
       <section class="not-found">
-        <p class="eyebrow">Projeto nao encontrado</p>
-        <h1>Esta iniciativa nao esta disponivel.</h1>
-        <p>Ela pode estar em curadoria, arquivada ou ter sido acessada por um endereco incorreto.</p>
-        <a class="primary-action" href="/projects" data-route>Voltar ao marketplace</a>
+        <p class="eyebrow">${t("Projeto nao encontrado")}</p>
+        <h1>${t("Esta iniciativa nao esta disponivel.")}</h1>
+        <p>${t("Ela pode estar em curadoria, arquivada ou ter sido acessada por um endereco incorreto.")}</p>
+        <a class="primary-action" href="${routePath('/projects')}" data-route>${t("Voltar ao marketplace")}</a>
       </section>
     `;
     return;
   }
 
-  container.innerHTML = '<div class="loading-state page-loading"><span></span><p>Carregando o projeto...</p></div>';
+  container.innerHTML = `<div class="loading-state page-loading"><span></span><p>${t("Carregando o projeto...")}</p></div>`;
   const evidence = await loadProjectEvidence(project);
   if (version !== state.routeVersion) return;
 
@@ -339,90 +343,92 @@ async function renderProjectDetail(slug, version) {
   const tiers = project.tiers.map(normalizeTier).filter((tier) => tier.slug && tier.amount > 0);
   const supportDisabled = !tiers.length || !readiness.ready ? "disabled aria-disabled=\"true\"" : "";
   const supportLabel = !tiers.length
-    ? "Apoio em preparacao"
+    ? t("Apoio em preparacao")
     : readiness.ready
-      ? "Apoiar este projeto"
-      : "Assinatura em configuracao";
+      ? t("Apoiar este projeto")
+      : t("Assinatura em configuracao");
 
   container.innerHTML = `
-    <nav class="breadcrumb" aria-label="Caminho">
-      <a href="/projects" data-route>Projetos</a><span aria-hidden="true">/</span><span>${escapeHtml(project.name)}</span>
+    <nav class="breadcrumb" aria-label="${t("Caminho")}">
+      <a href="${routePath('/projects')}" data-route>${t("Projetos")}</a><span aria-hidden="true">/</span><span>${escapeHtml(project.name)}</span>
     </nav>
 
     <section class="project-hero-layout">
       <div class="project-detail-media">
         <img src="${safeMediaUrl(project.image)}" alt="${escapeHtml(project.name)}">
-        <div class="media-badges"><span class="status-badge">${escapeHtml(statusLabel(project.status))}</span><span class="chain-badge">SUI DEVNET</span></div>
       </div>
       <div class="project-detail-copy">
         <div class="project-kicker"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(project.biome)}</span></div>
         <h1>${escapeHtml(project.name)}</h1>
         <p class="detail-location">${escapeHtml(project.location)}</p>
         <p class="detail-objective">${escapeHtml(project.objective)}</p>
+        ${language === "en" && project.fromApi ? `<p class="source-language">${t("Conteúdo publicado pela equipe no idioma original.")}</p>` : ""}
         <dl class="project-facts">
-          <div><dt>Impacto esperado</dt><dd>${escapeHtml(project.impact)}</dd></div>
-          <div><dt>Evidencias publicas</dt><dd>${evidence.length}</dd></div>
-          <div><dt>Apoiadores registrados</dt><dd>${project.supporters || 0}</dd></div>
+          <div><dt>${t("Impacto esperado")}</dt><dd>${escapeHtml(project.impact)}</dd></div>
+          <div><dt>${t("Evidencias publicas")}</dt><dd>${evidence.length}</dd></div>
+          <div><dt>${t("Apoiadores registrados")}</dt><dd>${project.supporters || 0}</dd></div>
         </dl>
       </div>
-      <aside class="funding-panel" aria-label="Captacao do projeto">
-        <p class="funding-label">Captacao em Sui devnet</p>
-        <strong class="funding-total">${formatSui(project.raisedSui)}</strong>
-        <div class="funding-progress-line"><span>de ${formatSui(project.goalSui)}</span><b>${progress}%</b></div>
-        <div class="progress large" aria-label="${progress}% da meta"><span style="width:${progress}%"></span></div>
+      <aside class="funding-panel" aria-label="${t("Captacao do projeto")}">
+        <p class="funding-label">${project.fromApi ? t("Meta de apoio em US$") : t("Captação ilustrativa em US$")}</p>
+        <strong class="funding-total">${formatUsd(project.fundingUsd?.raised)}</strong>
+        <div class="funding-progress-line"><span>${t("de")} ${formatUsd(project.fundingUsd?.goal)}</span><b>${progress}%</b></div>
+        <div class="progress large" aria-label="${t("{progress}% da meta", { progress })}"><span style="width:${progress}%"></span></div>
+        <p class="currency-note">${fundingNote(project)}</p>
         <button class="primary-action wide" data-support="${escapeHtml(project.id)}" ${supportDisabled} type="button">${supportLabel}</button>
-        <p class="readiness-note ${readiness.ready ? "ready" : "pending"}">${readiness.ready ? "Projeto configurado para assinatura na devnet." : "Assinatura on-chain em configuracao para este projeto."}</p>
-        <p class="risk-caption">Apoio experimental, sem promessa de lucro, retorno financeiro ou emissao de credito ambiental.</p>
+        <p class="readiness-note ${readiness.ready ? "ready" : "pending"}">${readiness.ready ? t("Projeto configurado para assinatura na devnet.") : t("Assinatura on-chain em configuracao para este projeto.")}</p>
+        <p class="risk-caption">${t("Apoio experimental, sem promessa de lucro, retorno financeiro ou emissao de credito ambiental.")}</p>
       </aside>
     </section>
 
-    <nav class="project-subnav" aria-label="Secoes do projeto">
-      <a href="#visao-geral">Visao geral</a>
-      <a href="#etapas">Etapas</a>
-      <a href="#evidencias">Evidencias</a>
-      <a href="#riscos">Riscos</a>
+    <nav class="project-subnav" aria-label="${t("Secoes do projeto")}">
+      <a href="#visao-geral">${t("Visao geral")}</a>
+      <a href="#etapas">${t("Etapas")}</a>
+      <a href="#evidencias">${t("Evidencias")}</a>
+      <a href="#riscos">${t("Riscos")}</a>
     </nav>
 
     <section class="project-content" id="visao-geral">
       <div class="project-story">
-        <p class="eyebrow">Sobre o projeto</p>
-        <h2>Uma iniciativa com escopo, territorio e execucao acompanhaveis.</h2>
+        <p class="eyebrow">${t("Sobre o projeto")}</p>
+        <h2>${t("Uma iniciativa com escopo, territorio e execucao acompanhaveis.")}</h2>
         <p>${escapeHtml(project.story)}</p>
       </div>
       <aside class="project-support-tiers" aria-labelledby="tiersTitle">
-        <p class="eyebrow">Faixas de apoio</p>
-        <h2 id="tiersTitle">Escolha sua participacao</h2>
-        ${tiers.length ? tiers.map((tier) => tierSummary(project, tier, readiness.ready)).join("") : '<p class="muted-copy">As faixas deste projeto ainda nao foram publicadas.</p>'}
+        <p class="eyebrow">${t("Faixas de apoio")}</p>
+        <h2 id="tiersTitle">${t("Escolha sua participacao")}</h2>
+        <p class="currency-note">${t("Faixas em SUI de teste, sem valor financeiro real.")}</p>
+        ${tiers.length ? tiers.map((tier) => tierSummary(project, tier, readiness.ready)).join("") : `<p class="muted-copy">${t("As faixas deste projeto ainda nao foram publicadas.")}</p>`}
       </aside>
     </section>
 
     <section class="project-section" id="etapas">
-      <div class="section-heading project-section-heading"><div><p class="eyebrow">Execucao</p><h2>Milestones do projeto</h2></div><p>${project.milestones.length} etapas publicadas</p></div>
+      <div class="section-heading project-section-heading"><div><p class="eyebrow">${t("Execucao")}</p><h2>${t("Milestones do projeto")}</h2></div><p>${project.milestones.length} ${t("etapas publicadas")}</p></div>
       <div class="milestone-timeline">
-        ${project.milestones.length ? project.milestones.map(renderMilestone).join("") : emptyState("Etapas em definicao", "A curadoria ainda nao publicou o cronograma deste projeto.")}
+        ${project.milestones.length ? project.milestones.map((item, index) => renderMilestone(item, index, project)).join("") : emptyState(t("Etapas em definicao"), t("A curadoria ainda nao publicou o cronograma deste projeto."))}
       </div>
     </section>
 
     <section class="project-section evidence-section" id="evidencias">
       <div class="section-heading project-section-heading">
-        <div><p class="eyebrow">Trilha de verificacao</p><h2>Evidencias vinculadas ao projeto</h2></div>
-        <a class="text-action" href="/method" data-route>Entender a prova <span aria-hidden="true">&rarr;</span></a>
+        <div><p class="eyebrow">${t("Trilha de verificacao")}</p><h2>${t("Evidencias vinculadas ao projeto")}</h2></div>
+        <a class="text-action" href="${routePath('/method')}" data-route>${t("Entender a prova")} <span aria-hidden="true">&rarr;</span></a>
       </div>
       <div class="evidence-list">
-        ${evidence.length ? evidence.map(renderEvidence).join("") : emptyState("Nenhuma evidencia publicada", "Os registros aparecerao aqui depois da captura, revisao e vinculacao ao projeto.")}
+        ${!project.fromApi ? `<p class="currency-note">${t("Registros ilustrativos")}</p>` : ""}
+        ${evidence.length ? evidence.map(renderEvidence).join("") : emptyState(t("Nenhuma evidencia publicada"), t("Os registros aparecerao aqui depois da captura, revisao e vinculacao ao projeto."))}
       </div>
     </section>
 
     <section class="risk-band" id="riscos">
-      <div><p class="eyebrow">Riscos declarados</p><h2>Transparencia inclui explicar o que pode nao sair como previsto.</h2></div>
+      <div><p class="eyebrow">${t("Riscos declarados")}</p><h2>${t("Transparencia inclui explicar o que pode nao sair como previsto.")}</h2></div>
       <p>${escapeHtml(project.risks)}</p>
     </section>
   `;
 }
 
-function renderMilestone(item, index) {
+function renderMilestone(item, index, project) {
   const title = Array.isArray(item) ? item[0] : item?.title;
-  const target = Array.isArray(item) ? item[1] : item?.targetAmount;
   const status = Array.isArray(item) ? item[2] : item?.status;
   const description = Array.isArray(item) ? item[3] : item?.description;
   const normalizedStatus = String(status || "planned").toLowerCase();
@@ -431,10 +437,10 @@ function renderMilestone(item, index) {
       <div class="milestone-index"><span>${String(index + 1).padStart(2, "0")}</span></div>
       <div class="milestone-copy">
         <span class="milestone-status">${escapeHtml(milestoneLabel(status))}</span>
-        <h3>${escapeHtml(title || "Etapa sem titulo")}</h3>
+        <h3>${escapeHtml(title || t("Etapa sem titulo"))}</h3>
         ${description ? `<p>${escapeHtml(description)}</p>` : ""}
       </div>
-      <strong>${formatSui(target)}</strong>
+      <strong>${formatUsd(project.fundingUsd?.milestones?.[index])}</strong>
     </article>
   `;
 }
@@ -450,10 +456,10 @@ function renderEvidence(record) {
       </div>
       <dl>
         <div><dt>Geohash</dt><dd>${escapeHtml(record.geohash)}</dd></div>
-        <div><dt>Hash do arquivo</dt><dd title="${escapeHtml(record.contentHash)}">${escapeHtml(formatHash(record.contentHash))}</dd></div>
-        <div><dt>Origem</dt><dd>${escapeHtml(record.source)}</dd></div>
+        <div><dt>${t("Hash do arquivo")}</dt><dd title="${escapeHtml(record.contentHash)}">${escapeHtml(formatHash(record.contentHash))}</dd></div>
+        <div><dt>${t("Origem")}</dt><dd>${escapeHtml(record.source)}</dd></div>
       </dl>
-      ${txUrl ? `<a class="text-action" href="${escapeHtml(txUrl)}" target="_blank" rel="noopener noreferrer">Ver transacao <span aria-hidden="true">&nearr;</span></a>` : '<span class="anchoring-state">Ancoragem pendente</span>'}
+      ${txUrl ? `<a class="text-action" href="${escapeHtml(txUrl)}" target="_blank" rel="noopener noreferrer">${t("Ver transacao")} <span aria-hidden="true">&nearr;</span></a>` : `<span class="anchoring-state">${t("Ancoragem pendente")}</span>`}
     </article>
   `;
 }
@@ -461,8 +467,8 @@ function renderEvidence(record) {
 function tierSummary(project, tier, supportReady) {
   return `
     <button class="tier-summary" type="button" data-support="${escapeHtml(project.id)}" data-tier="${escapeHtml(tier.slug)}" ${supportReady ? "" : "disabled aria-disabled=\"true\""}>
-      <span><strong>${escapeHtml(tier.name)}</strong><small>${escapeHtml(tier.description || "Participacao registrada no projeto.")}</small></span>
-      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString("pt-BR")} Allocation Points</small></span>
+      <span><strong>${escapeHtml(tier.name)}</strong><small>${escapeHtml(tier.description || t("Participacao registrada no projeto."))}</small></span>
+      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString(locale)} Allocation Points</small></span>
     </button>
   `;
 }
@@ -482,15 +488,15 @@ function openSupportDialog(projectId, tierSlug = "") {
   const selectedTier = tiers.find((tier) => tier.slug === tierSlug) || tiers[0];
   state.pendingSupport = { project, tiers };
   supportTitle.textContent = project.name;
-  supportMessage.textContent = "Escolha uma faixa. A wallet mostrara os dados finais antes de qualquer assinatura.";
+  supportMessage.textContent = t("Escolha uma faixa. A wallet mostrara os dados finais antes de qualquer assinatura.");
   supportStatus.textContent = publicReadinessMessage(project);
   supportStatus.className = `form-status ${getDevnetReadiness(project).ready ? "success" : "warning"}`;
   riskAccepted.checked = false;
   tierOptions.innerHTML = tiers.map((tier) => `
     <label class="tier-option">
       <input type="radio" name="supportTier" value="${escapeHtml(tier.slug)}" ${tier.slug === selectedTier.slug ? "checked" : ""}>
-      <span><strong>${escapeHtml(tier.name)}</strong><small>${escapeHtml(tier.description || "Participacao registrada no projeto.")}</small></span>
-      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString("pt-BR")} pontos</small></span>
+      <span><strong>${escapeHtml(tier.name)}</strong><small>${escapeHtml(tier.description || t("Participacao registrada no projeto."))}</small></span>
+      <span><b>${formatSui(tier.amount)}</b><small>${tier.points.toLocaleString(locale)} ${t("pontos")}</small></span>
     </label>
   `).join("");
   supportDialog.showModal();
@@ -503,15 +509,15 @@ async function confirmPendingSupport() {
   const tier = pending.tiers.find((item) => item.slug === selectedSlug);
 
   if (!riskAccepted.checked) {
-    setSupportStatus("Confirme que compreendeu os riscos antes de continuar.", "error");
+    setSupportStatus(t("Confirme que compreendeu os riscos antes de continuar."), "error");
     return;
   }
   if (!tier) {
-    setSupportStatus("Selecione uma faixa de apoio valida.", "error");
+    setSupportStatus(t("Selecione uma faixa de apoio valida."), "error");
     return;
   }
   if (!state.wallet) {
-    setSupportStatus("Conecte uma Sui wallet antes de assinar.", "error");
+    setSupportStatus(t("Conecte uma Sui wallet antes de assinar."), "error");
     return;
   }
   if (!getDevnetReadiness(pending.project).ready) {
@@ -520,7 +526,7 @@ async function confirmPendingSupport() {
   }
 
   setSupportBusy(true);
-  setSupportStatus("Aguardando confirmacao na wallet...", "");
+  setSupportStatus(t("Aguardando confirmacao na wallet..."), "");
   try {
     const result = await supportOnDevnet({
       walletSession: state.wallet,
@@ -539,11 +545,11 @@ async function confirmPendingSupport() {
       createdAt: new Date().toISOString()
     };
     saveSignedSupport(support);
-    setSupportStatus(`Transacao confirmada: ${formatHash(result.digest)}`, "success");
+    setSupportStatus(t("Transação confirmada: {digest}", { digest: formatHash(result.digest) }), "success");
     renderHome();
     renderDashboard();
   } catch (error) {
-    setSupportStatus(error instanceof Error ? error.message : "Nao foi possivel concluir a assinatura.", "error");
+    setSupportStatus(error instanceof Error ? error.message : t("Nao foi possivel concluir a assinatura."), "error");
   } finally {
     setSupportBusy(false);
   }
@@ -551,9 +557,9 @@ async function confirmPendingSupport() {
 
 async function openWalletDialog() {
   walletRiskAccepted.checked = false;
-  walletStatus.textContent = "Buscando wallets Sui autorizadas neste navegador...";
+  walletStatus.textContent = t("Buscando wallets Sui autorizadas neste navegador...");
   walletStatus.className = "form-status";
-  walletList.innerHTML = '<div class="wallet-loading"><span></span>Consultando providers...</div>';
+  walletList.innerHTML = `<div class="wallet-loading"><span></span>${t("Consultando providers...")}</div>`;
   walletDialog.showModal();
 
   try {
@@ -562,36 +568,36 @@ async function openWalletDialog() {
     if (!providers.length) {
       walletList.innerHTML = `
         <div class="wallet-empty">
-          <strong>Nenhuma Sui wallet detectada.</strong>
-          <p>Instale ou habilite uma wallet compativel, desbloqueie a conta e selecione a rede devnet.</p>
+          <strong>${t("Nenhuma Sui wallet detectada.")}</strong>
+          <p>${t("Instale ou habilite uma wallet compativel, desbloqueie a conta e selecione a rede devnet.")}</p>
         </div>
       `;
-      walletStatus.textContent = "A extensao deve ter permissao para funcionar neste site.";
+      walletStatus.textContent = t("A extensao deve ter permissao para funcionar neste site.");
       return;
     }
 
     walletList.innerHTML = providers.map((provider, index) => `
       <button type="button" class="wallet-provider" data-wallet-index="${index}" disabled>
         ${provider.icon ? `<img src="${safeMediaUrl(provider.icon)}" alt="">` : '<span class="wallet-provider-mark" aria-hidden="true">S</span>'}
-        <span><strong>${escapeHtml(provider.name)}</strong><small>${provider.supportsDevnet ? "Sui devnet detectada" : "Confirme a rede devnet na wallet"}</small></span>
+        <span><strong>${escapeHtml(provider.name)}</strong><small>${provider.supportsDevnet ? t("Sui devnet detectada") : t("Confirme a rede devnet na wallet")}</small></span>
         <i aria-hidden="true">&rarr;</i>
       </button>
     `).join("");
-    walletStatus.textContent = "Confirme o aviso para habilitar a conexao.";
+    walletStatus.textContent = t("Confirme o aviso para habilitar a conexao.");
 
     walletList.querySelectorAll("[data-wallet-index]").forEach((button) => {
       button.addEventListener("click", () => connectProvider(providers[Number(button.dataset.walletIndex)], button));
     });
   } catch (error) {
     walletList.innerHTML = "";
-    walletStatus.textContent = error instanceof Error ? error.message : "Nao foi possivel consultar as wallets.";
+    walletStatus.textContent = error instanceof Error ? error.message : t("Nao foi possivel consultar as wallets.");
     walletStatus.className = "form-status error";
   }
 }
 
 async function connectProvider(provider, button) {
   if (!walletRiskAccepted.checked) {
-    walletStatus.textContent = "Confirme o aviso de ambiente de testes antes de conectar.";
+    walletStatus.textContent = t("Confirme o aviso de ambiente de testes antes de conectar.");
     walletStatus.className = "form-status error";
     return;
   }
@@ -599,7 +605,7 @@ async function connectProvider(provider, button) {
   const buttons = [...walletList.querySelectorAll("button")];
   buttons.forEach((item) => { item.disabled = true; });
   button.classList.add("busy");
-  walletStatus.textContent = `Aguardando autorizacao na ${provider.name}...`;
+  walletStatus.textContent = t("Aguardando autorização na {wallet}...", { wallet: provider.name });
   walletStatus.className = "form-status";
 
   try {
@@ -610,7 +616,7 @@ async function connectProvider(provider, button) {
     state.supportIntent = null;
     if (intent) window.setTimeout(() => openSupportDialog(intent.projectId, intent.tierSlug), 0);
   } catch (error) {
-    walletStatus.textContent = error instanceof Error ? error.message : "A wallet recusou ou nao concluiu a conexao.";
+    walletStatus.textContent = error instanceof Error ? error.message : t("A wallet recusou ou nao concluiu a conexao.");
     walletStatus.className = "form-status error";
     button.classList.remove("busy");
     updateWalletProviderState();
@@ -622,8 +628,8 @@ function updateWalletProviderState() {
   walletList?.querySelectorAll("button").forEach((button) => {
     button.disabled = !enabled;
   });
-  if (enabled && walletStatus.textContent.includes("Confirme o aviso")) {
-    walletStatus.textContent = "Selecione a wallet que deseja conectar.";
+  if (enabled && walletStatus.textContent === t("Confirme o aviso para habilitar a conexao.")) {
+    walletStatus.textContent = t("Selecione a wallet que deseja conectar.");
   }
 }
 
@@ -633,7 +639,7 @@ function renderWalletState() {
   });
   document.querySelectorAll("[data-wallet-connect]").forEach((button) => {
     if (!state.wallet) {
-      button.textContent = button.closest("#walletGate") ? "Conectar Sui wallet" : "Conectar wallet";
+      button.textContent = button.closest("#walletGate") ? t("Conectar Sui wallet") : t("Conectar wallet");
       button.classList.remove("connected", "wrong-network");
       button.removeAttribute("title");
       return;
@@ -643,8 +649,8 @@ function renderWalletState() {
     button.classList.add("connected");
     button.classList.toggle("wrong-network", !state.wallet.supportsDevnet);
     button.title = state.wallet.supportsDevnet
-      ? `${state.wallet.walletName} conectada em Sui devnet`
-      : `${state.wallet.walletName} conectada fora da Sui devnet`;
+      ? t("{wallet} conectada em Sui devnet", { wallet: state.wallet.walletName })
+      : t("{wallet} conectada fora da Sui devnet", { wallet: state.wallet.walletName });
   });
   renderDashboard();
 }
@@ -667,26 +673,26 @@ function renderDashboard() {
 
   dashboard.innerHTML = `
     <article class="stat-card wallet-card">
-      <span>Wallet conectada</span>
+      <span>${t("Wallet conectada")}</span>
       <strong>${escapeHtml(shortAddress(state.wallet.address))}</strong>
-      <a href="${escapeHtml(addressUrl)}" target="_blank" rel="noopener noreferrer">Abrir no explorer <span aria-hidden="true">&nearr;</span></a>
+      <a href="${escapeHtml(addressUrl)}" target="_blank" rel="noopener noreferrer">${t("Abrir no explorer")} <span aria-hidden="true">&nearr;</span></a>
     </article>
-    <article class="stat-card"><span>Apoio assinado</span><strong>${formatSui(totalAmount)}</strong><small>Historico local confirmado por digest</small></article>
-    <article class="stat-card"><span>Allocation Points</span><strong>${totalPoints.toLocaleString("pt-BR")}</strong><small>Somente transacoes assinadas nesta wallet</small></article>
-    <article class="stat-card"><span>Projetos apoiados</span><strong>${uniqueProjects}</strong><small>NFTs dependem da emissao on-chain do contrato</small></article>
+    <article class="stat-card"><span>${t("Apoio assinado")}</span><strong>${formatSui(totalAmount)}</strong><small>${t("Historico local confirmado por digest")}</small></article>
+    <article class="stat-card"><span>Allocation Points</span><strong>${totalPoints.toLocaleString(locale)}</strong><small>${t("Somente transacoes assinadas nesta wallet")}</small></article>
+    <article class="stat-card"><span>${t("Projetos apoiados")}</span><strong>${uniqueProjects}</strong><small>${t("NFTs dependem da emissao on-chain do contrato")}</small></article>
   `;
 
   const supportList = document.querySelector("#supportList");
   supportList.innerHTML = ownSupports.length
     ? ownSupports.map(renderSignedSupport).join("")
-    : emptyState("Nenhum apoio assinado nesta wallet", "Explore o marketplace e escolha um projeto configurado para a Sui devnet.", '<a class="primary-action compact" href="/projects" data-route>Explorar projetos</a>');
+    : emptyState(t("Nenhum apoio assinado nesta wallet"), t("Explore o marketplace e escolha um projeto configurado para a Sui devnet."), `<a class="primary-action compact" href="${routePath('/projects')}" data-route>${t("Explorar projetos")}</a>`);
 }
 
 function renderSignedSupport(support) {
   const explorerUrl = explorerTransaction(encodeURIComponent(support.digest));
   return `
     <article class="support-row">
-      <div><span>${escapeHtml(formatDate(support.createdAt))}</span><h3>${escapeHtml(support.projectName)}</h3><p>${escapeHtml(support.tierName)} · ${positiveNumber(support.points).toLocaleString("pt-BR")} Allocation Points</p></div>
+      <div><span>${escapeHtml(formatDate(support.createdAt))}</span><h3>${escapeHtml(support.projectName)}</h3><p>${escapeHtml(support.tierName)} · ${positiveNumber(support.points).toLocaleString(locale)} Allocation Points</p></div>
       <strong>${formatSui(support.amount)}</strong>
       <a class="text-action" href="${escapeHtml(explorerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(formatHash(support.digest))} <span aria-hidden="true">&nearr;</span></a>
     </article>
@@ -732,7 +738,7 @@ function normalizeTier(tier) {
 }
 
 function parseRoute(pathname) {
-  const path = String(pathname || "/").replace(/\/+$/, "") || "/";
+  const path = String(pathname || "/").replace(/^\/en(?=\/|$)/, "").replace(/\/index\.html$/, "/").replace(/\/+$/, "") || "/";
   if (path === "/") return { view: "home", nav: "" };
   if (path === "/projects") return { view: "projects", nav: "projects" };
   if (path === "/method") return { view: "method", nav: "method" };
@@ -747,7 +753,7 @@ function parseRoute(pathname) {
     }
     return { view: "project", nav: "projects", slug };
   }
-  return { view: "home", nav: "" };
+  return { view: "not-found", nav: "" };
 }
 
 function navigateTo(href) {
@@ -767,48 +773,29 @@ function shouldHandleRouteClick(event, link) {
 function applyMarketplaceQuery() {
   const biome = new URLSearchParams(window.location.search).get("biome");
   const validBiomes = new Set(state.projects.map((project) => project.biome));
-  state.filter = biome && validBiomes.has(biome) ? biome : "Todos";
+  const candidate = biome && (validBiomes.has(biome) ? biome : translatedFilter(biome));
+  state.filter = candidate && validBiomes.has(candidate) ? candidate : t("Todos");
   renderMarketplace();
 }
 
 function updateMarketplaceUrl() {
   if (parseRoute(window.location.pathname).view !== "projects") return;
   const url = new URL(window.location.href);
-  if (state.filter === "Todos") url.searchParams.delete("biome");
+  if (state.filter === t("Todos")) url.searchParams.delete("biome");
   else url.searchParams.set("biome", state.filter);
   window.history.replaceState({}, "", `${url.pathname}${url.search}`);
 }
 
 function updateDocumentMetadata(route) {
-  const descriptions = {
-    home: "Conheca a Leafora: apoio direto a projetos de regeneracao, acompanhamento transparente e uma nova economia para a natureza.",
-    projects: "Explore projetos ecologicos selecionados, suas metas, impactos e evidencias publicas na Leafora.",
-    method: "Conheca a infraestrutura de verificacao e prova de campo da Leafora.",
-    roadmap: "Da etapa de apoio em devnet ao Leafora Capture, verificacao, selos, creditos certificados e um futuro mercado de ativos ambientais.",
-    dashboard: "Acompanhe os apoios e registros associados a sua Sui wallet na Leafora."
-  };
   const project = route.view === "project" ? state.projects.find((item) => item.id === route.slug) : null;
-  const titles = {
-    home: "Leafora | Apoie a regeneracao",
-    projects: "Projetos | Leafora",
-    method: "Como funciona | Leafora",
-    roadmap: "Roadmap | Leafora",
-    dashboard: "Dashboard | Leafora"
-  };
-  document.title = project ? `${project.name} | Leafora` : titles[route.view] || titles.home;
-  const description = document.querySelector('meta[name="description"]');
-  if (description) description.content = project?.objective || descriptions[route.view] || descriptions.home;
+  updateSeo(route, project, state.catalogLoaded);
 }
 
 function projectSorter(sort) {
   if (sort === "progress") return (a, b) => projectProgress(b) - projectProgress(a);
   if (sort === "goal") return (a, b) => positiveNumber(b.goalSui) - positiveNumber(a.goalSui);
-  if (sort === "name") return (a, b) => a.name.localeCompare(b.name, "pt-BR");
+  if (sort === "name") return (a, b) => a.name.localeCompare(b.name, locale);
   return () => 0;
-}
-
-function totalRaised() {
-  return state.projects.reduce((sum, project) => sum + positiveNumber(project.raisedSui), 0);
 }
 
 function totalEvidence() {
@@ -840,14 +827,14 @@ function setSupportStatus(message, statusClass) {
 
 function setSupportBusy(busy) {
   confirmSupport.disabled = busy;
-  confirmSupport.textContent = busy ? "Aguardando wallet..." : "Assinar na devnet";
+  confirmSupport.textContent = busy ? t("Aguardando wallet...") : t("Assinar na devnet");
   tierOptions.querySelectorAll("input").forEach((input) => { input.disabled = busy; });
 }
 
 function publicReadinessMessage(project) {
   return getDevnetReadiness(project).ready
-    ? "Projeto pronto para assinatura na Sui devnet."
-    : "A assinatura on-chain deste projeto ainda esta em configuracao na devnet.";
+    ? t("Projeto pronto para assinatura na Sui devnet.")
+    : t("A assinatura on-chain deste projeto ainda esta em configuracao na devnet.");
 }
 
 function resetSupportDialog() {

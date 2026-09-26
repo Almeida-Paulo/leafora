@@ -1,3 +1,5 @@
+import { t } from "./i18n.js";
+
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 document.querySelectorAll("[data-nature-art]").forEach(mountNatureArt);
@@ -55,7 +57,7 @@ function mountNatureArt(figure) {
   function sync() {
     const moving = visible && !paused && !reducedMotion.matches && !document.hidden;
     toggle.hidden = reducedMotion.matches;
-    const label = paused ? "Retomar anima\u00e7\u00e3o da folhagem" : "Pausar anima\u00e7\u00e3o da folhagem";
+    const label = paused ? t("Retomar animação da folhagem") : t("Pausar animação da folhagem");
     toggle.setAttribute("aria-label", label);
     toggle.title = label;
     toggle.querySelector("[data-art-play]").toggleAttribute("hidden", !paused);

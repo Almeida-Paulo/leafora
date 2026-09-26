@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Conheca a Leafora: apoio direto a projetos de regeneracao, acompanhamento transparente e uma nova economia para a natureza.">
+    <title>Leafora | Apoie a regeneracao</title>
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preload" href="/assets/fonts/manrope-latin-v20.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#app">Ir para o conte&uacute;do</a>
+    <header class="topbar" id="siteHeader">
+      <a class="brand" href="/" data-route aria-label="Leafora - pagina inicial">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M38.5 8.8c-10.4.7-20 4.9-25.4 11.1-5 5.7-5.2 13.6-.4 18.1 4.9 4.7 12.5 4 18-1.8 6-6.4 8.6-16.2 7.8-27.4Z"/><path d="M13.3 35.8c5.9-8.9 12.2-14.3 20.9-20.4"/><path d="M19 29.5c4 .3 7.5 1.1 10.7 2.5"/><path d="M22.9 24.8c-.5-3.4-.4-6.4.4-9.2"/></svg>
+        </span>
+        <span class="brand-copy">
+          <strong>Leafora</strong>
+          <small>Natureza conectada.</small>
+        </span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="primary-nav" id="primaryNav" aria-label="Navegacao principal">
+        <a href="/projects" data-route data-nav="projects">Projetos</a>
+        <a href="/method" data-route data-nav="method">Como funciona</a>
+        <a href="/roadmap" data-route data-nav="roadmap">Roadmap</a>
+        <a href="/dashboard" data-route data-nav="dashboard" data-wallet-only hidden>Meu portf&oacute;lio</a>
+        <button class="wallet-button nav-wallet" data-wallet-connect type="button">Conectar wallet</button>
+      </nav>
+
+      <div class="header-actions">
+        <nav class="language-switch" aria-label="Idioma">
+          <a href="/" data-language="pt-BR" lang="pt-BR" aria-label="Português">PT</a>
+          <a href="/en/" data-language="en" lang="en" aria-label="English">EN</a>
+        </nav>
+        <button class="wallet-button" data-wallet-connect type="button">Conectar wallet</button>
+      </div>
+    </header>
+
+    <main id="app" tabindex="-1">
+      <div class="view" data-view="home">
+        <section class="hero">
+          <img src="/assets/img/hero-proof.png" alt="Paisagem ecologica com linhas de prova e blockchain integradas ao campo">
+          <div class="hero-overlay"></div>
+          <div class="hero-copy">
+            <p class="eyebrow hero-label"><span aria-hidden="true"></span>Um novo ponto de partida para a natureza</p>
+            <h1>Leafora</h1>
+            <p class="hero-statement">O futuro &eacute; vivo.<br>E voc&ecirc; faz parte.</p>
+            <p>Apoie projetos de restauração ambiental e agricultura regenerativa com pequenos valores. Conheça as metas, acompanhe as etapas e consulte as evidências de cada projeto.</p>
+            <div class="actions">
+              <a class="primary-action" href="/projects" data-route>Explorar projetos <span aria-hidden="true">&nearr;</span></a>
+              <a class="secondary-action" href="/method" data-route>Como funciona</a>
+            </div>
+          </div>
+          <div class="hero-foot"><span>DA SUA CARTEIRA AO MUNDO REAL</span><a href="/#marketplace" data-route aria-label="Explorar projetos em destaque">Explore <span aria-hidden="true">&darr;</span></a><span>APOIO &middot; EVID&Ecirc;NCIA &middot; REGENERA&Ccedil;&Atilde;O</span></div>
+        </section>
+
+        <div class="platform-strip">
+          <p><span class="live-dot" aria-hidden="true"></span><strong>Estamos construindo em p&uacute;blico.</strong><span class="strip-divider" aria-hidden="true">/</span>Devnet &middot; testes sem dinheiro real</p>
+          <a href="/roadmap" data-route>Roadmap <span aria-hidden="true">&rarr;</span></a>
+        </div>
+
+        <section class="market-section" id="marketplace">
+          <div class="section-heading">
+            <div>
+              <h2>Projetos ecológicos<br>para apoiar e acompanhar.</h2>
+              <p class="section-lead">Compare a localização, a meta de captação e o impacto esperado. Abra um projeto para conhecer seu plano de execução e os registros publicados.</p>
+            </div>
+            <a class="text-action" href="/projects" data-route>Ver todos os projetos <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <div class="catalog-snapshot"><p id="catalogOrigin">Cat&aacute;logo de testes</p><div><span><b id="metricProjects">0</b> projetos</span><span><b id="metricRaised">—</b> de teste</span><span><b id="metricEvidence">0</b> registros no cat&aacute;logo</span></div></div>
+          <p class="currency-note catalog-funding-note" id="homeFundingNote"></p>
+          <div class="project-grid" id="featuredProjectGrid" role="region" aria-label="Projetos em destaque" tabindex="0" aria-live="polite"></div>
+        </section>
+
+        <section class="flow-section" aria-labelledby="flowTitle">
+          <div class="flow-intro">
+            <h2 id="flowTitle">Como apoiar um projeto na Leafora.</h2>
+            <p>A Leafora conecta pessoas que querem apoiar a regeneração a iniciativas com objetivos e etapas publicados. A proposta é permitir pequenos aportes diretos e tornar o acompanhamento acessível, sem depender apenas de relatórios resumidos.</p>
+            <a class="text-action" href="/method" data-route>Entenda o apoio <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <ol class="flow-list">
+            <li><span class="flow-icon" data-icon="map" aria-hidden="true"></span><div><strong>Conheça o projeto</strong><p>Veja onde será executado, o que pretende recuperar, quanto precisa captar e quais são os riscos.</p></div></li>
+            <li><span class="flow-icon" data-icon="wallet" aria-hidden="true"></span><div><strong>Escolha seu apoio</strong><p>Conecte sua carteira e confira o valor antes de assinar. O apoio está disponível apenas em projetos habilitados, com recursos de teste nesta fase.</p></div></li>
+            <li><span class="flow-icon" data-icon="scan" aria-hidden="true"></span><div><strong>Acompanhe a execução</strong><p>Consulte etapas, fotos e registros na página do projeto. Com a carteira conectada, acesse seu histórico de apoios e pontos de participação.</p></div></li>
+          </ol>
+        </section>
+
+        <section class="future-strip future-landscape" aria-labelledby="futureTitle">
+          <div class="future-inner">
+            <div class="future-copy"><h2 id="futureTitle">N&atilde;o termina<br>no primeiro apoio.</h2><p>Prova de campo. Selos verific&aacute;veis. Um mercado para a natureza. Um ecossistema, constru&iacute;do etapa por etapa.</p><a class="primary-action" href="/roadmap" data-route>Explorar o roadmap <span aria-hidden="true">&nearr;</span></a></div>
+            <figure class="nature-art" data-nature-art>
+              <canvas width="600" height="480" aria-hidden="true"></canvas>
+              <!-- Lucide pause/play icons. License: /assets/icons/LICENSE.txt. -->
+              <button class="art-toggle" type="button" aria-label="Pausar anima&ccedil;&atilde;o da folhagem" title="Pausar anima&ccedil;&atilde;o da folhagem" hidden>
+                <svg data-art-pause viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>
+                <svg data-art-play viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+              </button>
+            </figure>
+          </div>
+          <div class="ecosystem-links"><a href="/roadmap#capture" data-route><strong>Leafora Capture</strong><span class="ecosystem-description">A evid&ecirc;ncia nasce no campo.</span><i aria-hidden="true">&nearr;</i></a><a href="/roadmap#mercado" data-route><strong>Leafora Market</strong><span class="ecosystem-description">A natureza encontra seu mercado.</span><i aria-hidden="true">&nearr;</i></a></div>
+        </section>
+      </div>
+
+      <div class="view" data-view="projects" hidden>
+        <section class="page-intro marketplace-intro">
+          <div>
+            <p class="eyebrow">Leafora Marketplace</p>
+            <h1>Projetos para um planeta vivo.</h1>
+          </div>
+          <div class="market-summary" aria-label="Resumo do marketplace">
+            <span><strong id="marketProjectCount">0</strong> projetos</span>
+            <span><strong id="marketBiomeCount">0</strong> biomas</span>
+            <span><strong id="marketEvidenceCount">0</strong> evidencias</span>
+          </div>
+        </section>
+
+        <section class="catalog-section" aria-labelledby="catalogTitle">
+          <div class="catalog-toolbar">
+            <label class="search-field">
+              <span class="visually-hidden">Buscar projetos</span>
+              <input id="projectSearch" type="search" placeholder="Buscar por projeto, local, bioma ou impacto" autocomplete="off">
+            </label>
+            <label class="sort-field">
+              <span>Ordenar</span>
+              <select id="projectSort">
+                <option value="featured">Destaques</option>
+                <option value="progress">Mais avancados</option>
+                <option value="goal">Maior meta</option>
+                <option value="name">Nome</option>
+              </select>
+            </label>
+          </div>
+          <div class="catalog-meta">
+            <div class="filters" id="filters" aria-label="Filtrar por bioma"></div>
+            <p id="resultCount" aria-live="polite"></p>
+          </div>
+          <h2 class="visually-hidden" id="catalogTitle">Catalogo de projetos</h2>
+          <p class="currency-note catalog-funding-note" id="marketFundingNote"></p>
+          <div class="project-grid" id="projectGrid"></div>
+        </section>
+      </div>
+
+      <div class="view" data-view="project" hidden>
+        <div id="projectDetail" class="project-page" aria-live="polite"></div>
+      </div>
+
+      <div class="view" data-view="not-found" hidden>
+        <section class="not-found">
+          <h1>Página não encontrada</h1>
+          <p>Confira o endereço ou explore os projetos publicados.</p>
+          <a class="primary-action" href="/projects" data-route>Explorar projetos</a>
+        </section>
+      </div>
+
+      <div class="view" data-view="method" hidden>
+        <section class="page-intro method-intro">
+          <div>
+            <p class="eyebrow">Apoio direto e acompanhamento público</p>
+            <h1>Como funciona a Leafora</h1>
+          </div>
+          <p>Uma plataforma para conhecer e apoiar projetos ecológicos: recuperação de nascentes e mata nativa, agricultura regenerativa, recuperação de pastagens e conservação da biodiversidade. Cada projeto reúne sua meta, plano de execução e evidências em uma página.</p>
+        </section>
+
+        <section class="method-stage" aria-labelledby="methodCurrentTitle">
+          <div class="method-label">
+            <span class="availability current">Devnet atual</span>
+            <h2 id="methodCurrentTitle">O que você pode fazer nesta etapa.</h2>
+          </div>
+          <div class="method-steps">
+            <article><span data-icon="map" aria-hidden="true"></span><h3>Comparar iniciativas</h3><p>Busque projetos por local, bioma ou impacto. Leia o objetivo, a meta de captação, as etapas previstas e os riscos. O catálogo identifica quando os dados são demonstrativos.</p></article>
+            <article><span data-icon="wallet" aria-hidden="true"></span><h3>Testar o apoio por carteira</h3><p>Em projetos habilitados, escolha uma faixa e confira a transação na carteira antes de assinar. Hoje usamos Sui devnet: os recursos são de teste e não representam um investimento com dinheiro real.</p></article>
+            <article><span data-icon="leaf" aria-hidden="true"></span><h3>Entender sua participação</h3><p>O contrato prevê NFTs de apoiador e Allocation Points, os pontos de participação. A emissão depende de uma transação efetiva. Eles não são créditos de carbono nem garantem lucro ou direitos financeiros nesta etapa.</p></article>
+            <article><span data-icon="scan" aria-hidden="true"></span><h3>Consultar etapas e registros</h3><p>A página de cada projeto reúne as evidências publicadas e o andamento das etapas. O portfólio mostra o histórico de apoios assinado neste navegador pela carteira conectada; não substitui uma consulta completa à blockchain.</p></article>
+          </div>
+        </section>
+
+        <section class="proof-section" aria-labelledby="proofTitle">
+          <div class="proof-copy">
+            <p class="eyebrow">Pr&oacute;xima etapa &middot; Leafora Capture</p>
+            <h2 id="proofTitle">Como vamos documentar a execução no campo.</h2>
+            <p>O Leafora Capture será um aplicativo para operadores autorizados registrarem fotos e vídeos, localização geográfica, precisão do GPS e data da captura. Cada evidência será vinculada a um projeto e a uma etapa, com assinatura e hash, uma identificação digital que permite detectar alterações.</p>
+            <p>A mídia ficará fora da blockchain, com controle de acesso e retenção. O registro na blockchain permitirá conferir sua integridade, mas não provará sozinho que uma foto, coordenada ou declaração é verdadeira. A análise de campo, a revisão humana e a auditoria continuam necessárias.</p>
+            <a class="text-action" href="/roadmap#capture" data-route>Conhe&ccedil;a o aplicativo <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <dl class="proof-ledger">
+            <div><dt>Captura</dt><dd>Foto ou video produzido dentro do aplicativo autorizado.</dd></div>
+            <div><dt>Contexto</dt><dd>Projeto, milestone, coordenadas e data de captura.</dd></div>
+            <div><dt>Integridade</dt><dd>Hash do arquivo, hash dos metadados e assinatura do dispositivo.</dd></div>
+            <div><dt>Revisao</dt><dd>Status publico definido por curadoria e validadores autorizados.</dd></div>
+            <div><dt>Ancoragem</dt><dd>Referencia on-chain que preserva a trilha de auditoria.</dd></div>
+          </dl>
+        </section>
+
+        <section class="future-strip compact-future">
+          <div class="future-inner"><div><p class="eyebrow">A vis&atilde;o completa</p><h2>Do primeiro apoio ao mercado ambiental.</h2><p>Aplicativo, verifica&ccedil;&atilde;o, selos e cr&eacute;ditos t&ecirc;m etapas pr&oacute;prias no nosso roadmap.</p></div><a class="primary-action" href="/roadmap" data-route>Ver o roadmap <span aria-hidden="true">&nearr;</span></a></div>
+        </section>
+      </div>
+
+      <div class="view" data-view="roadmap" hidden>
+        <section class="roadmap-hero">
+          <div class="roadmap-hero-inner">
+            <p class="eyebrow">Leafora / O que estamos construindo</p>
+            <h1>Roadmap</h1>
+          </div>
+          <div class="roadmap-lead"><p>Do apoio aos projetos ao mercado de ativos ambientais.</p><span>Começamos pelo catálogo e pelo apoio em rede de testes. Depois vêm o aplicativo de campo, a verificação, os selos e a preparação para créditos e negociação. Cada etapa abaixo explica o que será entregue e o que precisa ser validado antes de avançar.</span><div class="roadmap-caption"><span class="live-dot" aria-hidden="true"></span>Agora: testes em Sui devnet</div></div>
+        </section>
+
+        <nav class="roadmap-nav" aria-label="Etapas do roadmap">
+          <a href="/roadmap#apoio" data-route data-phase-link="apoio" aria-controls="apoio"><span>01 <i aria-hidden="true">&nearr;</i></span><strong>Apoio</strong><small>Em testes</small></a>
+          <a href="/roadmap#capture" data-route data-phase-link="capture" aria-controls="capture"><span>02 <i aria-hidden="true">&nearr;</i></span><strong>Capture</strong><small>Pr&oacute;xima etapa</small></a>
+          <a href="/roadmap#verificacao" data-route data-phase-link="verificacao" aria-controls="verificacao"><span>03 <i aria-hidden="true">&nearr;</i></span><strong>Verifica&ccedil;&atilde;o</strong><small>Planejada</small></a>
+          <a href="/roadmap#selos" data-route data-phase-link="selos" aria-controls="selos"><span>04 <i aria-hidden="true">&nearr;</i></span><strong>Selos</strong><small>Planejada</small></a>
+          <a href="/roadmap#creditos" data-route data-phase-link="creditos" aria-controls="creditos"><span>05 <i aria-hidden="true">&nearr;</i></span><strong>Cr&eacute;ditos</strong><small>Planejada</small></a>
+          <a href="/roadmap#mercado" data-route data-phase-link="mercado" aria-controls="mercado"><span>06 <i aria-hidden="true">&nearr;</i></span><strong>Mercado</strong><small>Vis&atilde;o futura</small></a>
+        </nav>
+
+        <p class="roadmap-context">Etapas futuras sujeitas a valida&ccedil;&atilde;o, recursos e requisitos regulat&oacute;rios. Sem datas de lan&ccedil;amento confirmadas.</p>
+
+        <section class="roadmap-phase phase-support" id="apoio" aria-labelledby="phaseSupportTitle">
+          <div class="phase-inner">
+            <div class="phase-heading"><span class="phase-number">01</span><div><span class="phase-status status-now">Etapa atual &middot; Devnet</span><h2 id="phaseSupportTitle">Apoiar &eacute; o ponto de partida.</h2><p>Um lugar para conhecer projetos ecol&oacute;gicos, escolher uma causa e acompanhar o destino do apoio.</p></div></div>
+            <div class="phase-body two-columns">
+              <div><ul class="feature-list"><li>Projetos selecionados, com localiza&ccedil;&atilde;o, metas, etapas e uso dos recursos.</li><li>Apoio direto por carteira, com faixas acess&iacute;veis nas iniciativas habilitadas.</li><li>Portf&oacute;lio do apoiador, NFTs e Allocation Points no fluxo de testes.</li></ul><p class="phase-note">Apoios atuais usam SUI de teste. A assinatura depende da configura&ccedil;&atilde;o de cada projeto; n&atilde;o h&aacute; promessa de retorno financeiro.</p><a class="text-action" href="/projects" data-route>Explorar o marketplace <span aria-hidden="true">&nearr;</span></a></div>
+              <figure class="support-preview"><img src="/assets/img/project-spring.png" alt="Ilustracao de um projeto de recuperacao de nascentes" loading="lazy"><div class="support-preview-label"><span>PROJETO ILUSTRATIVO / MATA ATL&Acirc;NTICA</span><strong>Um apoio.<br>Novas ra&iacute;zes.</strong><a href="/projects" data-route>Explore o cat&aacute;logo <span aria-hidden="true">&nearr;</span></a></div><figcaption>Cat&aacute;logo em devnet &middot; sem valor financeiro real</figcaption></figure>
+            </div>
+          </div>
+        </section>
+
+        <section class="roadmap-phase phase-capture" id="capture" aria-labelledby="phaseCaptureTitle" hidden>
+          <div class="phase-inner">
+            <div class="phase-heading"><span class="phase-number">02</span><div><span class="phase-status status-next">Pr&oacute;xima etapa &middot; Planejada</span><h2 id="phaseCaptureTitle">Leafora Capture</h2><p>A hist&oacute;ria do projeto come&ccedil;a no campo.<br>A evid&ecirc;ncia tamb&eacute;m.</p></div></div>
+            <div class="phase-body capture-layout">
+              <div class="capture-copy"><p>Um aplicativo para operadores autorizados registrarem o que acontece, onde acontece e quando acontece. Primeiro no Android; iOS em uma etapa posterior.</p><dl class="capture-features"><div><dt>Origem</dt><dd>Foto e v&iacute;deo capturados no app, vinculados a projeto, etapa e operador.</dd></div><div><dt>Contexto</dt><dd>Coordenadas, precis&atilde;o do GPS, data e hora da captura. O momento da ancoragem fica registrado separadamente.</dd></div><div><dt>Integridade</dt><dd>Hashes e assinaturas para detectar altera&ccedil;&otilde;es. M&iacute;dia fora da blockchain, registro verific&aacute;vel na Sui.</dd></div><div><dt>Continuidade</dt><dd>Fila offline protegida, sincroniza&ccedil;&atilde;o e controle de registros duplicados.</dd></div></dl><p class="phase-note">A captura sustenta a prova. Revis&atilde;o humana e verifica&ccedil;&atilde;o independente continuam fazendo parte da confian&ccedil;a.</p></div>
+              <figure class="capture-preview">
+                <div class="preview-tabs" role="tablist" aria-label="Previa do Leafora Capture">
+                  <button type="button" role="tab" id="tab-projects" aria-controls="preview-projects" aria-selected="false" tabindex="-1" data-preview-tab="projects">Projetos</button>
+                  <button type="button" role="tab" id="tab-camera" aria-controls="preview-camera" aria-selected="true" data-preview-tab="camera">Captura</button>
+                  <button type="button" role="tab" id="tab-record" aria-controls="preview-record" aria-selected="false" tabindex="-1" data-preview-tab="record">Registro</button>
+                </div>
+                <div class="capture-phone">
+                  <div class="phone-top" aria-hidden="true"><span>09:41</span><span class="phone-speaker"></span><span>LTE &nbsp; 82%</span></div>
+                  <div class="phone-appbar"><span class="phone-logo">L</span><strong>Leafora <span>Capture</span></strong><span class="phone-profile">LF</span></div>
+                  <div class="phone-screen" id="preview-projects" role="tabpanel" aria-labelledby="tab-projects" tabindex="0" hidden>
+                    <div class="phone-section-heading"><small>EQUIPE LEAFORA</small><h3>Meus projetos</h3><p>Atividades de campo autorizadas</p></div>
+                    <div class="phone-project"><img src="/assets/img/project-spring.png" alt="" loading="lazy"><div><strong>Guardi&otilde;es da Nascente</strong><small>Mata Atl&acirc;ntica &middot; MG</small><span>Registro de plantio</span></div></div>
+                    <div class="phone-project"><img src="/assets/img/project-cerrado.png" alt="" loading="lazy"><div><strong>Agrofloresta do Cerrado</strong><small>Cerrado &middot; GO</small><span>Acompanhamento do solo</span></div></div>
+                    <div class="phone-task"><small>PR&Oacute;XIMA ATIVIDADE</small><strong>Documentar a &aacute;rea restaurada</strong><p>Talh&atilde;o 01 &middot; Fotografias de acompanhamento</p></div>
+                    <p class="phone-quiet">Acesso concedido pela curadoria.</p>
+                  </div>
+                  <div class="phone-screen" id="preview-camera" role="tabpanel" aria-labelledby="tab-camera" tabindex="0">
+                    <div class="phone-camera"><img src="/assets/img/project-spring.png" alt="Previa ilustrativa da camera em uma area de restauracao" loading="lazy"><div class="camera-topline"><span>Guardi&otilde;es da Nascente</span><span>FOTO</span></div><span class="camera-reticle" aria-hidden="true"></span><div class="camera-context"><span>LOCALIZA&Ccedil;&Atilde;O &middot; EXEMPLO</span><strong>22.4000&deg; S &nbsp; 44.8000&deg; O</strong><small>Precis&atilde;o: 5 m &middot; 24 set 2026, 09:41</small></div></div>
+                    <div class="camera-bottom"><span>Talh&atilde;o 01<br><strong>Registro de plantio</strong></span><span class="camera-shutter" aria-hidden="true"></span><span>GPS<br><strong>Dispon&iacute;vel</strong></span></div>
+                    <p class="phone-quiet">Projeto e etapa vinculados &agrave; captura.</p>
+                  </div>
+                  <div class="phone-screen" id="preview-record" role="tabpanel" aria-labelledby="tab-record" tabindex="0" hidden>
+                    <div class="phone-section-heading"><small>EVID&Ecirc;NCIA DE CAMPO</small><h3>Registro preparado</h3><p>Guardi&otilde;es da Nascente</p></div>
+                    <img class="phone-record-photo" src="/assets/img/project-spring.png" alt="Registro ilustrativo de uma nascente" loading="lazy">
+                    <dl class="phone-record-data"><div><dt>Captura</dt><dd>24 set 2026 &middot; 09:41</dd></div><div><dt>Localiza&ccedil;&atilde;o</dt><dd>Vinculada &middot; precis&atilde;o 5 m</dd></div><div><dt>Hash ilustrativo</dt><dd><code>b83f...a91c</code></dd></div><div><dt>Ancoragem Sui</dt><dd>Pendente</dd></div></dl>
+                    <div class="phone-sync"><span class="live-dot" aria-hidden="true"></span>Aguardando sincroniza&ccedil;&atilde;o</div>
+                  </div>
+                  <div class="phone-bottom" aria-hidden="true"></div>
+                </div>
+                <figcaption>Conceito do aplicativo &middot; dados ilustrativos<br>Lan&ccedil;amento planejado</figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <section class="roadmap-phase phase-verification" id="verificacao" aria-labelledby="phaseVerificationTitle" hidden>
+          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">03</span><div><span class="phase-status">Planejada</span><h2 id="phaseVerificationTitle">Mais projetos. Mais confian&ccedil;a.</h2><p>Expandir o acesso com crit&eacute;rios claros para quem executa, acompanha e verifica.</p></div></div>
+            <div class="phase-body verification-grid"><article><img src="/assets/img/project-cerrado.png" alt="" loading="lazy"><span class="feature-index">01 / PARTICIPA&Ccedil;&Atilde;O</span><h3>Criadores por convite</h3><p>Produtores, cooperativas e organiza&ccedil;&otilde;es poder&atilde;o propor projetos. A curadoria autoriza captura, publica&ccedil;&atilde;o e capta&ccedil;&atilde;o em etapas distintas.</p></article><article><img src="/assets/img/hero-proof.png" alt="" loading="lazy"><span class="feature-index">02 / MONITORAMENTO</span><h3>Campo, sat&eacute;lite e IA</h3><p>Comparar registros no tempo, localizar inconsist&ecirc;ncias e apoiar o monitoramento. Alertas automatizados seguem para revis&atilde;o humana.</p></article><article><img src="/assets/img/project-mangrove.png" alt="" loading="lazy"><span class="feature-index">03 / INTEGRIDADE</span><h3>Verifica&ccedil;&atilde;o independente</h3><p>Metodologias, auditores e relat&oacute;rios. Hist&oacute;rico de decis&otilde;es, contesta&ccedil;&otilde;es e suspens&otilde;es, sem apagar registros anteriores.</p></article></div>
+            <div class="phase-scope"><strong>Territ&oacute;rios de atua&ccedil;&atilde;o</strong><p>Agricultura regenerativa &middot; recupera&ccedil;&atilde;o de pastagens degradadas &middot; restaura&ccedil;&atilde;o de mata nativa &middot; &aacute;gua &middot; biodiversidade</p></div>
+          </div>
+        </section>
+
+        <section class="roadmap-phase phase-seals" id="selos" aria-labelledby="phaseSealsTitle" hidden>
+          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">04</span><div><span class="phase-status">Planejada</span><h2 id="phaseSealsTitle">Selos com um projeto por tr&aacute;s.</h2><p>Uma afirma&ccedil;&atilde;o ambiental precisa de um v&iacute;nculo que possa ser consultado.</p></div></div>
+            <div class="phase-body seal-layout"><div><p>Selos ambientais para empresas, lastreados documentalmente em projetos em opera&ccedil;&atilde;o e auditados. Cada selo dever&aacute; identificar o apoio, o per&iacute;odo e o resultado que sustenta a declara&ccedil;&atilde;o.</p><ul class="feature-list"><li>Identificador digital ou NFT vinculado ao projeto e &agrave; empresa.</li><li>P&aacute;gina p&uacute;blica de comprova&ccedil;&atilde;o, acess&iacute;vel por QR code.</li><li>Escopo, evid&ecirc;ncias, respons&aacute;vel pela verifica&ccedil;&atilde;o e validade.</li><li>Renova&ccedil;&atilde;o, suspens&atilde;o e revoga&ccedil;&atilde;o com hist&oacute;rico.</li></ul><p class="phase-note">O selo comprovar&aacute; uma declara&ccedil;&atilde;o espec&iacute;fica. Apoiar um projeto n&atilde;o significa, por si s&oacute;, compensar emiss&otilde;es ou ser uma empresa carbono neutro.</p></div>
+              <figure class="seal-preview"><div class="seal-stamp"><span>LEAFORA</span><strong>Apoio<br>verific&aacute;vel.</strong><span>PROJETO &middot; EVID&Ecirc;NCIA &middot; IMPACTO</span></div><div class="seal-caption"><span>PREVIA DE SELO</span><strong>Uma marca. Uma trilha de comprova&ccedil;&atilde;o.</strong><p>Projeto vinculado &middot; auditoria &middot; validade</p></div><figcaption>Conceito visual &middot; n&atilde;o &eacute; uma certifica&ccedil;&atilde;o emitida</figcaption></figure>
+            </div>
+          </div>
+        </section>
+
+        <section class="roadmap-phase phase-credits" id="creditos" aria-labelledby="phaseCreditsTitle" hidden>
+          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">05</span><div><span class="phase-status">Planejada</span><h2 id="phaseCreditsTitle">Impacto medido. Cr&eacute;ditos rastre&aacute;veis.</h2><p>Conectar projetos eleg&iacute;veis &agrave;s metodologias e aos programas de certifica&ccedil;&atilde;o aplic&aacute;veis.</p></div></div>
+            <div class="phase-body two-columns"><div><p>Preparar os dados de campo para mensura&ccedil;&atilde;o, relato e verifica&ccedil;&atilde;o. A emiss&atilde;o de cr&eacute;ditos depende da comprova&ccedil;&atilde;o do resultado e das regras do programa escolhido.</p><ul class="feature-list"><li>Linha de base, adicionalidade, perman&ecirc;ncia e risco de deslocamento de emiss&otilde;es.</li><li>Origem, metodologia, per&iacute;odo, lote e n&uacute;meros de s&eacute;rie rastre&aacute;veis.</li><li>Concilia&ccedil;&atilde;o com o registro emissor para prevenir duplicidade.</li></ul></div><div class="credit-passport"><div class="passport-heading"><span>PASSAPORTE DO ATIVO</span><span>Estrutura planejada</span></div><dl><div><dt>Origem</dt><dd>Projeto + registro emissor</dd></div><div><dt>Qualidade</dt><dd>Metodologia + verifica&ccedil;&atilde;o</dd></div><div><dt>Identidade</dt><dd>Lote + per&iacute;odo + n&uacute;mero de s&eacute;rie</dd></div><div><dt>Ciclo de vida</dt><dd>Emiss&atilde;o &rarr; transfer&ecirc;ncia &rarr; aposentadoria</dd></div></dl></div></div>
+            <div class="standards-note"><strong>Refer&ecirc;ncias t&eacute;cnicas</strong><p>GHG Protocol para contabiliza&ccedil;&atilde;o e relato; Verra VCS, Gold Standard e outros programas conforme o projeto. S&atilde;o refer&ecirc;ncias para estudo e adequa&ccedil;&atilde;o futura, sem afilia&ccedil;&atilde;o ou certifica&ccedil;&atilde;o impl&iacute;cita.</p></div>
+          </div>
+        </section>
+
+        <section class="roadmap-phase phase-market" id="mercado" aria-labelledby="phaseMarketTitle" hidden>
+          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">06</span><div><span class="phase-status">Vis&atilde;o de longo prazo</span><h2 id="phaseMarketTitle">Leafora Market</h2><p>Da origina&ccedil;&atilde;o dos projetos &agrave; negocia&ccedil;&atilde;o de ativos ambientais.</p></div></div>
+            <div class="phase-body"><div class="market-vision-copy"><p>Um mercado com experi&ecirc;ncia Web3 para comprar e vender cr&eacute;ditos de carbono e outros ativos ambientais eleg&iacute;veis. Origem, qualidade, ofertas e hist&oacute;rico em um mesmo lugar.</p><p>Direitos e participa&ccedil;&otilde;es em projetos tamb&eacute;m poder&atilde;o integrar a plataforma, conforme a estrutura jur&iacute;dica de cada oferta.</p></div>
+              <figure class="exchange-preview"><div class="exchange-top"><strong>Leafora <span>Market</span></strong><span class="concept-tag">Conceito &middot; n&atilde;o operacional</span></div><div class="exchange-categories"><span>Ativos ambientais</span><span>Ofertas</span><span>Portf&oacute;lio</span></div><div class="exchange-table-wrap"><table class="exchange-table"><caption class="visually-hidden">Categorias ilustrativas do futuro mercado, sem ofertas reais</caption><thead><tr><th>Ativo / categoria</th><th>Origem</th><th>Unidade</th><th>Disponibilidade</th></tr></thead><tbody><tr><td><span class="asset-monogram">CO<sub>2</sub></span><strong>Cr&eacute;ditos de carbono<small>Redu&ccedil;&atilde;o ou remo&ccedil;&atilde;o verificada</small></strong></td><td>Registro reconhecido</td><td>tCO<sub>2</sub>e</td><td><span class="market-pending">Planejada</span></td></tr><tr><td><span class="asset-monogram asset-bio">BIO</span><strong>Ativos de biodiversidade<small>Conforme metodologia aplic&aacute;vel</small></strong></td><td>Projeto verificado</td><td>A definir</td><td><span class="market-pending">Em estudo</span></td></tr><tr><td><span class="asset-monogram asset-project">PRJ</span><strong>Participa&ccedil;&otilde;es em projetos<small>Direitos definidos em contrato</small></strong></td><td>Oferta estruturada</td><td>Conforme oferta</td><td><span class="market-pending">Em estudo</span></td></tr></tbody></table></div><div class="exchange-bottom"><span><span class="live-dot" aria-hidden="true"></span>Rastreabilidade da origem &agrave; destina&ccedil;&atilde;o</span><span>Pr&eacute;via sem cota&ccedil;&otilde;es ou ordens reais</span></div><figcaption class="visually-hidden">Representacao visual de um produto futuro.</figcaption></figure>
+              <div class="market-capabilities"><div><span>01</span><h3>Negocia&ccedil;&atilde;o</h3><p>Compra, venda, cota&ccedil;&otilde;es, leil&otilde;es e negocia&ccedil;&atilde;o entre participantes.</p></div><div><span>02</span><h3>Liquida&ccedil;&atilde;o</h3><p>Regras de transfer&ecirc;ncia, titularidade e integra&ccedil;&atilde;o com registros.</p></div><div><span>03</span><h3>Aposentadoria</h3><p>Retirada definitiva do cr&eacute;dito de circula&ccedil;&atilde;o e comprovante da destina&ccedil;&atilde;o.</p></div></div>
+              <p class="phase-note">Ofertas com participa&ccedil;&atilde;o em resultados dependem de estrutura jur&iacute;dica, revis&atilde;o de seguran&ccedil;a e requisitos regulat&oacute;rios aplic&aacute;veis, inclusive CVM quando cab&iacute;vel. O planejamento n&atilde;o atribui direitos financeiros aos NFTs ou pontos atuais.</p>
+            </div>
+          </div>
+        </section>
+
+        <nav class="phase-pagination" aria-label="Continuar pelo roadmap"><a id="previousPhase" data-route hidden><span aria-hidden="true">&larr;</span> Etapa anterior</a><span id="phasePosition" aria-live="polite">01 / 06</span><a id="nextPhase" href="/roadmap#capture" data-route>Pr&oacute;xima: Capture <span aria-hidden="true">&rarr;</span></a></nav>
+        <section class="roadmap-faq" aria-labelledby="roadmapFaqTitle"><div><p class="eyebrow">Sem atalhos. Com clareza.</p><h2 id="roadmapFaqTitle">Antes do<br>pr&oacute;ximo passo.</h2></div><div class="faq-list"><details><summary>O que posso experimentar hoje?</summary><p>O cat&aacute;logo de projetos, suas p&aacute;ginas e a conex&atilde;o de carteira em Sui devnet. Apoios assinados dependem de cada projeto estar habilitado. Os recursos da rede de testes n&atilde;o t&ecirc;m valor financeiro real.</p></details><details><summary>O aplicativo j&aacute; est&aacute; dispon&iacute;vel?</summary><p>Ainda n&atilde;o. As telas nesta p&aacute;gina s&atilde;o pr&eacute;vias do conceito. O Leafora Capture est&aacute; planejado inicialmente para Android, com acesso concedido pela curadoria aos operadores de cada projeto.</p></details><details><summary>Um NFT de apoio &eacute; um cr&eacute;dito de carbono?</summary><p>N&atilde;o. NFT de apoio, Allocation Points, selo ambiental e cr&eacute;dito certificado t&ecirc;m finalidades e requisitos distintos. Um apoio n&atilde;o garante lucro, compensa&ccedil;&atilde;o de emiss&otilde;es ou cr&eacute;ditos futuros.</p></details><details><summary>Quando chegam as pr&oacute;ximas etapas?</summary><p>N&atilde;o h&aacute; datas confirmadas. Cada etapa depende de testes, projetos-piloto, recursos, parcerias e, quando necess&aacute;rio, auditorias e autoriza&ccedil;&otilde;es. O roadmap ser&aacute; atualizado conforme esses marcos forem atingidos.</p></details></div></section>
+        <section class="roadmap-closing"><p class="eyebrow">O futuro se constr&oacute;i no presente</p><h2>Comece por uma causa.</h2><a class="primary-action" href="/projects" data-route>Conhe&ccedil;a os projetos <span aria-hidden="true">&nearr;</span></a></section>
+      </div>
+
+      <div class="view" data-view="dashboard" hidden>
+        <section class="dashboard-shell">
+          <div class="section-heading dashboard-heading">
+            <div>
+              <p class="eyebrow">Area do apoiador</p>
+              <h1>Seu portfolio Leafora</h1>
+              <p class="section-lead">Apoios, NFTs e registros associados a wallet conectada.</p>
+            </div>
+            <span class="network-pill large"><i aria-hidden="true"></i>Sui Devnet</span>
+          </div>
+
+          <div class="wallet-gate" id="walletGate">
+            <div>
+              <span class="gate-mark" aria-hidden="true">L</span>
+              <p class="eyebrow">Wallet necessaria</p>
+              <h2>Conecte sua wallet para acessar o dashboard.</h2>
+              <p>O conteudo pessoal nao aparece na area publica. A Leafora solicita apenas a conexao e as assinaturas necessarias para cada acao.</p>
+            </div>
+            <button class="primary-action" data-wallet-connect type="button">Conectar Sui wallet</button>
+          </div>
+
+          <div id="connectedDashboard" hidden>
+            <div class="dashboard-grid" id="dashboardGrid"></div>
+            <section class="activity-section" aria-labelledby="activityTitle">
+              <div class="section-heading compact-heading">
+                <div><p class="eyebrow">Atividade</p><h2 id="activityTitle">Apoios assinados</h2></div>
+              </div>
+              <div class="support-list" id="supportList"></div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <strong>Leafora</strong>
+        <p>Uma nova economia.<br>Um planeta vivo.</p>
+      </div>
+      <nav aria-label="Navegacao do rodape">
+        <a href="/projects" data-route>Projetos</a>
+        <a href="/method" data-route>Como funciona</a>
+        <a href="/roadmap" data-route>Roadmap</a>
+        <a href="/dashboard" data-route data-wallet-only hidden>Meu portf&oacute;lio</a>
+      </nav>
+      <p class="footer-copyright">© <span data-current-year>2026</span> Leafora. Todos os direitos reservados.</p>
+    </footer>
+
+    <dialog id="supportDialog" class="support-dialog">
+      <form method="dialog" class="dialog-panel">
+        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">&times;</button>
+        <p class="eyebrow">Apoiar projeto</p>
+        <h2 id="supportTitle">Projeto</h2>
+        <p id="supportMessage" class="dialog-description"></p>
+        <div id="tierOptions" class="tier-options"></div>
+        <label class="risk-check">
+          <input id="riskAccepted" type="checkbox">
+          <span>Entendo que este apoio nao garante retorno, lucro, credito de carbono ou resultado certificado.</span>
+        </label>
+        <p class="form-status" id="supportStatus" role="status" aria-live="polite"></p>
+        <menu class="dialog-actions">
+          <button class="secondary-action" value="cancel" type="submit">Cancelar</button>
+          <button class="primary-action" id="confirmSupport" value="default" type="button">Assinar na devnet</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="walletDialog" class="wallet-dialog">
+      <form method="dialog" class="dialog-panel">
+        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">&times;</button>
+        <div class="dialog-network"><span class="network-pill"><i aria-hidden="true"></i>Sui Devnet</span></div>
+        <h2>Conectar wallet</h2>
+        <p class="wallet-notice">Use somente uma wallet de teste. A Leafora nunca solicita seed phrase, chave privada ou transferencia direta de fundos.</p>
+        <label class="risk-check">
+          <input id="walletRiskAccepted" type="checkbox">
+          <span>Entendo que este ambiente e para testes, sem valor financeiro real e sem promessa de retorno.</span>
+        </label>
+        <div id="walletList" class="wallet-list"></div>
+        <p class="form-status" id="walletStatus" role="status" aria-live="polite"></p>
+      </form>
+    </dialog>
+
+    <script type="module" src="/assets/js/app.js"></script>
+    <script type="module" src="/assets/js/nature-art.js"></script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 import { leaforaConfig } from "./config.js";
+import { t } from "./i18n.js";
 
 const SUI_DEVNET_CHAIN = "sui:devnet";
 const SUI_SIGN_FEATURES = ["sui:signAndExecuteTransaction", "sui:signAndExecuteTransactionBlock"];
@@ -35,7 +36,7 @@ export async function listSuiWallets() {
 export async function connectSuiWallet(provider) {
   const selected = provider || (await listSuiWallets())[0];
   if (!selected) {
-    throw new Error("Nenhuma Sui wallet foi encontrada. Instale uma wallet Sui, desbloqueie a conta e selecione devnet.");
+    throw new Error(t("Nenhuma Sui wallet foi encontrada. Instale uma wallet Sui, desbloqueie a conta e selecione devnet."));
   }
 
   if (selected.kind === "wallet-standard") {
@@ -46,7 +47,7 @@ export async function connectSuiWallet(provider) {
     await selected.wallet.requestPermissions();
     const accounts = await selected.wallet.getAccounts();
     const address = accounts?.[0] || "";
-    if (!address) throw new Error("Wallet Sui encontrada, mas nenhuma conta foi retornada.");
+    if (!address) throw new Error(t("Wallet Sui encontrada, mas nenhuma conta foi retornada."));
     return {
       kind: "legacy",
       wallet: selected.wallet,
@@ -59,20 +60,20 @@ export async function connectSuiWallet(provider) {
     };
   }
 
-  throw new Error("Tipo de wallet Sui nao suportado.");
+  throw new Error(t("Tipo de wallet Sui nao suportado."));
 }
 
 export async function supportOnDevnet({ walletSession, project, tier }) {
   if (!walletSession?.address) {
-    throw new Error("Conecte a wallet antes de apoiar.");
+    throw new Error(t("Conecte a wallet antes de apoiar."));
   }
 
   if (!walletSession.supportsDevnet) {
-    throw new Error("A wallet conectada nao esta em Sui devnet. Troque a rede na wallet e conecte novamente.");
+    throw new Error(t("A wallet conectada nao esta em Sui devnet. Troque a rede na wallet e conecte novamente."));
   }
 
   if (!walletSession.canSign) {
-    throw new Error("A wallet conectada nao expoe assinatura Sui compativel.");
+    throw new Error(t("A wallet conectada nao expoe assinatura Sui compativel."));
   }
 
   const readiness = getDevnetReadiness(project);
@@ -82,7 +83,7 @@ export async function supportOnDevnet({ walletSession, project, tier }) {
 
   const adapter = await loadSuiTransactionAdapter();
   if (!adapter?.supportProject) {
-    throw new Error("Adapter Sui nao encontrado. Vendorize o SDK oficial em apps/web/vendor/leafora-sui-sdk.js antes de assinar transacoes no browser.");
+    throw new Error(t("Adapter Sui nao encontrado. Vendorize o SDK oficial em apps/web/vendor/leafora-sui-sdk.js antes de assinar transacoes no browser."));
   }
 
   const result = await adapter.supportProject({
@@ -96,7 +97,7 @@ export async function supportOnDevnet({ walletSession, project, tier }) {
   });
 
   if (!result?.digest) {
-    throw new Error("A wallet retornou sucesso sem digest de transacao. Verifique o adapter Sui vendorizado.");
+    throw new Error(t("A wallet retornou sucesso sem digest de transacao. Verifique o adapter Sui vendorizado."));
   }
 
   return {
@@ -109,27 +110,27 @@ export function getDevnetReadiness(project) {
   if (!leaforaConfig.packageId) {
     return {
       ready: false,
-      message: "Contrato devnet ainda nao publicado. Publique o pacote Move e preencha packageId em apps/web/assets/js/config.js."
+      message: t("Contrato devnet ainda nao publicado. Publique o pacote Move e preencha packageId em apps/web/assets/js/config.js.")
     };
   }
 
   if (!project?.chain?.projectId || !project?.chain?.vaultId) {
     return {
       ready: false,
-      message: "Projeto ainda sem object IDs devnet. Crie o projeto on-chain e preencha projectId/vaultId em apps/web/assets/js/projects.js."
+      message: t("Projeto ainda sem object IDs devnet. Crie o projeto on-chain e preencha projectId/vaultId em apps/web/assets/js/projects.js.")
     };
   }
 
   if (!leaforaConfig.browserSigningEnabled) {
     return {
       ready: false,
-      message: "Assinatura no browser ainda desabilitada. Vendorize e revise o adapter Sui antes de habilitar browserSigningEnabled."
+      message: t("Assinatura no browser ainda desabilitada. Vendorize e revise o adapter Sui antes de habilitar browserSigningEnabled.")
     };
   }
 
   return {
     ready: true,
-    message: "Pronto para assinatura na Sui devnet. Confira a rede na wallet antes de confirmar."
+    message: t("Pronto para assinatura na Sui devnet. Confira a rede na wallet antes de confirmar.")
   };
 }
 
@@ -159,7 +160,7 @@ async function connectWalletStandard(provider) {
   const account = (result.accounts || wallet.accounts || []).find((item) => item.chains?.includes(SUI_DEVNET_CHAIN)) || result.accounts?.[0] || wallet.accounts?.[0];
 
   if (!account?.address) {
-    throw new Error("Wallet conectada, mas nenhuma conta Sui foi retornada.");
+    throw new Error(t("Wallet conectada, mas nenhuma conta Sui foi retornada."));
   }
 
   return {

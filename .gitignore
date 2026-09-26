@@ -28,6 +28,8 @@ apps/api/.env.*
 # Local deploy configuration
 infra/nginx/*.conf
 !infra/nginx/*.conf.example
+apps/web/robots.txt
+apps/web/sitemap.xml
 
 # Secrets, certificates and credentials
 *.pem
