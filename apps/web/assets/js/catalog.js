@@ -1,5 +1,4 @@
-import { projects as seedProjects } from "./projects.js";
-import { leaforaConfig } from "./config.js";
+import { api } from "./stellar-wallet.js";
 import { locale, routePath, t } from "./i18n.js";
 import { formatUsd, usdAmount } from "./funding.js";
 
@@ -11,29 +10,18 @@ const fallbackImages = {
 
 let catalogPromise = null;
 
-export function loadProjectCatalog() {
-  if (!catalogPromise) catalogPromise = fetchProjectCatalog();
+export function loadProjectCatalog(refresh = false) {
+  if (refresh || !catalogPromise) catalogPromise = fetchProjectCatalog().catch(error => {
+    catalogPromise = null;
+    throw error;
+  });
   return catalogPromise;
 }
 
 async function fetchProjectCatalog() {
-  try {
-    const response = await fetch("/api/projects", { headers: { Accept: "application/json" } });
-    if (!response.ok) return normalizeProjects(seedProjects);
-
-    const payload = await response.json();
-    if (!Array.isArray(payload)) return normalizeProjects(seedProjects);
-
-    const activeProjects = normalizeProjects(
-      payload
-        .filter((project) => project && project.status !== "archived")
-        .map(projectFromApi)
-    );
-
-    return activeProjects.length ? activeProjects : normalizeProjects(seedProjects);
-  } catch (_error) {
-    return normalizeProjects(seedProjects);
-  }
+  const payload = await api("/projects");
+  if (!Array.isArray(payload)) throw new Error("Invalid catalog response");
+  return normalizeProjects(payload.map(projectFromApi));
 }
 
 export async function loadProjectEvidence(project) {
@@ -54,13 +42,8 @@ export async function loadProjectEvidence(project) {
 
 export function renderProjectCard(project) {
   const progress = projectProgress(project);
-  const supportReady = Boolean(
-    project.tiers.length &&
-    leaforaConfig.packageId &&
-    leaforaConfig.browserSigningEnabled &&
-    project.chain?.projectId &&
-    project.chain?.vaultId
-  );
+  const supportReady = project.funding?.open === true;
+
 
   return `
     <article class="project-card">
@@ -76,7 +59,7 @@ export function renderProjectCard(project) {
           <span><strong>${formatUsd(project.fundingUsd?.raised)}</strong> ${t("captados")}</span>
           <span>${progress}%</span>
         </div>
-        <div class="progress" aria-label="${t("{progress}% da meta", { progress })}"><span style="width:${progress}%"></span></div>
+        <div class="progress" aria-label="${t("{progress}% da meta", { progress })}"><span style="width:${Math.min(progress, 100)}%"></span></div>
         <div class="project-card-footer">
           <span>${t("Meta")} ${formatUsd(project.fundingUsd?.goal)}</span>
           <div class="card-actions">
@@ -94,11 +77,9 @@ export function projectPath(projectId) {
 }
 
 export function projectProgress(project) {
-  const raised = project?.fromApi ? finiteNumber(project.raisedSui) : usdAmount(project?.fundingUsd?.raised);
-  const goal = project?.fromApi ? finiteNumber(project.goalSui) : usdAmount(project?.fundingUsd?.goal);
-  if (raised === null || goal === null) return 0;
-  if (goal <= 0) return 0;
-  return Math.min(100, Math.max(0, Math.round((raised / goal) * 100)));
+  const goal = BigInt(project.fundingUsd.goal);
+  if (goal <= 0n) throw new Error("Invalid project funding goal");
+  return Number(BigInt(project.fundingUsd.raised) * 100n / goal);
 }
 
 export function formatSui(value) {
@@ -248,48 +229,19 @@ function normalizeEvidence(items) {
 }
 
 function projectFromApi(project) {
+  const funding = project.funding;
+  if (!funding || !/^\d+$/.test(funding.goal_units) || BigInt(funding.goal_units) <= 0n ||
+      !/^\d+$/.test(funding.raised_units) || !Number.isSafeInteger(funding.deadline)) {
+    throw new Error("Invalid on-chain project data");
+  }
   return {
-    id: project.slug,
-    name: project.name,
-    category: project.category,
-    biome: project.biome,
-    location: project.location_label,
-    image: project.image_uri || imageForBiome(project.biome),
-    status: project.display_status || project.status,
-    goalSui: mistToSui(project.funding_goal_mist),
-    raisedSui: mistToSui(project.raised_mist),
-    supporters: 0,
-    impact: project.impact_summary,
-    objective: project.objective,
-    story: project.story,
-    risks: project.risks,
-    chain: {
-      projectId: textOr(project.sui_project_id, ""),
-      vaultId: textOr(project.sui_vault_id, "")
-    },
-    milestones: (project.milestones || [])
-      .filter(Boolean)
-      .sort((a, b) => finiteNumber(a.display_order) - finiteNumber(b.display_order))
-      .map((milestone) => [
-        milestone.title,
-        mistToSui(milestone.target_amount_mist),
-        milestone.status,
-        milestone.description
-      ]),
-    evidence: [],
-    tiers: (project.tiers || [])
-      .filter((tier) => tier?.is_active)
-      .sort((a, b) => finiteNumber(a.display_order) - finiteNumber(b.display_order))
-      .map((tier) => [
-        tier.slug,
-        tier.name,
-        mistToSui(tier.amount_mist),
-        Math.max(0, Math.trunc(finiteNumber(tier.allocation_points))),
-        Math.max(0, Math.trunc(finiteNumber(tier.chain_tier))),
-        textOr(tier.metadata_uri, ""),
-        textOr(tier.description, "")
-      ]),
-    fromApi: true
+    id: project.slug, name: project.name, category: project.category, biome: project.biome,
+    location: project.location_label, image: project.image_uri || imageForBiome(project.biome),
+    status: funding.open ? "active" : "closed", funding,
+    fundingUsd: { goal: funding.goal_units, raised: funding.raised_units },
+    supporters: funding.supporters, impact: project.impact_summary, objective: project.objective,
+    story: project.story, risks: project.risks, chain: { projectId: funding.id },
+    milestones: project.milestones || [], evidence: [], tiers: [], fromApi: true
   };
 }
 

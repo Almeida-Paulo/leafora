@@ -2,6 +2,7 @@
 
 import html
 import json
+import shutil
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -115,6 +116,8 @@ class Page(HTMLParser):
 
 
 def build():
+    for name in ("stellar-wallet.js", "money.js"):
+        shutil.copyfile(OUTPUT / "assets/js" / name, ROOT / "apps/admin/assets" / name)
     template = (SOURCE / "site.html").read_text(encoding="utf-8")
     for language in (0, 1):
         for view, page in PAGES.items():

@@ -13,6 +13,12 @@ class Settings:
     admin_token: str = getenv("LEAFORA_ADMIN_TOKEN", "")
     sui_rpc_url: str = getenv("LEAFORA_SUI_RPC_URL", "https://fullnode.devnet.sui.io:443")
     sui_network: str = getenv("LEAFORA_SUI_NETWORK", "devnet")
+    stellar_network: str = getenv("LEAFORA_STELLAR_NETWORK", "testnet")
+    stellar_rpc_url: str = getenv("LEAFORA_STELLAR_RPC_URL", "https://soroban-testnet.stellar.org")
+    stellar_contract: str = getenv("LEAFORA_STELLAR_CONTRACT", "")
+    stellar_admin: str = getenv("LEAFORA_STELLAR_ADMIN", "")
+    stellar_usdc_issuer: str = getenv("LEAFORA_STELLAR_USDC_ISSUER", "")
+    walletconnect_project_id: str = getenv("LEAFORA_WALLETCONNECT_PROJECT_ID", "")
 
     @cached_property
     def cors_origins(self) -> list[str]:

@@ -1,6 +1,13 @@
-# Leafora Sui Browser Adapter
+# Browser Wallet Dependencies
 
-This folder is intentionally empty in the repository.
+`stellar/` contains pinned Freighter and WalletConnect bundles used by the public
+USDC support flow. Versions, hashes and licenses are recorded in
+`docs/security/stellar-vendor.json`. No runtime SDK download or npm installation
+is required. `scripts/build_web.py` synchronizes the shared first-party wallet
+adapter into the administrator application; vendor copies are produced by
+`scripts/vendor_stellar.py`.
+
+## Legacy Sui Adapter
 
 Leafora does not use npm or pnpm. To enable real browser wallet signing, add a
 reviewed, pinned and hashed Sui SDK adapter here:

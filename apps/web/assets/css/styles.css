@@ -39,6 +39,48 @@
   font-family: "Manrope", Arial, sans-serif;
 }
 
+.amount-label { display: block; margin-bottom: 10px; font-size: 16px; font-weight: 650; }
+.amount-field { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line-dark); border-radius: 6px; padding: 12px 16px; }
+.amount-field > span { font-size: 24px; }
+.amount-field input { min-width: 0; width: 100%; border: 0; background: var(--paper); color: var(--ink); font-size: 24px; }
+.amount-field:focus-within { outline: 2px solid var(--brand-green); outline-offset: 2px; }
+.points-preview { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ap-icon { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--lime); color: var(--ink); font-size: 16px; vertical-align: middle; flex: 0 0 auto; }
+.allocation-table-wrap { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+.allocation-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 16px; }
+.allocation-table caption { text-align: left; padding: 16px 0; font-weight: 650; font-size: 18px; }
+.allocation-table th, .allocation-table td { padding: 16px 12px; border-bottom: 1px solid var(--line); }
+.allocation-table thead th { color: var(--muted); font-size: 14px; font-weight: 500; }
+.allocation-table td { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.allocation-table th a { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+.allocation-table img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; flex: 0 0 auto; }
+.allocation-note { margin: 24px 0; max-width: 76ch; font-size: 15px; color: var(--muted); }
+.pending-support { padding: 18px 0; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.pending-support p { flex-basis: 100%; margin: 0; }
+.support-dialog, .wallet-dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
+.dialog-panel { padding-bottom: max(24px, env(safe-area-inset-bottom)); }
+#dashboardGrid .stat-card strong { display: flex; align-items: center; gap: 8px; font-size: 28px; overflow-wrap: anywhere; }
+#dashboardGrid .stat-card .ap-icon { display: inline-grid; }
+#dashboardGrid .stat-card { min-width: 0; min-height: 140px; }
+#refreshPortfolio { display: block; padding: 8px 0; background: none; border: 0; color: var(--brand-green); cursor: pointer; font: inherit; text-align: left; }
+.view[data-view="dashboard"] .dashboard-heading h1 { font-size: 38px; line-height: 1.2; }
+[data-view="dashboard"] .section-heading h2 { font-size: 24px; }
+@media (max-width: 640px) {
+  #dashboardGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #dashboardGrid .stat-card { padding: 16px 12px; }
+  #dashboardGrid .stat-card strong { font-size: 22px; }
+  .allocation-table { table-layout: fixed; font-size: 14px; }
+  .allocation-table th, .allocation-table td { padding: 12px 4px; }
+  .allocation-table th:first-child { width: 52%; }
+  .allocation-table th:nth-child(2), .allocation-table td:nth-child(2) { display: none; }
+  .allocation-table th a { gap: 8px; }
+  .allocation-table img { width: 28px; height: 28px; }
+  .allocation-table .ap-icon { display: none; }
+  .allocation-table td { white-space: normal; overflow-wrap: anywhere; }
+  .view[data-view="dashboard"] .dashboard-heading h1 { font-size: 32px; }
+  .support-dialog, .wallet-dialog { width: calc(100% - 24px); }
+}
+
 *, *::before, *::after { box-sizing: border-box; letter-spacing: 0; }
 html { min-width: 320px; scroll-behavior: smooth; scroll-padding-top: 96px; background: var(--surface); }
 body {

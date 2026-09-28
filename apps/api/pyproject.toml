@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Leafora backend API for ecological projects, evidence registry, and Sui indexing."
 requires-python = ">=3.10"
 dependencies = [
+  "stellar-sdk==16.1.0",
   "alembic>=1.16,<2.0",
   "fastapi>=0.115,<1.0",
   "httpx>=0.28,<1.0",

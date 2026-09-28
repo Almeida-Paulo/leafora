@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from app.api.routes import evidence, health, projects, supports
+from app.api.routes import evidence, health, projects, supports, funding
 
 api_router = APIRouter()
+api_router.include_router(funding.router, prefix="/funding", tags=["funding"])
 api_router.include_router(health.router, tags=["health"])
 api_router.include_router(projects.router, prefix="/projects", tags=["projects"])
 api_router.include_router(evidence.router, tags=["evidence"])
 api_router.include_router(supports.router, tags=["supports"])
-

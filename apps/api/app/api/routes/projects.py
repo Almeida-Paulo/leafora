@@ -20,7 +20,7 @@ from app.schemas.project import (
 router = APIRouter()
 
 
-@router.get("", response_model=list[ProjectRead])
+@router.get("", response_model=list[ProjectRead], dependencies=[Depends(require_admin_token)])
 def list_projects(db: Session = Depends(get_db)) -> list[Project]:
     return list(
         db.scalars(
@@ -31,7 +31,7 @@ def list_projects(db: Session = Depends(get_db)) -> list[Project]:
     )
 
 
-@router.get("/{slug}", response_model=ProjectRead)
+@router.get("/{slug}", response_model=ProjectRead, dependencies=[Depends(require_admin_token)])
 def get_project(slug: str, db: Session = Depends(get_db)) -> Project:
     project = _get_project_by_slug(db, slug)
     if not project:
@@ -64,7 +64,17 @@ def update_project(
     if not project:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found.")
 
-    for key, value in payload.model_dump(exclude_unset=True).items():
+    from app.core.config import settings
+    from app.services.stellar import chain, EDITORIAL_FIELDS
+    updates = payload.model_dump(exclude_unset=True)
+    if settings.stellar_contract and any(key in EDITORIAL_FIELDS for key in updates):
+        with chain() as client:
+            if client.project(slug) is not None and any(
+                key in EDITORIAL_FIELDS and getattr(project, key) != value
+                for key, value in updates.items()
+            ):
+                raise HTTPException(409, "Published metadata is committed on-chain and cannot be overwritten.")
+    for key, value in updates.items():
         setattr(project, key, value)
 
     db.commit()

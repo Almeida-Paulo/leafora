@@ -31,7 +31,7 @@ Allowed by default:
 Allowed only with review:
 
 - official SDK bundles saved under `apps/web/vendor/`;
-- exact version pinned in filename;
+- exact version and file hashes pinned in the vendor manifest (stable local filenames are allowed with entrypoint SRI);
 - source URL documented;
 - SHA-256 hash documented;
 - entry recorded in `docs/security/vendor-manifest.md`;

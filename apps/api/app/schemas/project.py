@@ -95,7 +95,7 @@ class ProjectCreate(BaseModel):
     impact_summary: str
     story: str
     risks: str
-    funding_goal_mist: int
+    funding_goal_mist: int = 0
     metadata_uri: str = ""
     metadata_hash: str = ""
     tiers: list[ProjectTierCreate] = Field(default_factory=list)

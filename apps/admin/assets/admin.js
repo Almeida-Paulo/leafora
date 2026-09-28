@@ -1,3 +1,6 @@
+import { walletOptions, connectWallet, signIntent, api as fundingApi } from "./stellar-wallet.js";
+import { parseAmount, decimal } from "./money.js";
+let fundingWallet, fundingProviders = [], fundingBusy = false;
 const state = {
   projects: [],
   selected: null,
@@ -36,7 +39,6 @@ async function init() {
   els.adminToken.value = state.token;
   renderSessionStatus();
   bindEvents();
-  addTierRow();
   addMilestoneRow();
   await loadProjects();
 }
@@ -66,6 +68,18 @@ function bindEvents() {
   els.duplicateDemo.addEventListener("click", loadDemoStructure);
   els.projectForm.addEventListener("submit", onSaveProject);
   els.chainForm.addEventListener("submit", onSaveChainBinding);
+  document.getElementById("loadStellarWallets").addEventListener("click", async () => {
+    const status = document.getElementById("stellarPublishStatus");
+    try {
+      fundingProviders = await walletOptions();
+      const select = document.getElementById("stellarProvider");
+      select.replaceChildren(...fundingProviders.map((provider, i) => new Option(provider.name, String(i))));
+      status.textContent = fundingProviders.length ? "Escolha a carteira e publique o projeto salvo." : "Nenhuma carteira compatível disponível.";
+    } catch (error) { status.textContent = error.message; }
+  });
+  document.getElementById("stellarPublishForm").addEventListener("submit", publishStellar);
+  document.getElementById("pauseStellar").addEventListener("click", () => changeFundingPause(true));
+  document.getElementById("resumeStellar").addEventListener("click", () => changeFundingPause(false));
 }
 
 async function loadProjects() {
@@ -135,7 +149,7 @@ function fillProjectForm(project) {
     ...tier,
     amount_sui: mistToSui(tier.amount_mist)
   }));
-  if (!project.tiers?.length) addTierRow();
+
 
   els.milestoneRows.innerHTML = "";
   (project.milestones || []).forEach((milestone) => addMilestoneRow({
@@ -169,7 +183,6 @@ function resetEditor() {
   });
   els.tierRows.innerHTML = "";
   els.milestoneRows.innerHTML = "";
-  addTierRow();
   addMilestoneRow();
   els.chainForm.reset();
   els.chainSlug.textContent = "No project selected";
@@ -185,7 +198,7 @@ async function onSaveProject(event) {
     const form = new FormData(els.projectForm);
     const slug = String(form.get("slug")).trim();
     const payload = projectPayload(form);
-    const tiers = readTierRows();
+    const tiers = state.selected?.tiers || [];
     const milestones = readMilestoneRows();
 
     if (state.selected?.slug === slug) {
@@ -258,7 +271,7 @@ function projectPayload(form) {
     status: value(form, "status") || "draft",
     verification_level: Number(value(form, "verification_level") || 0),
     funding_goal_mist: suiToMistNumber(required(form, "funding_goal_sui")),
-    raised_mist: suiToMistNumber(value(form, "raised_sui") || "0"),
+
     metadata_uri: value(form, "metadata_uri"),
     metadata_hash: value(form, "metadata_hash")
   };
@@ -432,4 +445,45 @@ function escapeHtml(value) {
     '"': "&quot;",
     "'": "&#039;"
   }[char]));
+}
+
+async function publishStellar(event) {
+  event.preventDefault();
+  if (fundingBusy) return;
+  const fields = new FormData(event.target);
+  await manageFunding("publish", () => {
+    const amount = decimal(parseAmount(fields.get("goal")));
+    const deadline = Math.floor(new Date(fields.get("deadline")).getTime() / 1000);
+    if (!Number.isSafeInteger(deadline) || deadline <= Date.now() / 1000) throw new Error("Informe um prazo futuro.");
+    return { amount, deadline };
+  });
+}
+
+async function changeFundingPause(paused) {
+  if (fundingBusy) return;
+  await manageFunding("pause", () => ({ paused }));
+}
+
+async function manageFunding(action, payload) {
+  const status = document.getElementById("stellarPublishStatus");
+  const buttons = document.querySelectorAll("#stellarPublishForm button");
+  fundingBusy = true;
+  buttons.forEach(button => { button.disabled = true; });
+  try {
+    requireAdminToken();
+    if (!state.selected) throw new Error("Selecione e salve um projeto.");
+    const slug = state.selected.slug;
+    const fields = payload();
+    const provider = fundingProviders[Number(document.getElementById("stellarProvider").value)];
+    if (!provider) throw new Error("Clique em Conectar carteira primeiro.");
+    fundingWallet = await connectWallet(provider);
+    status.textContent = "Preparando transação...";
+    const intent = await request("/funding/projects/" + encodeURIComponent(slug) + "/" + action, {
+      method: "POST", body: JSON.stringify({ wallet: fundingWallet.address, ...fields })
+    });
+    const xdr = await signIntent(fundingWallet, intent);
+    const result = await fundingApi("/intents/" + intent.id + "/submit", { method: "POST", body: JSON.stringify({ xdr }) });
+    status.textContent = "Transação " + result.hash + ": " + result.status + ". O catálogo só muda após a confirmação na blockchain.";
+  } catch (error) { status.textContent = error.message; }
+  finally { fundingBusy = false; buttons.forEach(button => { button.disabled = false; }); }
 }

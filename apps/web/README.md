@@ -49,9 +49,14 @@ No automatic translation service receives project data.
 
 ## Funding Display
 
-Demonstration projects have explicit illustrative USD budgets, separate from
-their SUI test balances. There is no implicit SUI/USD exchange rate. API records
-without USD budgets show an unavailable amount, not a fabricated conversion.
-Wallet confirmation, contribution tiers and transaction history retain the
-actual test-token denomination. Display localization does not change contract
-arguments, token quantities or signing eligibility.
+The catalog reads `/api/funding/projects`, which verifies published projects and
+loads USDC goals, raised amounts, deadlines and supporter counts from Soroban.
+There is no demonstration fallback. Monetary values cross the API as seven-decimal
+integer strings and are formatted with BigInt. Missing or invalid goals fail
+validation; unavailable data is not interpreted as zero.
+
+The portfolio reads on-chain project positions and the wallet-wide AP total.
+Only pending signed envelopes are kept locally for recovery, never as balance
+authority. Contributions accept arbitrary positive USDC amounts; no NFT tier is
+required. The adapter supports desktop Freighter and WalletConnect mobile/QR
+signing. Real-wallet and real-chain acceptance tests remain deployment gates.

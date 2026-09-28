@@ -1,0 +1,52 @@
+{
+  "packages": [
+    {
+      "package": "@stellar/freighter-api",
+      "version": "6.0.1",
+      "url": "https://registry.npmjs.org/@stellar/freighter-api/-/freighter-api-6.0.1.tgz",
+      "archive_integrity": "sha512-eqwakEqSg+zoLuPpSbKyrX0pG8DQFzL/J5GtbfuMCmJI+h+oiC9pQ5C6QLc80xopZQKdGt8dUAFCmDMNdAG95w==",
+      "file": "freighter.js",
+      "sha256": "d797429cf97f9a67f1999910830a89dc01d565aedebafb651a11b1ed003a7e9d",
+      "sri": "sha384-PBwq0JVfqy16Z6jvKJPx93jpStXbwF2oWvsRTODkvE/3hOX5zmLvAuMiKgAaxe2b"
+    },
+    {
+      "package": "@walletconnect/sign-client",
+      "version": "2.25.0",
+      "url": "https://registry.npmjs.org/@walletconnect/sign-client/-/sign-client-2.25.0.tgz",
+      "archive_integrity": "sha512-oOnOZpaoMTjzPlj+PY530zBc0wLKMH1qkFStu+UbfZ162iPQcikE29QXb0bCKiKgqiRZUWacBmsQBdLpYFVhOg==",
+      "file": "walletconnect.js",
+      "sha256": "312677331bf95ca8df0eb4c896a812a9c4be639bf599f697a05766918d6c7ccf",
+      "sri": "sha384-bDeJAnEnmi9DHtwGefEaYR9IZ1ixRRx2yaV9hrKjyDuu9TmVSM2YkWDkzdG8h/hP"
+    },
+    {
+      "package": "@walletconnect/modal",
+      "version": "2.7.0",
+      "url": "https://registry.npmjs.org/@walletconnect/modal/-/modal-2.7.0.tgz",
+      "archive_integrity": "sha512-RQVt58oJ+rwqnPcIvRFeMGKuXb9qkgSmwz4noF8JZGUym3gUAzVs+uW2NQ1Owm9XOJAV+sANrtJ+VoVq1ftElw==",
+      "file": "walletconnect-modal.js",
+      "sha256": "70b541ca60f7ff0538a60d233e54471a14ae010297791170ac34b8034fc5b162",
+      "sri": "sha384-R+1EzoNZ9XYKrOjvTKD+PD/mufMsdhfv2EUbsqzmyjwrJxTuFfWllhvGbs1AS0tz"
+    }
+  ],
+  "license_sources": [
+    {
+      "file": "freighter-LICENSE.txt",
+      "source": "https://api.github.com/repos/stellar/freighter/git/blobs/957a4b87e66e817e645a894084a2fa4cfe63586c"
+    },
+    {
+      "file": "modal-LICENSE.txt",
+      "source": "https://api.github.com/repos/WalletConnect/modal/git/blobs/3a52ea2a8da95ad7f50db088bf73f48c953f5610"
+    }
+  ],
+  "files": {
+    "bundle-6897c25a.js": "f823bbab31e2de69902dc1c187d2b500b44d2505d3ad8268604f0dac18c37c92",
+    "bundle.js": "70b541ca60f7ff0538a60d233e54471a14ae010297791170ac34b8034fc5b162",
+    "freighter-LICENSE.txt": "f1d495312c6c33955d0242822f68923f3d6137a428734eb696a0dfe9c16ae323",
+    "freighter.js": "d797429cf97f9a67f1999910830a89dc01d565aedebafb651a11b1ed003a7e9d",
+    "index-2f182d7e.js": "23f008df288d56c02b0b59d6580f1e77b6ad9c6aed8bbd04b3b88d56a94f3133",
+    "modal-LICENSE.txt": "2a8022f0cd59b4d54dd6f1b87710579a0e300a43d47ef2e7d4f9b6e754567486",
+    "sign-client-LICENSE-0.txt": "1cb6f8cfe21f54ab1105105717eaa2ba08343037a2a9c41dfd5ab09e3ce270fc",
+    "walletconnect-modal.js": "70b541ca60f7ff0538a60d233e54471a14ae010297791170ac34b8034fc5b162",
+    "walletconnect.js": "312677331bf95ca8df0eb4c896a812a9c4be639bf599f697a05766918d6c7ccf"
+  }
+}

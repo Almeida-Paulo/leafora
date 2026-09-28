@@ -73,7 +73,7 @@
                 <input name="slug" required placeholder="nascente-mg">
               </label>
               <label>
-                Status
+                Status editorial (não altera a captação)
                 <select name="status">
                   <option value="draft">draft</option>
                   <option value="review">review</option>
@@ -112,8 +112,8 @@
                 <input name="location_label" required placeholder="Serra da Mantiqueira, MG">
               </label>
               <label>
-                Funding goal (SUI)
-                <input name="funding_goal_sui" inputmode="decimal" required placeholder="12500">
+
+                <input name="funding_goal_sui" type="hidden" value="0">
               </label>
               <label class="span-2">
                 Image URI
@@ -151,12 +151,12 @@
                 <input name="verification_level" type="number" min="0" step="1" value="0">
               </label>
               <label>
-                Raised override (SUI)
-                <input name="raised_sui" inputmode="decimal" placeholder="0">
+
+                <input name="raised_sui" type="hidden" value="0">
               </label>
             </div>
 
-            <section class="subsection">
+            <section class="subsection" hidden>
               <div class="heading-row">
                 <div>
                   <p class="eyebrow">Support tiers</p>
@@ -185,7 +185,7 @@
             <p class="status" id="projectStatus"></p>
           </form>
 
-          <form class="panel chain-form" id="chainForm">
+          <form class="panel chain-form" id="chainForm" hidden>
             <div class="heading-row" id="chain">
               <div>
                 <p class="eyebrow">Sui devnet</p>
@@ -213,6 +213,19 @@
             </div>
             <p class="status" id="chainStatus"></p>
           </form>
+          <form class="panel" id="stellarPublishForm">
+            <h2>Captação na Stellar</h2>
+            <p>Salve o projeto, defina a meta e o encerramento e assine com a carteira administradora. O contrato aceita novos apoios até esse prazo, inclusive acima da meta.</p>
+            <div class="grid two">
+              <label>Meta em USDC <input name="goal" inputmode="decimal" required placeholder="12500"></label>
+              <label>Encerramento (horário deste computador) <input name="deadline" type="datetime-local" required></label>
+            </div>
+            <label>Carteira <select id="stellarProvider"></select></label>
+            <div class="actions"><button class="ghost" id="loadStellarWallets" type="button">Conectar carteira</button><button class="primary" type="submit">Publicar e assinar</button></div>
+            <div class="actions"><button class="ghost" id="pauseStellar" type="button">Pausar apoios</button><button class="ghost" id="resumeStellar" type="button">Reabrir apoios</button></div>
+            <p>A pausa só entra em vigor após a confirmação na blockchain. Reabrir não prorroga o encerramento do projeto.</p>
+            <p id="stellarPublishStatus" class="status" role="status"></p>
+          </form>
         </section>
       </section>
     </main>
@@ -238,7 +251,7 @@
         <button class="remove-row" type="button" aria-label="Remove milestone">×</button>
         <div class="grid four">
           <label>Title <input data-field="title" required></label>
-          <label>Target SUI <input data-field="target_sui" inputmode="decimal" required></label>
+          <input data-field="target_sui" type="hidden" value="0">
           <label>Status <input data-field="status" value="planned"></label>
           <label>Order <input data-field="display_order" type="number" min="0" step="1" value="0"></label>
         </div>

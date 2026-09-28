@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from hmac import compare_digest
 
 from fastapi import Header, HTTPException, status
 from sqlalchemy.orm import Session
@@ -16,9 +17,8 @@ def get_db() -> Generator[Session, None, None]:
 
 
 def require_admin_token(x_admin_token: str = Header(default="")) -> None:
-    if not settings.admin_token or x_admin_token != settings.admin_token:
+    if not settings.admin_token or not compare_digest(x_admin_token, settings.admin_token):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid admin token.",
         )
-
