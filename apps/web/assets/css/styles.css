@@ -1070,6 +1070,9 @@ html[lang="en"] .phase-number::before { content: "STAGE / "; }
 .location { font-size: 15px; }
 .currency-note, .source-language { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; font-weight: 400; }
 .catalog-funding-note { margin: 0 0 22px; max-width: 850px; }
+.catalog-image-note, .image-provenance { color: var(--muted); font-size: 15px; line-height: 1.6; }
+.catalog-image-note { margin: 0 0 22px; }
+.image-provenance { margin: 8px 0 0; }
 .project-card-footer { align-items: flex-start; flex-wrap: wrap; gap: 12px; }
 .project-card-footer > span { font-size: 15px; }
 .funding-line { align-items: baseline; flex-wrap: wrap; }

@@ -297,6 +297,8 @@
   "Carregando projetos...": ["Carregando projetos...","Loading projects..."],
   "Carregando o projeto...": ["Carregando o projeto...","Loading project..."],
   "Nenhum projeto publicado": ["Nenhum projeto publicado","No published projects"],
+  "A localização é informada pela curadoria e as imagens atuais são ilustrativas. Os registros de campo aparecerão após a captura e a revisão das evidências.": ["A localização é informada pela curadoria e as imagens atuais são ilustrativas. Os registros de campo aparecerão após a captura e a revisão das evidências.","The location is provided by Leafora's curators, and current images are illustrative. Field records will appear after evidence is captured and reviewed."],
+  "Imagem ilustrativa; ainda não é um registro de campo do Leafora Capture.": ["Imagem ilustrativa; ainda não é um registro de campo do Leafora Capture.","Illustrative image; this is not yet a Leafora Capture field record."],
   "A curadoria ainda nao publicou projetos neste ambiente.": ["A curadoria ainda não publicou projetos neste ambiente.","Curators have not published any projects in this environment yet."],
   "Nenhum projeto encontrado": ["Nenhum projeto encontrado","No projects found"],
   "Altere a busca ou remova o filtro para consultar outras iniciativas.": ["Altere a busca ou remova o filtro para consultar outras iniciativas.","Change your search or remove a filter to discover other initiatives."],

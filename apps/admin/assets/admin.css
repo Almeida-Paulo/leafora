@@ -171,6 +171,12 @@ input:focus, textarea:focus, select:focus {
 }
 
 .subsection { display: grid; gap: 14px; padding-top: 6px; }
+.project-preview { display: grid; gap: 16px; }
+.preview-layout { display: grid; grid-template-columns: minmax(180px, 42%) minmax(0, 1fr); gap: 20px; align-items: start; }
+.preview-layout img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 4px; }
+.preview-layout img[hidden] { display: none; }
+.preview-layout p { margin: 0 0 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.preview-layout h3 { margin-bottom: 12px; }
 .rows { display: grid; gap: 12px; }
 .row-card { position: relative; display: grid; gap: 12px; padding: 16px; }
 .remove-row {
@@ -199,4 +205,5 @@ input:focus, textarea:focus, select:focus {
   nav { overflow-x: auto; }
   main { width: calc(100% - 28px); }
   .heading-row, .footer-actions { display: grid; justify-content: stretch; }
+  .preview-layout { grid-template-columns: 1fr; }
 }

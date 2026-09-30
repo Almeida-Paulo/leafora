@@ -181,6 +181,7 @@ function normalizeProject(project) {
     goalSui: finiteNumber(project.goalSui),
     raisedSui: finiteNumber(project.raisedSui),
     supporters: Math.max(0, Math.trunc(finiteNumber(project.supporters))),
+    evidenceCount: Math.max(0, Math.trunc(finiteNumber(project.evidenceCount))),
     impact: textOr(project.impact, t("Impacto em validacao")),
     objective: textOr(project.objective, t("Objetivo em validacao pela curadoria.")),
     story: textOr(project.story, t("As informacoes detalhadas deste projeto estao em preparacao.")),
@@ -237,9 +238,11 @@ function projectFromApi(project) {
   return {
     id: project.slug, name: project.name, category: project.category, biome: project.biome,
     location: project.location_label, image: project.image_uri || imageForBiome(project.biome),
+    imageKind: project.image_kind || "illustration",
     status: funding.open ? "active" : "closed", funding,
     fundingUsd: { goal: funding.goal_units, raised: funding.raised_units },
-    supporters: funding.supporters, impact: project.impact_summary, objective: project.objective,
+    supporters: funding.supporters, evidenceCount: project.evidence_count,
+    impact: project.impact_summary, objective: project.objective,
     story: project.story, risks: project.risks, chain: { projectId: funding.id },
     milestones: project.milestones || [], evidence: [], tiers: [], fromApi: true
   };
@@ -254,7 +257,7 @@ function evidenceFromApi(record) {
     metadataHash: record.metadata_hash,
     geohash: record.geohash,
     timestamp: record.capture_timestamp || record.created_at,
-    source: "Leafora Capture",
+    source: "Leafora Registry",
     txDigest: record.sui_tx_digest
   };
 }

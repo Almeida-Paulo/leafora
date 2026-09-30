@@ -65,15 +65,16 @@ def update_project(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found.")
 
     from app.core.config import settings
-    from app.services.stellar import chain, EDITORIAL_FIELDS
+    from app.services.stellar import chain, committed_metadata_version, EDITORIAL_FIELDS, LEGACY_EDITORIAL_FIELDS
     updates = payload.model_dump(exclude_unset=True)
-    if settings.stellar_contract and any(key in EDITORIAL_FIELDS for key in updates):
+    if settings.stellar_contract and any(key in LEGACY_EDITORIAL_FIELDS for key in updates):
         with chain() as client:
-            if client.project(slug) is not None and any(
-                key in EDITORIAL_FIELDS and getattr(project, key) != value
-                for key, value in updates.items()
-            ):
-                raise HTTPException(409, "Published metadata is committed on-chain and cannot be overwritten.")
+            published = client.project(slug)
+            if published is not None:
+                version = committed_metadata_version(project, published["metadata"])
+                locked_fields = LEGACY_EDITORIAL_FIELDS if version == "v1" else EDITORIAL_FIELDS
+                if any(key in locked_fields and getattr(project, key) != value for key, value in updates.items()):
+                    raise HTTPException(409, "Published metadata is committed on-chain and cannot be overwritten.")
     for key, value in updates.items():
         setattr(project, key, value)
 

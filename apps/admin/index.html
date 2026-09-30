@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
     <meta name="description" content="Leafora internal operations panel.">
+    <meta name="leafora-public-origin" content="https://leafora.midnorth.com.br">
     <title>Leafora Panel</title>
     <link rel="stylesheet" href="/assets/admin.css">
   </head>
@@ -14,13 +15,12 @@
         <span class="brand-mark">L</span>
         <span>
           <strong>Leafora Panel</strong>
-          <small>Project operations console</small>
+          <small>Gestão de projetos</small>
         </span>
       </a>
-      <nav aria-label="Panel navigation">
-        <a href="#catalog">Catalog</a>
+      <nav aria-label="Navegação do painel">
+        <a href="#catalog">Projetos</a>
         <a href="#editor">Editor</a>
-        <a href="#chain">Chain</a>
       </nav>
     </header>
 
@@ -28,30 +28,30 @@
       <section class="workspace">
         <aside class="sidebar" id="catalog">
           <div class="panel">
-            <p class="eyebrow">Access</p>
-            <h1>Admin session</h1>
+            <p class="eyebrow">Acesso</p>
+            <h1>Sessão administrativa</h1>
             <label>
-              API origin
+              Endereço da API
               <input id="apiBase" type="url" value="/api" autocomplete="off">
             </label>
             <label>
-              Admin token
+              Token administrativo
               <input id="adminToken" type="password" autocomplete="off" placeholder="X-Admin-Token">
             </label>
             <div class="actions">
-              <button class="primary" id="saveSession" type="button">Save session</button>
-              <button class="ghost" id="clearSession" type="button">Clear</button>
+              <button class="primary" id="saveSession" type="button">Salvar sessão</button>
+              <button class="ghost" id="clearSession" type="button">Limpar</button>
             </div>
-            <p class="status" id="sessionStatus">Session not configured.</p>
+            <p class="status" id="sessionStatus">Sessão não configurada.</p>
           </div>
 
           <div class="panel">
             <div class="heading-row">
               <div>
-                <p class="eyebrow">Catalog</p>
-                <h2>Projects</h2>
+                <p class="eyebrow">Catálogo</p>
+                <h2>Projetos</h2>
               </div>
-              <button class="icon-button" id="refreshProjects" type="button" title="Refresh projects">↻</button>
+              <button class="icon-button" id="refreshProjects" type="button" title="Atualizar projetos" aria-label="Atualizar projetos">↻</button>
             </div>
             <div class="project-list" id="projectList"></div>
           </div>
@@ -61,11 +61,12 @@
           <form class="panel project-form" id="projectForm">
             <div class="heading-row">
               <div>
-                <p class="eyebrow">Project editor</p>
-                <h2 id="editorTitle">New project</h2>
+                <p class="eyebrow">Catálogo público</p>
+                <h2 id="editorTitle">Novo projeto</h2>
               </div>
-              <button class="ghost" id="newProject" type="button">New</button>
+              <button class="ghost" id="newProject" type="button">Novo</button>
             </div>
+            <p class="muted">Estas informações aparecem na página inicial, em Projetos e na página do projeto. Revise-as antes da publicação na Stellar.</p>
 
             <div class="grid two">
               <label>
@@ -73,149 +74,100 @@
                 <input name="slug" required placeholder="nascente-mg">
               </label>
               <label>
-                Status editorial (não altera a captação)
+                Status editorial (não controla a captação)
                 <select name="status">
-                  <option value="draft">draft</option>
-                  <option value="review">review</option>
-                  <option value="active">active</option>
-                  <option value="paused">paused</option>
-                  <option value="completed">completed</option>
-                  <option value="archived">archived</option>
+                  <option value="draft">Rascunho</option>
+                  <option value="review">Em revisão</option>
+                  <option value="active">Aprovado para publicação</option>
+                  <option value="paused">Pausado</option>
+                  <option value="completed">Concluído</option>
+                  <option value="archived">Arquivado</option>
                 </select>
               </label>
               <label>
-                Name
-                <input name="name" required placeholder="Guardioes da Nascente">
+                Nome
+                <input name="name" required placeholder="Guardiões da Nascente">
               </label>
               <label>
-                Display status
-                <input name="display_status" placeholder="Field evidence">
+                Categoria
+                <input name="category" required placeholder="Água e reflorestamento">
               </label>
               <label>
-                Category
-                <input name="category" required placeholder="Agua e reflorestamento">
+                Bioma
+                <input name="biome" required placeholder="Mata Atlântica">
               </label>
               <label>
-                Biome
-                <input name="biome" required placeholder="Mata Atlantica">
-              </label>
-              <label>
-                Country
+                País
                 <input name="country" value="BR">
               </label>
               <label>
-                Region
+                Região
                 <input name="region" placeholder="MG">
               </label>
               <label>
-                Location label
+                Localização pública
                 <input name="location_label" required placeholder="Serra da Mantiqueira, MG">
               </label>
-              <label>
-
-                <input name="funding_goal_sui" type="hidden" value="0">
-              </label>
               <label class="span-2">
-                Image URI
-                <input name="image_uri" placeholder="/assets/img/project-spring.png">
+                Imagem de capa ilustrativa
+                <input name="image_uri" required placeholder="/assets/img/project-spring.png">
               </label>
             </div>
+            <p class="muted">A localização acima é uma descrição pública informada pela curadoria. Ainda não é uma coordenada extraída do Leafora Capture. As imagens atuais são ilustrativas; não são evidências de campo.</p>
 
             <label>
-              Objective
+              Objetivo do projeto
               <textarea name="objective" required rows="3"></textarea>
             </label>
             <label>
-              Impact summary
+              Impacto esperado (resumo dos cards)
               <textarea name="impact_summary" required rows="2"></textarea>
             </label>
             <label>
-              Story
+              Sobre o projeto
               <textarea name="story" required rows="5"></textarea>
             </label>
             <label>
-              Risks
+              Riscos
               <textarea name="risks" required rows="3"></textarea>
             </label>
-            <div class="grid two">
-              <label>
-                Metadata URI
-                <input name="metadata_uri" placeholder="ipfs://...">
-              </label>
-              <label>
-                Metadata hash
-                <input name="metadata_hash" placeholder="0x...">
-              </label>
-              <label>
-                Verification level
-                <input name="verification_level" type="number" min="0" step="1" value="0">
-              </label>
-              <label>
-
-                <input name="raised_sui" type="hidden" value="0">
-              </label>
-            </div>
-
-            <section class="subsection" hidden>
-              <div class="heading-row">
-                <div>
-                  <p class="eyebrow">Support tiers</p>
-                  <h3>NFT tiers and allocation points</h3>
-                </div>
-                <button class="ghost" id="addTier" type="button">Add tier</button>
-              </div>
-              <div class="rows" id="tierRows"></div>
-            </section>
 
             <section class="subsection">
               <div class="heading-row">
                 <div>
-                  <p class="eyebrow">Execution</p>
-                  <h3>Milestones</h3>
+                  <p class="eyebrow">Execução</p>
+                  <h3>Etapas do projeto</h3>
                 </div>
-                <button class="ghost" id="addMilestone" type="button">Add milestone</button>
+                <button class="ghost" id="addMilestone" type="button">Adicionar etapa</button>
               </div>
               <div class="rows" id="milestoneRows"></div>
             </section>
 
             <div class="actions footer-actions">
-              <button class="primary" type="submit">Save project</button>
-              <button class="ghost" id="duplicateDemo" type="button">Load demo structure</button>
+              <button class="primary" type="submit">Salvar projeto</button>
             </div>
             <p class="status" id="projectStatus"></p>
           </form>
 
-          <form class="panel chain-form" id="chainForm" hidden>
-            <div class="heading-row" id="chain">
+          <section class="panel project-preview" aria-labelledby="previewTitle">
+            <p class="eyebrow">Prévia do catálogo</p>
+            <h2 id="previewTitle">Como o projeto será apresentado</h2>
+            <div class="preview-layout">
+              <img id="previewImage" alt="" hidden>
               <div>
-                <p class="eyebrow">Sui devnet</p>
-                <h2>Chain binding</h2>
+                <p id="previewCategory" class="muted"></p>
+                <h3 id="previewName">Nome do projeto</h3>
+                <p id="previewLocation"></p>
+                <p id="previewImpact"></p>
+                <p id="previewObjective" class="muted"></p>
               </div>
-              <span class="pill" id="chainSlug">No project selected</span>
             </div>
-            <p class="muted">Use this after a project exists on-chain. The wallet-signed publish flow will reuse this binding model.</p>
-            <div class="grid three">
-              <label>
-                Package ID
-                <input name="sui_package_id" placeholder="0x...">
-              </label>
-              <label>
-                Project object ID
-                <input name="sui_project_id" placeholder="0x...">
-              </label>
-              <label>
-                Vault object ID
-                <input name="sui_vault_id" placeholder="0x...">
-              </label>
-            </div>
-            <div class="actions footer-actions">
-              <button class="primary" type="submit">Save chain binding</button>
-            </div>
-            <p class="status" id="chainStatus"></p>
-          </form>
+            <p class="muted">Imagem ilustrativa. A meta, o valor captado e o prazo aparecem no site somente após a publicação no contrato.</p>
+          </section>
+
           <form class="panel" id="stellarPublishForm">
             <h2>Captação na Stellar</h2>
-            <p>Salve o projeto, defina a meta e o encerramento e assine com a carteira administradora. O contrato aceita novos apoios até esse prazo, inclusive acima da meta.</p>
+            <p>Confira a prévia e as etapas, marque o projeto como aprovado e salve. Depois, defina a meta em USDC e o encerramento. A carteira administradora assina a publicação. O contrato aceita apoios até o prazo, inclusive acima da meta.</p>
             <div class="grid two">
               <label>Meta em USDC <input name="goal" inputmode="decimal" required placeholder="12500"></label>
               <label>Encerramento (horário deste computador) <input name="deadline" type="datetime-local" required></label>
@@ -230,32 +182,16 @@
       </section>
     </main>
 
-    <template id="tierTemplate">
-      <article class="row-card tier-row">
-        <button class="remove-row" type="button" aria-label="Remove tier">×</button>
-        <div class="grid six">
-          <label>Slug <input data-field="slug" required></label>
-          <label>Name <input data-field="name" required></label>
-          <label>Amount SUI <input data-field="amount_sui" inputmode="decimal" required></label>
-          <label>Points <input data-field="allocation_points" type="number" min="0" step="1" required></label>
-          <label>Chain tier <input data-field="chain_tier" type="number" min="0" step="1" value="0"></label>
-          <label>Order <input data-field="display_order" type="number" min="0" step="1" value="0"></label>
-        </div>
-        <label>Metadata URI <input data-field="metadata_uri"></label>
-        <label>Description <textarea data-field="description" rows="2"></textarea></label>
-      </article>
-    </template>
-
     <template id="milestoneTemplate">
       <article class="row-card milestone-row">
-        <button class="remove-row" type="button" aria-label="Remove milestone">×</button>
+        <button class="remove-row" type="button" aria-label="Remover etapa">×</button>
         <div class="grid four">
-          <label>Title <input data-field="title" required></label>
+          <label>Título <input data-field="title" required></label>
           <input data-field="target_sui" type="hidden" value="0">
-          <label>Status <input data-field="status" value="planned"></label>
-          <label>Order <input data-field="display_order" type="number" min="0" step="1" value="0"></label>
+          <label>Situação <select data-field="status"><option value="planned">Planejada</option><option value="active">Em execução</option><option value="completed">Concluída</option></select></label>
+          <label>Ordem <input data-field="display_order" type="number" min="0" step="1" value="0"></label>
         </div>
-        <label>Description <textarea data-field="description" rows="2"></textarea></label>
+        <label>Descrição <textarea data-field="description" rows="2"></textarea></label>
       </article>
     </template>
 

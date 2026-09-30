@@ -1,5 +1,6 @@
 import time
 import json
+from urllib.parse import urlsplit
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel, Field
 from sqlalchemy import select, func
@@ -8,6 +9,7 @@ from stellar_sdk import TransactionEnvelope, StrKey, scval
 
 from app.api.deps import get_db, require_admin_token
 from app.models.project import Project
+from app.models.evidence import EvidenceRecord
 from app.models.stellar_intent import StellarIntent
 from app.services.stellar import amount_units, chain, funding_read, metadata, metadata_hash, project_id, public_config
 from app.core.config import settings
@@ -78,10 +80,13 @@ def catalog(response: Response, db: Session = Depends(get_db)):
     with chain() as client:
         client.verify_configuration()
         result = []
+        evidence_counts = dict(db.execute(select(EvidenceRecord.project_id, func.count())
+            .where(EvidenceRecord.status == "approved").group_by(EvidenceRecord.project_id)).all())
         for project in db.scalars(select(Project).order_by(Project.created_at)):
             funding = funding_read(client, project)
             if funding is not None:
-                result.append({**metadata(project), "funding": funding, "milestones": [
+                result.append({**metadata(project), "image_uri": project.image_uri, "image_kind": "illustration",
+                    "evidence_count": evidence_counts.get(project.id, 0), "funding": funding, "milestones": [
                     {"title": m.title, "description": m.description, "status": m.status}
                     for m in project.milestones]})
         return result
@@ -114,11 +119,15 @@ def published_metadata(slug: str, db: Session = Depends(get_db)):
     project = get_project(db, slug)
     with chain() as client:
         client.verify_configuration()
-        if funding_read(client, project) is None:
+        funding = funding_read(client, project)
+        if funding is None:
             raise HTTPException(404, "Project is not published.")
-        return Response(json.dumps(metadata(project), ensure_ascii=False, sort_keys=True, separators=(",", ":")),
+        legacy = funding["metadata_version"] == "v1"
+        committed = metadata(project, include_image=legacy)
+        digest = metadata_hash(project, include_image=legacy)
+        return Response(json.dumps(committed, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
             media_type="application/json", headers={"Cache-Control": "no-cache",
-            "ETag": '"' + metadata_hash(project).hex() + '"'})
+            "ETag": '"' + digest.hex() + '"'})
 
 
 @router.post("/projects/{slug}/prepare")
@@ -137,6 +146,18 @@ def prepare_support(slug: str, payload: SupportRequest, db: Session = Depends(ge
 @router.post("/projects/{slug}/publish", dependencies=[Depends(require_admin_token)])
 def prepare_publish(slug: str, payload: PublishRequest, db: Session = Depends(get_db)):
     project = get_project(db, slug)
+    if project.status != "active":
+        raise HTTPException(422, "Approve the project in the editorial panel before publishing it.")
+    required_fields = ("name", "category", "biome", "country", "location_label", "image_uri",
+                       "objective", "impact_summary", "story", "risks")
+    missing = [field for field in required_fields if not str(getattr(project, field) or "").strip()]
+    if missing or not project.milestones:
+        raise HTTPException(422, "Complete the project presentation, cover image and at least one milestone before publishing.")
+    image_uri = project.image_uri.strip()
+    parsed = urlsplit(image_uri)
+    if not ((image_uri.startswith("/") and not image_uri.startswith("//")) or
+            (parsed.scheme == "https" and parsed.hostname and not parsed.username and not parsed.password)):
+        raise HTTPException(422, "The cover image must use a public site path or an HTTPS URL.")
     if payload.wallet != settings.stellar_admin:
         raise HTTPException(403, "Connect the contract administrator wallet.")
     if payload.deadline <= int(time.time()):

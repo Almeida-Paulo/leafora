@@ -246,6 +246,7 @@ function renderHome() {
   setText("#metricEvidence", totalEvidence());
   setText("#catalogOrigin", "");
   setText("#homeFundingNote", state.projects.length ? fundingNote(state.projects[0]) : "");
+  document.querySelector("#homeImageNote").hidden = !state.projects.some((project) => project.imageKind !== "capture");
 }
 
 function renderMarketplace() {
@@ -264,6 +265,7 @@ function renderMarketplace() {
   setText("#marketBiomeCount", biomes.length);
   setText("#marketEvidenceCount", totalEvidence());
   setText("#marketFundingNote", state.projects.length ? fundingNote(state.projects[0]) : "");
+  document.querySelector("#marketImageNote").hidden = !state.projects.some((project) => project.imageKind !== "capture");
   renderMarketplaceGrid();
 }
 
@@ -380,6 +382,7 @@ async function renderProjectDetail(slug, version) {
         <div class="project-kicker"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(project.biome)}</span></div>
         <h1>${escapeHtml(project.name)}</h1>
         <p class="detail-location">${escapeHtml(project.location)}</p>
+        ${project.imageKind !== "capture" ? `<p class="image-provenance">${t("Imagem ilustrativa; ainda não é um registro de campo do Leafora Capture.")}</p>` : ""}
         <p class="detail-objective">${escapeHtml(project.objective)}</p>
         ${language === "en" && project.fromApi ? `<p class="source-language">${t("Conteúdo publicado pela equipe no idioma original.")}</p>` : ""}
         <dl class="project-facts">
@@ -474,7 +477,6 @@ function renderEvidence(record) {
         <p>${escapeHtml(record.id)} · ${escapeHtml(formatDate(record.timestamp))}</p>
       </div>
       <dl>
-        <div><dt>Geohash</dt><dd>${escapeHtml(record.geohash)}</dd></div>
         <div><dt>${t("Hash do arquivo")}</dt><dd title="${escapeHtml(record.contentHash)}">${escapeHtml(formatHash(record.contentHash))}</dd></div>
         <div><dt>${t("Origem")}</dt><dd>${escapeHtml(record.source)}</dd></div>
       </dl>
@@ -547,7 +549,7 @@ function projectSorter(sort) {
 }
 
 function totalEvidence() {
-  return state.projects.reduce((sum, project) => sum + (Array.isArray(project.evidence) ? project.evidence.length : 0), 0);
+  return state.projects.reduce((sum, project) => sum + project.evidenceCount, 0);
 }
 
 function uniqueValues(values) {

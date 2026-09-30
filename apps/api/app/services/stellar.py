@@ -13,7 +13,8 @@ from app.core.config import settings
 UNIT = 10_000_000
 LIMIT = 10**18
 EDITORIAL_FIELDS = ("slug", "name", "category", "biome", "country", "region",
-                    "location_label", "image_uri", "objective", "impact_summary", "story", "risks")
+                    "location_label", "objective", "impact_summary", "story", "risks")
+LEGACY_EDITORIAL_FIELDS = EDITORIAL_FIELDS + ("image_uri",)
 
 
 def amount_units(value: str) -> int:
@@ -30,13 +31,22 @@ def project_id(slug: str) -> bytes:
     return hashlib.sha256(("leafora:project:v1:" + slug).encode()).digest()
 
 
-def metadata(project) -> dict:
-    return {key: getattr(project, key) for key in EDITORIAL_FIELDS}
+def metadata(project, *, include_image: bool = False) -> dict:
+    fields = LEGACY_EDITORIAL_FIELDS if include_image else EDITORIAL_FIELDS
+    return {key: getattr(project, key) for key in fields}
 
 
-def metadata_hash(project) -> bytes:
-    return hashlib.sha256(json.dumps(metadata(project), ensure_ascii=False,
+def metadata_hash(project, *, include_image: bool = False) -> bytes:
+    return hashlib.sha256(json.dumps(metadata(project, include_image=include_image), ensure_ascii=False,
                                     sort_keys=True, separators=(",", ":")).encode()).digest()
+
+
+def committed_metadata_version(project, chain_hash: bytes) -> str:
+    if chain_hash == metadata_hash(project):
+        return "v2"
+    if chain_hash == metadata_hash(project, include_image=True):
+        return "v1"
+    raise HTTPException(409, "Published project metadata does not match its on-chain commitment.")
 
 
 def public_config():
@@ -116,10 +126,12 @@ def funding_read(chain_client, project):
     result = chain_client.project(project.slug)
     if result is None:
         return None
-    if result["metadata"] != metadata_hash(project) or result["goal"] <= 0:
-        raise HTTPException(409, "Published project metadata does not match its on-chain commitment.")
+    version = committed_metadata_version(project, result["metadata"])
+    if result["goal"] <= 0:
+        raise HTTPException(409, "Invalid on-chain project funding goal.")
     return {"id": project_id(project.slug).hex(), "goal_units": str(result["goal"]),
             "raised_units": str(result["raised"]), "points_units": str(result["raised"]),
             "deadline": result["deadline"], "supporters": result["supporters"],
             "paused": result["paused"], "open": not result["paused"] and int(time.time()) < result["deadline"],
-            "contract": chain_client.config["contract"], "network": chain_client.config["network"]}
+            "contract": chain_client.config["contract"], "network": chain_client.config["network"],
+            "metadata_version": version}

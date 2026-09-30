@@ -5,21 +5,25 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_db, require_admin_token
 from app.models.evidence import EvidenceRecord
 from app.models.project import Project
-from app.schemas.evidence import EvidenceCreate, EvidenceRead, EvidenceReview
+from app.schemas.evidence import EvidenceCreate, EvidencePublicRead, EvidenceRead, EvidenceReview
+from app.services.stellar import chain, funding_read
 
 router = APIRouter()
 
 
-@router.get("/projects/{slug}/evidence", response_model=list[EvidenceRead])
+@router.get("/projects/{slug}/evidence", response_model=list[EvidencePublicRead])
 def list_project_evidence(slug: str, db: Session = Depends(get_db)) -> list[EvidenceRecord]:
     project = db.scalar(select(Project).where(Project.slug == slug))
     if not project:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found.")
+    with chain() as client:
+        if funding_read(client, project) is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not published.")
 
     return list(
         db.scalars(
             select(EvidenceRecord)
-            .where(EvidenceRecord.project_id == project.id)
+            .where(EvidenceRecord.project_id == project.id, EvidenceRecord.status == "approved")
             .order_by(EvidenceRecord.created_at.desc())
         )
     )
@@ -54,4 +58,3 @@ def review_evidence(
     db.commit()
     db.refresh(evidence)
     return evidence
-

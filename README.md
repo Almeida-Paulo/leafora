@@ -1,8 +1,9 @@
 # Leafora
 
-Leafora is a Sui-based Web3 platform for verifiable ecological project funding,
-supporter NFTs, allocation points and public evidence registries for
-regeneration projects.
+Leafora combines ecological project funding and public evidence registries.
+Stellar/USDC provides support transactions and per-project allocation points;
+Sui retains the evidence registry domain. Supporter NFT issuance is deferred.
+The current funding release is restricted to testnet, pending contract validation.
 
 ## Repository Structure
 
@@ -15,6 +16,7 @@ apps/
 
 blockchain/
   sui/leafora/  Sui Move package
+  stellar/      Soroban USDC funding and allocation contract
 
 docs/
   architecture/ Product and system architecture
@@ -31,6 +33,7 @@ infra/
 ## Stack
 
 - Sui Move smart contracts
+- Stellar Soroban / Rust and USDC
 - Static web dApp
 - Python/FastAPI backend
 - PostgreSQL/PostGIS
@@ -46,7 +49,7 @@ Public dApp interface for:
 
 - project marketplace;
 - project detail pages;
-- Sui wallet connection;
+- Stellar wallet connection (desktop extension and mobile/QR);
 - project support flow;
 - supporter dashboard;
 - evidence registry;
@@ -68,8 +71,9 @@ Backend API for:
 Internal operations panel for:
 
 - curated project creation and editorial updates;
-- support tier and milestone management;
-- Sui devnet object binding after on-chain project creation.
+- project milestones;
+- wallet-signed Stellar project publication, with funding goal and closing time;
+- retained legacy Sui binding data.
 
 ### `blockchain/sui/leafora`
 
@@ -82,6 +86,8 @@ Move package for:
 - conditional future revenue claims.
 
 ## Documentation
+
+- [Stellar funding architecture and validation gates](docs/architecture/stellar-funding.md)
 
 - [Target architecture](docs/architecture/target.md)
 - [Backend architecture](docs/architecture/backend.md)

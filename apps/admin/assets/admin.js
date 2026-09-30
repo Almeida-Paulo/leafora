@@ -20,16 +20,9 @@ const els = {
   editorTitle: document.querySelector("#editorTitle"),
   projectStatus: document.querySelector("#projectStatus"),
   newProject: document.querySelector("#newProject"),
-  duplicateDemo: document.querySelector("#duplicateDemo"),
-  tierRows: document.querySelector("#tierRows"),
-  addTier: document.querySelector("#addTier"),
   milestoneRows: document.querySelector("#milestoneRows"),
   addMilestone: document.querySelector("#addMilestone"),
-  tierTemplate: document.querySelector("#tierTemplate"),
-  milestoneTemplate: document.querySelector("#milestoneTemplate"),
-  chainForm: document.querySelector("#chainForm"),
-  chainSlug: document.querySelector("#chainSlug"),
-  chainStatus: document.querySelector("#chainStatus")
+  milestoneTemplate: document.querySelector("#milestoneTemplate")
 };
 
 init();
@@ -40,6 +33,7 @@ async function init() {
   renderSessionStatus();
   bindEvents();
   addMilestoneRow();
+  renderProjectPreview();
   await loadProjects();
 }
 
@@ -50,7 +44,7 @@ function bindEvents() {
     sessionStorage.setItem("leafora.panel.apiBase", state.apiBase);
     sessionStorage.setItem("leafora.panel.adminToken", state.token);
     els.apiBase.value = state.apiBase;
-    renderSessionStatus("Session saved.");
+    renderSessionStatus("Sessão salva.");
     await loadProjects();
   });
 
@@ -58,16 +52,14 @@ function bindEvents() {
     state.token = "";
     els.adminToken.value = "";
     sessionStorage.removeItem("leafora.panel.adminToken");
-    renderSessionStatus("Session cleared.");
+    renderSessionStatus("Sessão limpa.");
   });
 
   els.refreshProjects.addEventListener("click", loadProjects);
   els.newProject.addEventListener("click", resetEditor);
-  els.addTier.addEventListener("click", () => addTierRow());
   els.addMilestone.addEventListener("click", () => addMilestoneRow());
-  els.duplicateDemo.addEventListener("click", loadDemoStructure);
+  els.projectForm.addEventListener("input", renderProjectPreview);
   els.projectForm.addEventListener("submit", onSaveProject);
-  els.chainForm.addEventListener("submit", onSaveChainBinding);
   document.getElementById("loadStellarWallets").addEventListener("click", async () => {
     const status = document.getElementById("stellarPublishStatus");
     try {
@@ -84,10 +76,10 @@ function bindEvents() {
 
 async function loadProjects() {
   try {
-    setStatus(els.sessionStatus, "Loading projects...");
+    setStatus(els.sessionStatus, "Carregando projetos...");
     state.projects = await request("/projects");
     renderProjects();
-    renderSessionStatus(`${state.projects.length} project${state.projects.length === 1 ? "" : "s"} loaded.`);
+    renderSessionStatus(`${state.projects.length} ${state.projects.length === 1 ? "projeto carregado" : "projetos carregados"}.`);
   } catch (error) {
     state.projects = [];
     renderProjects();
@@ -100,10 +92,10 @@ function renderProjects() {
     ? state.projects.map((project) => `
       <button class="project-item ${state.selected?.slug === project.slug ? "active" : ""}" type="button" data-slug="${escapeHtml(project.slug)}">
         <strong>${escapeHtml(project.name)}</strong>
-        <small>${escapeHtml(project.slug)} / ${escapeHtml(project.status)} / ${escapeHtml(project.biome)}</small>
+        <small>${escapeHtml(project.slug)} / ${escapeHtml(editorialStatusLabel(project.status))} / ${escapeHtml(project.biome)}</small>
       </button>
     `).join("")
-    : `<p class="muted">No projects found.</p>`;
+    : `<p class="muted">Nenhum projeto cadastrado.</p>`;
 
   els.projectList.querySelectorAll("[data-slug]").forEach((button) => {
     button.addEventListener("click", () => selectProject(button.dataset.slug));
@@ -117,7 +109,6 @@ function selectProject(slug) {
   state.selected = project;
   renderProjects();
   fillProjectForm(project);
-  fillChainForm(project);
 }
 
 function fillProjectForm(project) {
@@ -126,30 +117,17 @@ function fillProjectForm(project) {
     slug: project.slug,
     name: project.name,
     status: project.status,
-    display_status: project.display_status,
     category: project.category,
     biome: project.biome,
     country: project.country,
     region: project.region,
     location_label: project.location_label,
-    funding_goal_sui: mistToSui(project.funding_goal_mist),
     image_uri: project.image_uri,
     objective: project.objective,
     impact_summary: project.impact_summary,
     story: project.story,
-    risks: project.risks,
-    metadata_uri: project.metadata_uri,
-    metadata_hash: project.metadata_hash,
-    verification_level: project.verification_level,
-    raised_sui: mistToSui(project.raised_mist)
+    risks: project.risks
   });
-
-  els.tierRows.innerHTML = "";
-  (project.tiers || []).forEach((tier) => addTierRow({
-    ...tier,
-    amount_sui: mistToSui(tier.amount_mist)
-  }));
-
 
   els.milestoneRows.innerHTML = "";
   (project.milestones || []).forEach((milestone) => addMilestoneRow({
@@ -159,56 +137,39 @@ function fillProjectForm(project) {
   if (!project.milestones?.length) addMilestoneRow();
 
   setStatus(els.projectStatus, "");
-}
-
-function fillChainForm(project) {
-  els.chainSlug.textContent = project.slug;
-  setFormValues(els.chainForm, {
-    sui_package_id: project.sui_package_id,
-    sui_project_id: project.sui_project_id,
-    sui_vault_id: project.sui_vault_id
-  });
-  setStatus(els.chainStatus, "");
+  renderProjectPreview();
 }
 
 function resetEditor() {
   state.selected = null;
-  els.editorTitle.textContent = "New project";
+  els.editorTitle.textContent = "Novo projeto";
   els.projectForm.reset();
   setFormValues(els.projectForm, {
     country: "BR",
-    status: "draft",
-    verification_level: 0,
-    raised_sui: 0
+    status: "draft"
   });
-  els.tierRows.innerHTML = "";
   els.milestoneRows.innerHTML = "";
   addMilestoneRow();
-  els.chainForm.reset();
-  els.chainSlug.textContent = "No project selected";
   renderProjects();
+  renderProjectPreview();
 }
 
 async function onSaveProject(event) {
   event.preventDefault();
   try {
     requireAdminToken();
-    setStatus(els.projectStatus, "Saving project...");
+    setStatus(els.projectStatus, "Salvando projeto...");
 
     const form = new FormData(els.projectForm);
     const slug = String(form.get("slug")).trim();
     const payload = projectPayload(form);
-    const tiers = state.selected?.tiers || [];
     const milestones = readMilestoneRows();
+    if (!milestones.length) throw new Error("Adicione pelo menos uma etapa antes de salvar.");
 
     if (state.selected?.slug === slug) {
       await request(`/projects/${encodeURIComponent(slug)}`, {
         method: "PATCH",
         body: JSON.stringify(payload)
-      });
-      await request(`/projects/${encodeURIComponent(slug)}/tiers`, {
-        method: "PUT",
-        body: JSON.stringify({ tiers })
       });
       await request(`/projects/${encodeURIComponent(slug)}/milestones`, {
         method: "PUT",
@@ -217,40 +178,15 @@ async function onSaveProject(event) {
     } else {
       await request("/projects", {
         method: "POST",
-        body: JSON.stringify({ slug, ...payload, tiers, milestones })
+        body: JSON.stringify({ slug, ...payload, milestones })
       });
     }
 
     await loadProjects();
     selectProject(slug);
-    setStatus(els.projectStatus, "Project saved.");
+    setStatus(els.projectStatus, "Projeto salvo.");
   } catch (error) {
     setStatus(els.projectStatus, error.message, true);
-  }
-}
-
-async function onSaveChainBinding(event) {
-  event.preventDefault();
-  try {
-    requireAdminToken();
-    if (!state.selected?.slug) throw new Error("Select a project before saving chain IDs.");
-
-    const form = new FormData(els.chainForm);
-    setStatus(els.chainStatus, "Saving chain binding...");
-    await request(`/projects/${encodeURIComponent(state.selected.slug)}/chain`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        sui_package_id: String(form.get("sui_package_id")).trim(),
-        sui_project_id: String(form.get("sui_project_id")).trim(),
-        sui_vault_id: String(form.get("sui_vault_id")).trim(),
-        status: "active"
-      })
-    });
-    await loadProjects();
-    selectProject(state.selected.slug);
-    setStatus(els.chainStatus, "Chain binding saved.");
-  } catch (error) {
-    setStatus(els.chainStatus, error.message, true);
   }
 }
 
@@ -262,35 +198,13 @@ function projectPayload(form) {
     country: value(form, "country") || "BR",
     region: value(form, "region"),
     location_label: required(form, "location_label"),
-    image_uri: value(form, "image_uri"),
-    display_status: value(form, "display_status"),
+    image_uri: required(form, "image_uri"),
     objective: required(form, "objective"),
     impact_summary: required(form, "impact_summary"),
     story: required(form, "story"),
     risks: required(form, "risks"),
-    status: value(form, "status") || "draft",
-    verification_level: Number(value(form, "verification_level") || 0),
-    funding_goal_mist: suiToMistNumber(required(form, "funding_goal_sui")),
-
-    metadata_uri: value(form, "metadata_uri"),
-    metadata_hash: value(form, "metadata_hash")
+    status: value(form, "status") || "draft"
   };
-}
-
-function readTierRows() {
-  return [...els.tierRows.querySelectorAll(".tier-row")]
-    .map((row, index) => ({
-      slug: rowValue(row, "slug"),
-      name: rowValue(row, "name"),
-      amount_mist: suiToMistNumber(rowValue(row, "amount_sui")),
-      allocation_points: Number(rowValue(row, "allocation_points") || 0),
-      chain_tier: Number(rowValue(row, "chain_tier") || 0),
-      metadata_uri: rowValue(row, "metadata_uri"),
-      description: rowValue(row, "description"),
-      display_order: Number(rowValue(row, "display_order") || index),
-      is_active: true
-    }))
-    .filter((tier) => tier.slug && tier.name);
 }
 
 function readMilestoneRows() {
@@ -303,13 +217,6 @@ function readMilestoneRows() {
       display_order: Number(rowValue(row, "display_order") || index)
     }))
     .filter((milestone) => milestone.title);
-}
-
-function addTierRow(values = {}) {
-  const node = els.tierTemplate.content.firstElementChild.cloneNode(true);
-  els.tierRows.appendChild(node);
-  fillRow(node, values);
-  node.querySelector(".remove-row").addEventListener("click", () => node.remove());
 }
 
 function addMilestoneRow(values = {}) {
@@ -328,40 +235,40 @@ function fillRow(row, values) {
   });
 }
 
-function loadDemoStructure() {
-  els.tierRows.innerHTML = "";
-  addTierRow({
-    slug: "seed",
-    name: "Seed",
-    amount_sui: 5,
-    allocation_points: 50,
-    chain_tier: 0,
-    display_order: 0,
-    description: "Badge inicial e registro de apoio."
-  });
-  addTierRow({
-    slug: "guardian",
-    name: "Guardian",
-    amount_sui: 25,
-    allocation_points: 250,
-    chain_tier: 1,
-    display_order: 1,
-    description: "NFT do projeto e destaque no mural."
-  });
-  addTierRow({
-    slug: "founder",
-    name: "Founder",
-    amount_sui: 100,
-    allocation_points: 1000,
-    chain_tier: 2,
-    display_order: 2,
-    description: "Badge fundador e maior peso de participacao."
-  });
+function renderProjectPreview() {
+  const form = els.projectForm;
+  const field = (name) => String(form.elements[name]?.value || "").trim();
+  const name = field("name");
+  document.querySelector("#previewName").textContent = name || "Nome do projeto";
+  document.querySelector("#previewCategory").textContent = [field("category"), field("biome")].filter(Boolean).join(" · ");
+  document.querySelector("#previewLocation").textContent = field("location_label");
+  document.querySelector("#previewImpact").textContent = field("impact_summary");
+  document.querySelector("#previewObjective").textContent = field("objective");
 
-  els.milestoneRows.innerHTML = "";
-  addMilestoneRow({ title: "Diagnostico inicial", target_sui: 2500, status: "planned", display_order: 0 });
-  addMilestoneRow({ title: "Execucao de campo", target_sui: 4000, status: "planned", display_order: 1 });
-  addMilestoneRow({ title: "Monitoramento", target_sui: 3000, status: "planned", display_order: 2 });
+  const image = document.querySelector("#previewImage");
+  const mediaUrl = previewMediaUrl(field("image_uri"));
+  image.hidden = !mediaUrl;
+  image.alt = name ? `Imagem ilustrativa de ${name}` : "Imagem ilustrativa do projeto";
+  image.referrerPolicy = "no-referrer";
+  image.onerror = () => { image.hidden = true; };
+  if (mediaUrl && image.src !== mediaUrl) image.src = mediaUrl;
+  else image.removeAttribute("src");
+}
+
+function editorialStatusLabel(status) {
+  return ({ draft: "Rascunho", review: "Em revisão", active: "Aprovado",
+    paused: "Pausado", completed: "Concluído", archived: "Arquivado" })[status] || status;
+}
+
+function previewMediaUrl(candidate) {
+  if (!candidate) return "";
+  try {
+    const origin = document.querySelector('meta[name="leafora-public-origin"]').content;
+    const url = new URL(candidate, origin);
+    return url.protocol === "https:" ? url.href : "";
+  } catch (_error) {
+    return "";
+  }
 }
 
 async function request(path, options = {}) {
@@ -427,7 +334,7 @@ function requireAdminToken() {
 function renderSessionStatus(message = "") {
   setStatus(
     els.sessionStatus,
-    message || (state.token ? "Session configured." : "Session not configured."),
+    message || (state.token ? "Sessão configurada." : "Sessão não configurada."),
     false
   );
 }

@@ -60,3 +60,8 @@ Only pending signed envelopes are kept locally for recovery, never as balance
 authority. Contributions accept arbitrary positive USDC amounts; no NFT tier is
 required. The adapter supports desktop Freighter and WalletConnect mobile/QR
 signing. Real-wallet and real-chain acceptance tests remain deployment gates.
+
+Project covers are currently illustrative media, not Leafora Capture evidence.
+The stable project description is committed on Stellar; the image URI is kept
+separate for new publications so it can later be replaced by reviewed,
+Capture-backed media. See `docs/architecture/project-catalog-capture.md`.

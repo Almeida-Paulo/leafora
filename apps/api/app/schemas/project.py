@@ -95,6 +95,7 @@ class ProjectCreate(BaseModel):
     impact_summary: str
     story: str
     risks: str
+    status: str = "draft"
     funding_goal_mist: int = 0
     metadata_uri: str = ""
     metadata_hash: str = ""
