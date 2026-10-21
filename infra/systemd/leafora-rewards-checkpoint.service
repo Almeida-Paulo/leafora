@@ -1,0 +1,16 @@
+[Unit]
+Description=Leafora locked LEAF reward accounting backup
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=leafora
+Group=leafora
+WorkingDirectory=/var/www/leafora/apps/api
+EnvironmentFile=/etc/leafora/api.env
+ExecStart=/var/www/leafora/apps/api/.venv/bin/python -m app.rewards_admin checkpoint --directory /var/lib/leafora/reward-backups
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+TimeoutStartSec=180

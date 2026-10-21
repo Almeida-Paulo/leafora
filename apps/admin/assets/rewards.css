@@ -1,0 +1,33 @@
+.rewards-workspace { margin-top: 48px; padding: 28px 0; border-top: 1px solid #c5d9ca; color: #1a1a1a; background: #fff; scroll-margin-top: 90px; }
+.rewards-workspace > * { margin-left: 24px; margin-right: 24px; }
+.rewards-workspace h2 { font-size: 24px; letter-spacing: 0; }
+.rewards-workspace h3 { font-size: 18px; letter-spacing: 0; }
+.rewards-workspace .eyebrow { color: #37a05a; }
+.rewards-workspace small { display: block; margin-top: 4px; color: #6d6d6d; font-weight: 400; overflow-wrap: anywhere; }
+.reward-table-wrap { overflow-x: auto; }
+.rewards-workspace .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.reward-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+.reward-table th, .reward-table td { padding: 12px 10px; border-bottom: 1px solid #e4ebe5; vertical-align: middle; }
+.reward-table td { font-variant-numeric: tabular-nums; }
+.reward-table th { font-weight: 600; }
+.reward-table thead { color: #6d6d6d; }
+.reward-forms { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; margin-top: 28px; margin-bottom: 28px; }
+.reward-forms form { display: grid; align-content: start; gap: 14px; min-width: 0; }
+.rewards-workspace input, .rewards-workspace textarea, .rewards-workspace select { min-width: 0; width: 100%; font-size: 16px; }
+.rewards-workspace .primary { background: #167c55; border-color: #167c55; color: #fff; justify-self: start; }
+.reward-policy { font-size: 14px; line-height: 1.5; color: #536760; }
+.reward-export { display: inline-flex; align-items: center; gap: 8px; }
+.reward-export svg { width: 18px; height: 18px; flex: 0 0 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+.rewards-workspace > .heading-row { flex-wrap: wrap; }
+.reward-icon-button { display: inline-grid; place-items: center; width: 40px; height: 40px; border: 1px solid #c5d9ca; border-radius: 6px; background: #fff; color: #1a1a1a; }
+.reward-icon-button svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.reward-row-actions { display: flex; gap: 8px; align-items: center; }
+#rewardsStatus { overflow-wrap: anywhere; min-height: 24px; font-size: 14px; }
+.rewards-workspace :focus-visible { outline: 2px solid #37a05a; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .reward-icon-button:hover { background: #eff9f1; } }
+@media (max-width: 760px) {
+  .rewards-workspace { scroll-margin-top: 150px; }
+  .reward-forms { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .rewards-workspace > * { margin-left: 12px; margin-right: 12px; }
+  .reward-table { min-width: 620px; }
+}

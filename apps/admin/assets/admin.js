@@ -1,5 +1,7 @@
 import { walletOptions, connectWallet, signIntent, api as fundingApi } from "./stellar-wallet.js";
 import { parseAmount, decimal } from "./money.js";
+import { setupRewards } from "./rewards.js";
+let rewardUI;
 let fundingWallet, fundingProviders = [], fundingBusy = false;
 const state = {
   projects: [],
@@ -32,9 +34,11 @@ async function init() {
   els.adminToken.value = state.token;
   renderSessionStatus();
   bindEvents();
+  rewardUI = setupRewards({ request });
   addMilestoneRow();
   renderProjectPreview();
   await loadProjects();
+  if (state.token) await rewardUI.refresh();
 }
 
 function bindEvents() {
@@ -46,6 +50,7 @@ function bindEvents() {
     els.apiBase.value = state.apiBase;
     renderSessionStatus("Sessão salva.");
     await loadProjects();
+    await rewardUI.refresh();
   });
 
   els.clearSession.addEventListener("click", () => {
@@ -53,6 +58,7 @@ function bindEvents() {
     els.adminToken.value = "";
     sessionStorage.removeItem("leafora.panel.adminToken");
     renderSessionStatus("Sessão limpa.");
+    rewardUI.clear();
   });
 
   els.refreshProjects.addEventListener("click", loadProjects);

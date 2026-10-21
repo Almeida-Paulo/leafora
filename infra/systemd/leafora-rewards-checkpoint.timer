@@ -1,0 +1,10 @@
+[Unit]
+Description=Check Leafora rewards every minute
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=1min
+Unit=leafora-rewards-checkpoint.service
+
+[Install]
+WantedBy=timers.target

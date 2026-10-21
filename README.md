@@ -88,6 +88,9 @@ Move package for:
 ## Documentation
 
 - [Stellar funding architecture and validation gates](docs/architecture/stellar-funding.md)
+- [LEAF whitepaper and tokenomics](docs/whitepaper/leaf-tokenomics.md)
+- [LEAF locked reward accounting and planned supply](docs/architecture/leaf-token-rewards.md)
+- [LEAF backups and recovery](docs/operations/leaf-rewards.md)
 
 - [Target architecture](docs/architecture/target.md)
 - [Backend architecture](docs/architecture/backend.md)

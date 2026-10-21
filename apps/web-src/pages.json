@@ -2,27 +2,27 @@
   "home": {
     "path": "/",
     "title": ["Leafora | Apoio a projetos ecológicos com transparência", "Leafora | Support ecological projects with transparency"],
-    "description": ["A Leafora aproxima você de quem recupera a natureza. Conheça os projetos e a proposta de apoiar com pequenos valores e acompanhar os resultados. Em testes.", "Leafora connects you with people restoring nature. Explore projects and our plans for small contributions with progress you can follow. Currently in testing."]
+    "description": ["A Leafora aproxima você de quem recupera a natureza. Conheça os projetos, o apoio em USDC pela Stellar e o planejamento de registros de campo na Sui.", "Leafora connects you with people restoring nature. Explore projects, USDC contributions on Stellar and plans for field records on Sui."]
   },
   "projects": {
     "path": "/projects/",
-    "title": ["Projetos ecológicos para apoiar e acompanhar | Leafora", "Explore ecological restoration projects | Leafora"],
-    "description": ["Conheça os projetos do catálogo de testes da Leafora. Veja o que cada iniciativa pretende recuperar e como planeja usar os recursos antes de escolher seu apoio.", "Explore Leafora's test catalog. Learn what each project aims to restore and how it plans to use funds before choosing one to support."]
+    "title": ["Projetos ecológicos em andamento | Leafora", "Ecological projects in progress | Leafora"],
+    "description": ["Conheça os projetos ecológicos da Leafora. Veja o que cada iniciativa pretende recuperar e como planeja usar os recursos antes de escolher seu apoio.", "Explore Leafora's ecological projects. Learn what each initiative aims to restore and how it plans to use funds before choosing one to support."]
   },
   "method": {
     "path": "/method/",
     "title": ["Como funciona: apoio, evidências e blockchain | Leafora", "How it works: project support, evidence and blockchain | Leafora"],
-    "description": ["Entenda como você poderá apoiar um projeto na Leafora e acompanhar seu trabalho. Conheça os testes atuais e como o aplicativo registrará a execução no campo.", "Learn how you will be able to support a Leafora project and follow its work. Explore current trials and how the app will record progress in the field."]
+    "description": ["Entenda os apoios em USDC pela rede Stellar e como a Leafora planeja documentar a execução dos projetos com registros de campo e referências digitais na Sui.", "Learn about USDC contributions on Stellar and how Leafora plans to document project progress with field records and digital references on Sui."]
   },
   "roadmap": {
     "path": "/roadmap/",
     "title": ["Roadmap: Capture, selos e mercado ambiental | Leafora", "Roadmap: Capture, environmental labels and marketplace | Leafora"],
-    "description": ["Veja como a Leafora pretende evoluir dos pequenos apoios a um mercado de créditos de carbono, com registros de campo e selos ligados a projetos auditados.", "See how Leafora plans to grow from small project contributions to a carbon credit marketplace, with field records and labels linked to audited projects."]
+    "description": ["Conheça os próximos passos da Leafora: apoios pela Stellar, registros de campo, selos e NFTs planejados na Sui, e a preparação para créditos de carbono.", "Explore Leafora's next steps: contributions on Stellar, field records, labels and NFTs planned on Sui, and preparation for carbon credits."]
   },
   "dashboard": {
     "path": "/dashboard/",
     "title": ["Meu portfólio | Leafora", "My portfolio | Leafora"],
-    "description": ["Consulte os apoios feitos neste navegador com sua carteira e os pontos de participação registrados na Leafora.", "Review contributions made in this browser with your wallet and the participation points recorded in Leafora."]
+    "description": ["Consulte os apoios e pontos de participação da sua carteira, registrados por projeto na rede Stellar.", "Review contributions and allocation points for your wallet, recorded by project on the Stellar network."]
   },
   "not-found": {
     "path": "/404/",

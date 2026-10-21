@@ -1,8 +1,9 @@
 from fastapi import APIRouter
 
-from app.api.routes import evidence, health, projects, supports, funding
+from app.api.routes import evidence, health, projects, supports, funding, rewards
 
 api_router = APIRouter()
+api_router.include_router(rewards.router, prefix="/rewards", tags=["rewards"])
 api_router.include_router(funding.router, prefix="/funding", tags=["funding"])
 api_router.include_router(health.router, tags=["health"])
 api_router.include_router(projects.router, prefix="/projects", tags=["projects"])

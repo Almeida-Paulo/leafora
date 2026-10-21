@@ -65,3 +65,11 @@ Project covers are currently illustrative media, not Leafora Capture evidence.
 The stable project description is committed on Stellar; the image URI is kept
 separate for new publications so it can later be replaced by reviewed,
 Capture-backed media. See `docs/architecture/project-catalog-capture.md`.
+
+The connected dashboard also reads `/api/rewards/wallets/{address}` independently
+of funding availability. It shows accumulated LEAF rewards, locked until official
+launch, zero transferable balance and a 1:1 mainnet conversion. No LEAF is issued
+or sent during testing; rewards survive resets in the API journal. Cancelled
+approvals stay visible in the history. Campaign approvals are administrative;
+USDC contributions do not grant LEAF automatically. Migration `0004_leaf_rewards`
+must be applied before deploying this dashboard. See `docs/operations/leaf-rewards.md`.

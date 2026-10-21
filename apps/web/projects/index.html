@@ -4,15 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
     <meta name="theme-color" content="#ffffff">
-    <meta name="description" content="Conheça os projetos do catálogo de testes da Leafora. Veja o que cada iniciativa pretende recuperar e como planeja usar os recursos antes de escolher seu apoio.">
-    <title>Projetos ecológicos para apoiar e acompanhar | Leafora</title>
-    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+    <meta name="description" content="Conheça os projetos ecológicos da Leafora. Veja o que cada iniciativa pretende recuperar e como planeja usar os recursos antes de escolher seu apoio.">
+    <title>Projetos ecológicos em andamento | Leafora</title>
+    <link rel="icon" href="/assets/img/favicon.svg?v=2" type="image/svg+xml">
     <link rel="preload" href="/assets/fonts/manrope-latin-v20.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/zt-nature-medium.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/wallet.css">
+    <link rel="stylesheet" href="/assets/css/rewards.css">
+    <link rel="stylesheet" href="/assets/css/raiz.css?v=23">
   <meta property="og:type" content="website">
 <meta property="og:site_name" content="Leafora">
-<meta property="og:title" content="Projetos ecológicos para apoiar e acompanhar | Leafora">
-<meta property="og:description" content="Conheça os projetos do catálogo de testes da Leafora. Veja o que cada iniciativa pretende recuperar e como planeja usar os recursos antes de escolher seu apoio.">
+<meta property="og:title" content="Projetos ecológicos em andamento | Leafora">
+<meta property="og:description" content="Conheça os projetos ecológicos da Leafora. Veja o que cada iniciativa pretende recuperar e como planeja usar os recursos antes de escolher seu apoio.">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary">
 <meta name="robots" content="index,follow">
@@ -22,7 +26,7 @@
     <header class="topbar" id="siteHeader">
       <a class="brand" href="/" data-route aria-label="Leafora - página inicial">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewbox="0 0 48 48"><path d="M38.5 8.8c-10.4.7-20 4.9-25.4 11.1-5 5.7-5.2 13.6-.4 18.1 4.9 4.7 12.5 4 18-1.8 6-6.4 8.6-16.2 7.8-27.4Z"></path><path d="M13.3 35.8c5.9-8.9 12.2-14.3 20.9-20.4"></path><path d="M19 29.5c4 .3 7.5 1.1 10.7 2.5"></path><path d="M22.9 24.8c-.5-3.4-.4-6.4.4-9.2"></path></svg>
+          <img src="/assets/img/leafora-symbol.svg" alt="" width="25" height="32">
         </span>
         <span class="brand-copy">
           <strong>Leafora</strong>
@@ -53,67 +57,103 @@
 
     <main id="app" tabindex="-1">
       <div class="view" data-view="home" hidden>
-        <section class="hero">
-          <img src="/assets/img/hero-proof.png" alt="Ilustração de uma paisagem de restauração ambiental">
-          <div class="hero-overlay"></div>
+        <section class="hero hero-raiz">
+          <div class="hero-art" data-leafora-tree aria-hidden="true">
+            <canvas data-tree-canvas width="1000" height="800"></canvas>
+            <canvas data-rain-canvas width="1000" height="800"></canvas>
+          </div>
           <div class="hero-copy">
-            <p class="eyebrow hero-label"><span aria-hidden="true"></span>Apoio a projetos de regeneração ambiental</p>
-            <h1>Leafora</h1>
-            <p class="hero-statement">O futuro é vivo.<br>E você faz parte.</p>
-            <p>Apoie projetos de restauração ambiental e agricultura regenerativa com pequenos valores. Conheça as metas, acompanhe as etapas e consulte as evidências de cada projeto.</p>
+            <h1 class="hero-title">A plataforma que descentraliza a preservação da natureza</h1>
+            <p class="hero-description">A Leafora tem o objetivo de democratizar o acesso a projetos de restauração ambiental e agricultura regenerativa com pequenos valores e máxima transparência.</p>
             <div class="actions">
               <a class="primary-action" href="/projects/" data-route>Explorar projetos <span aria-hidden="true">↗</span></a>
               <a class="secondary-action" href="/method/" data-route>Como funciona</a>
             </div>
           </div>
-          <div class="hero-foot"><span>DA SUA CARTEIRA AO MUNDO REAL</span><a href="/#marketplace" data-route aria-label="Explorar projetos em destaque">Explore <span aria-hidden="true">↓</span></a><span>APOIO · EVIDÊNCIA · REGENERAÇÃO</span></div>
         </section>
 
-        <div class="platform-strip">
-          <p><span class="live-dot" aria-hidden="true"></span><strong>Da sua participação à regeneração.</strong></p>
-          <a href="/roadmap/" data-route>Roadmap <span aria-hidden="true">→</span></a>
-        </div>
+        <section class="home-editorial home-story" aria-labelledby="flowTitle">
+          <h2 id="flowTitle">Como a Leafora atua</h2>
+          <div class="home-editorial-grid">
+            <div class="home-story-copy">
+              <p>A Leafora está sendo criada para que você possa contribuir diretamente com projetos ecológicos, mesmo com pequenos valores. Depois do apoio, poderá acompanhar o trabalho e os registros publicados pelos responsáveis.</p>
+              <a class="home-inline-link" href="/method/" data-route>Saiba como participar <span aria-hidden="true">→</span></a>
+            </div>
+            <figure class="home-photo">
+              <div class="home-photo-stage">
+                <span class="home-photo-ticks" aria-hidden="true"></span>
+                <img src="/assets/img/home-macaw-photo.webp" width="1600" height="1107" loading="lazy" decoding="async" alt="Arara-vermelha pousada em um galho">
+              </div>
+              <figcaption><span class="home-photo-prefix" aria-hidden="true">//</span> <strong class="home-photo-name">Arara-vermelha</strong> <span class="home-photo-scientific">(<i>Ara chloropterus</i>)</span></figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="home-editorial home-how" aria-labelledby="homeHowTitle">
+          <h2 id="homeHowTitle">Como apoiar um projeto</h2>
+          <div class="home-editorial-grid">
+            <figure class="home-photo">
+              <div class="home-photo-stage">
+                <span class="home-photo-ticks" aria-hidden="true"></span>
+                <img src="/assets/img/home-jaguar-photo.jpg" width="640" height="427" loading="lazy" decoding="async" alt="Onça-pintada em uma floresta">
+              </div>
+              <figcaption><span class="home-photo-prefix" aria-hidden="true">//</span> <strong class="home-photo-name">Onça-pintada</strong> <span class="home-photo-scientific">(<i>Panthera onca</i>)</span></figcaption>
+            </figure>
+            <ol class="flow-list">
+              <li><span class="flow-icon" data-icon="map" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#map"></use></svg></span><div><strong>Conheça o projeto</strong><p>A página do projeto explica o que será recuperado e como a equipe pretende fazer isso. Assim, você conhece a iniciativa antes de decidir participar.</p></div></li>
+              <li><span class="flow-icon" data-icon="wallet" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#wallet"></use></svg></span><div><strong>Escolha seu apoio</strong><p>Escolha um valor em USDC e confirme o apoio na sua carteira digital, pela rede Stellar. Você pode apoiar novamente enquanto a captação estiver aberta.</p></div></li>
+              <li><span class="flow-icon" data-icon="scan" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#scan"></use></svg></span><div><strong>Acompanhe a execução</strong><p>Volte à página do projeto para consultar as atualizações publicadas pela equipe. Seu portfólio reúne os apoios registrados na sua carteira.</p></div></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="home-editorial home-types" aria-labelledby="projectTypesTitle">
+          <h2 id="projectTypesTitle">Tipos de projetos</h2>
+          <div class="home-editorial-grid">
+            <div class="home-types-copy">
+              <ul class="home-type-list">
+                <li><span class="home-type-icon" data-icon="trees" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#trees"></use></svg></span><div><h3>REDD+</h3><p>Conservação de florestas existentes e redução do desmatamento e da degradação florestal.</p></div></li>
+                <li><span class="home-type-icon" data-icon="sprout" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#sprout"></use></svg></span><div><h3>ARR</h3><p>Recuperação da cobertura vegetal por meio de florestamento, reflorestamento e revegetação.</p></div></li>
+                <li><span class="home-type-icon" data-icon="wheat" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#wheat"></use></svg></span><div><h3>ALM</h3><p>Práticas agrícolas que melhoram o manejo do solo, da água e da vegetação, como culturas de cobertura e menor revolvimento.</p></div></li>
+              </ul>
+              <p class="home-types-note">São frentes de atuação reconhecidas internacionalmente. A metodologia e a validação dependem de cada projeto.</p>
+            </div>
+            <figure class="home-photo">
+              <div class="home-photo-stage">
+                <span class="home-photo-ticks" aria-hidden="true"></span>
+                <img src="/assets/img/home-frog.webp" width="1200" height="900" loading="lazy" decoding="async" alt="Perereca de olhos vermelhos sobre uma folha">
+              </div>
+              <figcaption><span class="home-photo-prefix" aria-hidden="true">//</span> <strong class="home-photo-name">Perereca de olhos vermelhos</strong> <span class="home-photo-scientific">(<i>Agalychnis callidryas</i>)</span></figcaption>
+            </figure>
+          </div>
+        </section>
 
         <section class="market-section" id="marketplace">
           <div class="section-heading">
             <div>
-              <h2>Projetos ecológicos<br>para apoiar e acompanhar.</h2>
-              <p class="section-lead">Cada projeto conta uma história de recuperação da natureza. Conheça o que ele pretende transformar e como os recursos serão usados antes de escolher qual apoiar.</p>
+              <h2>Projetos ecológicos em andamento</h2>
             </div>
-            <a class="text-action" href="/projects/" data-route>Ver todos os projetos <span aria-hidden="true">→</span></a>
           </div>
           <div class="catalog-snapshot"><p id="catalogOrigin">Projetos publicados</p><div><span><b id="metricProjects">0</b> projetos</span><span><b id="metricRaised">—</b> em apoios</span><span><b id="metricEvidence">0</b> registros no catálogo</span></div></div>
           <p class="currency-note catalog-funding-note" id="homeFundingNote"></p>
           <p class="catalog-image-note" id="homeImageNote" hidden>A localização é informada pela curadoria e as imagens atuais são ilustrativas. Os registros de campo aparecerão após a captura e a revisão das evidências.</p>
           <div class="project-grid" id="featuredProjectGrid" role="region" aria-label="Projetos em destaque" tabindex="0" aria-live="polite"></div>
+          <div class="home-projects-footer"><a class="home-inline-link" href="/projects/" data-route>Ver todos os projetos <span aria-hidden="true">→</span></a></div>
         </section>
 
-        <section class="flow-section" aria-labelledby="flowTitle">
-          <div class="flow-intro">
-            <h2 id="flowTitle">Como apoiar um projeto na Leafora.</h2>
-            <p>A Leafora está sendo criada para que você possa contribuir diretamente com projetos ecológicos, mesmo com pequenos valores. Depois do apoio, poderá acompanhar o trabalho e os registros publicados pelos responsáveis.</p>
-            <a class="text-action" href="/method/" data-route>Saiba como participar <span aria-hidden="true">→</span></a>
-          </div>
-          <ol class="flow-list">
-            <li><span class="flow-icon" data-icon="map" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#map"></use></svg></span><div><strong>Conheça o projeto</strong><p>A página do projeto explica o que será recuperado e como a equipe pretende fazer isso. Assim, você conhece a iniciativa antes de decidir participar.</p></div></li>
-            <li><span class="flow-icon" data-icon="wallet" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#wallet"></use></svg></span><div><strong>Escolha seu apoio</strong><p>Escolha um valor e confirme o apoio na sua carteira digital, o aplicativo que autoriza a transação. Você pode apoiar novamente enquanto a captação estiver aberta.</p></div></li>
-            <li><span class="flow-icon" data-icon="scan" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#scan"></use></svg></span><div><strong>Acompanhe a execução</strong><p>Volte à página do projeto para consultar as atualizações publicadas pela equipe. Seu portfólio reúne os apoios registrados na sua carteira.</p></div></li>
-          </ol>
-        </section>
-
-        <section class="future-strip future-landscape" aria-labelledby="futureTitle">
-          <div class="future-inner">
-            <div class="future-copy"><h2 id="futureTitle">Não termina<br>no primeiro apoio.</h2><p>Nos próximos passos, queremos mostrar como os projetos evoluem e permitir que esse trabalho sustente selos ambientais e créditos de carbono.</p><a class="primary-action" href="/roadmap/" data-route>Explorar o roadmap <span aria-hidden="true">↗</span></a></div>
-            <figure class="nature-art" data-nature-art>
-              <canvas width="600" height="480" aria-hidden="true"></canvas>
-              <!-- Lucide pause/play icons. License: /assets/icons/LICENSE.txt. -->
-              <button class="art-toggle" type="button" aria-label="Pausar animação da folhagem" title="Pausar animação da folhagem" hidden>
-                <svg data-art-pause viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="3" width="5" height="18" rx="1"></rect><rect x="5" y="3" width="5" height="18" rx="1"></rect></svg>
-                <svg data-art-play viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg>
-              </button>
+        <section class="future-strip future-landscape future-birds" aria-labelledby="futureTitle">
+            <figure class="footer-birds" data-footer-birds aria-hidden="true">
+              <svg class="bird-colour-filter" width="0" height="0" focusable="false"><defs>
+                <filter id="footerBirdInk" color-interpolation-filters="sRGB">
+                  <fecolormatrix type="matrix" values="0 0 0 0 .10196  0 0 0 0 .10196  0 0 0 0 .10196  -1.28 0 0 0 1.2549"></fecolormatrix>
+                </filter>
+              </defs></svg>
+              <video muted loop playsinline preload="none" disablepictureinpicture tabindex="-1"></video>
             </figure>
+          <div class="future-inner">
+            <div class="future-copy"><h2 id="futureTitle">Não termina<br>no primeiro apoio.</h2><p>Nos próximos passos, queremos conectar os registros de campo na Sui a selos ambientais e preparar os projetos para créditos de carbono, conforme as regras de cada programa.</p><a class="primary-action" href="/roadmap/" data-route>Explorar o roadmap <span aria-hidden="true">↗</span></a></div>
+
           </div>
-          <div class="ecosystem-links"><a href="/roadmap/#capture" data-route><strong>Leafora Capture</strong><span class="ecosystem-description">A evidência nasce no campo.</span><i aria-hidden="true">↗</i></a><a href="/roadmap/#mercado" data-route><strong>Leafora Market</strong><span class="ecosystem-description">A natureza encontra seu mercado.</span><i aria-hidden="true">↗</i></a></div>
         </section>
       </div>
 
@@ -121,7 +161,7 @@
         <section class="page-intro marketplace-intro">
           <div>
             <p class="eyebrow">Leafora Marketplace</p>
-            <h1>Explore projetos de regeneração ambiental.</h1>
+            <h1>Projetos ecológicos em andamento</h1>
           </div>
           <div class="market-summary" aria-label="Resumo do catálogo">
             <span><strong id="marketProjectCount">0</strong> projetos</span>
@@ -179,14 +219,13 @@
 
         <section class="method-stage" aria-labelledby="methodCurrentTitle">
           <div class="method-label">
-            <span class="availability current">Etapa atual · testes</span>
-            <h2 id="methodCurrentTitle">O que você pode fazer nesta etapa.</h2>
+            <h2 id="methodCurrentTitle">Do apoio ao acompanhamento do projeto.</h2>
           </div>
           <div class="method-steps">
-            <article><span data-icon="map" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#map"></use></svg></span><h3>Encontre uma causa para apoiar</h3><p>Você pode explorar o catálogo e conhecer a proposta de cada iniciativa, desde a recuperação de mata nativa até a agricultura regenerativa. Os exemplos de demonstração estão identificados para você reconhecer o que está em teste.</p></article>
-            <article><span data-icon="wallet" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#wallet"></use></svg></span><h3>Experimente um apoio</h3><p>Você escolhe o valor em USDC e confirma o apoio na sua carteira digital. O contrato registra a contribuição e os pontos de participação na mesma transação.</p></article>
-            <article><span data-icon="leaf" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#leaf"></use></svg></span><h3>Conheça o registro do seu apoio</h3><p>Cada USDC corresponde a um ponto de participação (AP) no projeto escolhido. Os pontos ficam registrados publicamente na blockchain e podem ser consultados no seu portfólio. Eles não são créditos de carbono nem garantem rendimento.</p></article>
-            <article><span data-icon="scan" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#scan"></use></svg></span><h3>Veja o que acontece depois</h3><p>A página de cada projeto reúne as atualizações e os registros publicados pela equipe. Seu portfólio mostra os apoios associados à carteira, mesmo quando você troca de aparelho.</p></article>
+            <article><span data-icon="map" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#map"></use></svg></span><h3>Encontre uma causa para apoiar</h3><p>Explore o catálogo e conheça a proposta de cada iniciativa, desde a recuperação de mata nativa até a agricultura regenerativa. Confira os objetivos, as etapas e o uso previsto dos recursos antes de participar.</p></article>
+            <article><span data-icon="wallet" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#wallet"></use></svg></span><h3>Escolha como apoiar</h3><p>Escolha um valor em USDC e confirme o apoio na sua carteira digital. Na rede Stellar, o contrato registra a contribuição e os pontos de participação na mesma transação.</p></article>
+            <article><span data-icon="leaf" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#leaf"></use></svg></span><h3>Conheça o registro do seu apoio</h3><p>Cada USDC corresponde a um ponto de participação (AP) no projeto escolhido. Os pontos ficam registrados na Stellar e podem ser consultados no seu portfólio. Eles não são créditos de carbono nem garantem rendimento.</p></article>
+            <article><span data-icon="scan" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#scan"></use></svg></span><h3>Veja o que acontece depois</h3><p>A página de cada projeto reúne as atualizações e os registros publicados pela equipe. Seu portfólio mostra os apoios associados à carteira, mesmo quando você troca de aparelho.</p></article>
           </div>
         </section>
 
@@ -195,20 +234,20 @@
             <p class="eyebrow">Aplicativo planejado · Leafora Capture</p>
             <h2 id="proofTitle">Como você poderá acompanhar o trabalho no campo</h2>
             <p>Uma foto ajuda a mostrar o trabalho, mas também precisamos saber onde e quando ela foi feita. O Leafora Capture permitirá que as equipes registrem imagens com essas informações no momento da captura. Você poderá consultar os registros publicados junto ao projeto.</p>
-            <p>Cada registro terá uma identificação digital na blockchain, uma rede de registros compartilhados, para que alterações posteriores possam ser detectadas. A equipe também avaliará o conteúdo: preservar um arquivo não garante, por si só, que ele retrate a realidade.</p>
+            <p>As fotos e os vídeos ficarão armazenados fora da blockchain. Uma identificação digital registrada na rede Sui permitirá conferir se o arquivo foi alterado. A análise da equipe e a verificação independente continuarão necessárias para avaliar o que ele mostra.</p>
             <a class="text-action" href="/roadmap/#capture" data-route>Conheça o aplicativo <span aria-hidden="true">→</span></a>
           </div>
           <dl class="proof-ledger">
             <div><dt>Captura</dt><dd>A equipe fará fotos e vídeos no aplicativo, durante o trabalho.</dd></div>
             <div><dt>Contexto</dt><dd>Cada imagem estará ligada à etapa do projeto em que foi registrada.</dd></div>
-            <div><dt>Integridade</dt><dd>Uma identificação digital permitirá conferir se o arquivo foi alterado.</dd></div>
+            <div><dt>Integridade</dt><dd>Uma identificação digital na Sui permitirá conferir se o arquivo foi alterado.</dd></div>
             <div><dt>Revisão</dt><dd>Você poderá saber se o registro já foi analisado pela equipe responsável.</dd></div>
-            <div><dt>Registro público</dt><dd>O registro na blockchain permitirá consultar o histórico da evidência.</dd></div>
+            <div><dt>Registro público</dt><dd>O registro na Sui permitirá consultar o histórico da evidência.</dd></div>
           </dl>
         </section>
 
         <section class="future-strip compact-future">
-          <div class="future-inner"><div><p class="eyebrow">A visão completa</p><h2>Do primeiro apoio ao mercado ambiental.</h2><p>Veja como pretendemos ampliar o acompanhamento dos projetos até chegar aos selos e ao mercado de créditos de carbono.</p></div><a class="primary-action" href="/roadmap/" data-route>Ver o roadmap <span aria-hidden="true">↗</span></a></div>
+          <div class="future-inner"><div><p class="eyebrow">A visão completa</p><h2>Do primeiro apoio ao mercado ambiental.</h2><p>Conheça os próximos passos: registros de campo na Sui, verificação independente e futuros selos ambientais, até a preparação para créditos de carbono.</p></div><a class="primary-action" href="/roadmap/" data-route>Ver o roadmap <span aria-hidden="true">↗</span></a></div>
         </section>
       </div>
 
@@ -218,12 +257,12 @@
             <h1>Roadmap</h1>
           </div>
           <div class="roadmap-lead">
-            <p>Estamos criando uma forma de apoiar a recuperação da natureza e acompanhar o que acontece com cada projeto. O caminho começa com pequenos apoios e avança para registros de campo, selos ambientais e um mercado de créditos de carbono. Conheça o que você poderá fazer em cada etapa.</p>
+            <p>O caminho começa com apoios em USDC pela Stellar e avança para registros de campo na Sui, selos ambientais e um mercado de créditos de carbono. Conheça o que está previsto em cada etapa e como os projetos serão acompanhados.</p>
           </div>
         </section>
 
         <nav class="roadmap-nav" aria-label="Etapas do roadmap">
-          <a href="/roadmap/#apoio" data-route data-phase-link="apoio" aria-controls="apoio"><span>01 <i aria-hidden="true">↗</i></span><strong>Apoio</strong><small>Em testes</small></a>
+          <a href="/roadmap/#apoio" data-route data-phase-link="apoio" aria-controls="apoio"><span>01 <i aria-hidden="true">↗</i></span><strong>Apoio</strong><small>Etapa atual</small></a>
           <a href="/roadmap/#capture" data-route data-phase-link="capture" aria-controls="capture"><span>02 <i aria-hidden="true">↗</i></span><strong>Capture</strong><small>Planejado</small></a>
           <a href="/roadmap/#verificacao" data-route data-phase-link="verificacao" aria-controls="verificacao"><span>03 <i aria-hidden="true">↗</i></span><strong>Verificação</strong><small>Planejada</small></a>
           <a href="/roadmap/#selos" data-route data-phase-link="selos" aria-controls="selos"><span>04 <i aria-hidden="true">↗</i></span><strong>Selos</strong><small>Planejada</small></a>
@@ -235,16 +274,16 @@
 
         <section class="roadmap-phase phase-support" id="apoio" aria-labelledby="phaseSupportTitle">
           <div class="phase-inner">
-            <div class="phase-heading"><span class="phase-number">01</span><div><span class="phase-status status-now">Em testes</span><h2 id="phaseSupportTitle">Escolha um projeto e faça parte dele</h2><p>Você não precisa financiar um projeto inteiro para ajudar a recuperar a natureza. A proposta da Leafora é reunir pequenos apoios e aproximar você de quem realiza esse trabalho.</p></div></div>
+            <div class="phase-heading"><span class="phase-number">01</span><div><span class="phase-status status-now">Stellar Testnet</span><h2 id="phaseSupportTitle">Escolha um projeto e faça parte dele</h2><p>Você não precisa financiar um projeto inteiro para ajudar a recuperar a natureza. A proposta da Leafora é reunir pequenos apoios e aproximar você de quem realiza esse trabalho.</p></div></div>
             <div class="phase-body two-columns">
               <div>
                 <p>Antes de participar, você conhece o que o projeto pretende recuperar e como usará os recursos. A equipe Leafora seleciona as iniciativas que podem ser publicadas.</p>
-                <p>Nos projetos abertos para captação, você escolhe um valor em USDC e confirma o apoio na sua carteira. A meta orienta o financiamento; os apoios podem ultrapassá-la até o encerramento do prazo.</p>
+                <p>Nos projetos abertos para captação, você escolhe um valor em USDC e confirma o apoio na rede Stellar pela sua carteira. A meta orienta o financiamento; os apoios podem ultrapassá-la até o encerramento do prazo.</p>
                 <p>Cada USDC apoiado corresponde a um ponto de participação (AP) naquele projeto. No seu portfólio, você acompanha os valores registrados e a evolução das iniciativas que escolheu.</p>
-                <p class="phase-note">Os AP ficam registrados publicamente por projeto e por carteira. A emissão de NFTs será uma etapa posterior; os pontos atuais não prometem rendimento.</p>
+                <p class="phase-note">Os AP ficam registrados na Stellar por projeto e por carteira. NFTs de participação estão previstos para uma etapa futura na Sui; os pontos atuais não prometem rendimento.</p>
                 <a class="text-action" href="/projects/" data-route>Explorar os projetos <span aria-hidden="true">↗</span></a>
               </div>
-              <figure class="support-preview"><img src="/assets/img/project-spring.png" alt="Ilustração de um projeto de recuperação de nascentes" loading="lazy"><div class="support-preview-label"><span>PROJETO ILUSTRATIVO / MATA ATLÂNTICA</span><strong>Um apoio.<br>Novas raízes.</strong><a href="/projects/" data-route>Explore o catálogo <span aria-hidden="true">↗</span></a></div><figcaption>Demonstração sem dinheiro real</figcaption></figure>
+              <figure class="support-preview"><img src="/assets/img/project-spring.png" alt="Ilustração de um projeto de recuperação de nascentes" loading="lazy"><div class="support-preview-label"><span>MATA ATLÂNTICA</span><strong>Um apoio.<br>Novas raízes.</strong><a href="/projects/" data-route>Explore o catálogo <span aria-hidden="true">↗</span></a></div><figcaption>Natureza, pessoas e acompanhamento.</figcaption></figure>
             </div>
           </div>
         </section>
@@ -253,7 +292,7 @@
           <div class="phase-inner">
             <div class="phase-heading"><span class="phase-number">02</span><div><span class="phase-status status-next">Aplicativo planejado</span><h2 id="phaseCaptureTitle">Leafora Capture</h2><p>Você poderá acompanhar o trabalho por imagens que mostram onde e quando cada atividade foi registrada.</p></div></div>
             <div class="phase-body capture-layout">
-              <div class="capture-copy"><p>Com o Leafora Capture, a equipe autorizada poderá documentar o projeto diretamente no celular. As fotos e os vídeos serão associados à atividade acompanhada, para que você veja sua evolução ao longo do tempo.</p><dl class="capture-features"><div><dt>Origem</dt><dd>Cada registro identificará o projeto e quem fez a captura.</dd></div><div><dt>Contexto</dt><dd>O aplicativo guardará a localização e a data da captura. Você também poderá ver quando o registro foi incluído na blockchain.</dd></div><div><dt>Integridade</dt><dd>As imagens ficarão armazenadas fora da blockchain. Uma identificação digital registrada na Sui permitirá verificar se foram alteradas.</dd></div><div><dt>Continuidade</dt><dd>Sem internet, a equipe poderá guardar os registros no celular e enviá-los quando a conexão voltar, sem repeti-los.</dd></div></dl><p class="phase-note">O aplicativo será disponibilizado primeiro para Android. A revisão dos registros ajudará a avaliar se eles correspondem ao trabalho realizado.</p></div>
+              <div class="capture-copy"><p>Com o Leafora Capture, a equipe autorizada poderá documentar o projeto diretamente no celular. As fotos e os vídeos serão associados à atividade acompanhada, para que você veja sua evolução ao longo do tempo.</p><dl class="capture-features"><div><dt>Origem</dt><dd>Cada registro identificará o projeto e quem fez a captura.</dd></div><div><dt>Contexto</dt><dd>O aplicativo guardará a localização e a data da captura. Você também poderá ver quando a identificação digital do registro foi incluída na rede Sui.</dd></div><div><dt>Integridade</dt><dd>As imagens ficarão armazenadas fora da blockchain. Uma identificação digital registrada na Sui permitirá verificar se foram alteradas.</dd></div><div><dt>Continuidade</dt><dd>Sem internet, a equipe poderá guardar os registros no celular e enviá-los quando a conexão voltar, sem repeti-los.</dd></div></dl><p class="phase-note">O aplicativo será disponibilizado primeiro para Android. A revisão dos registros ajudará a avaliar se eles correspondem ao trabalho realizado.</p></div>
               <figure class="capture-preview">
                 <div class="preview-tabs" role="tablist" aria-label="Prévia do Leafora Capture">
                   <button type="button" role="tab" id="tab-projects" aria-controls="preview-projects" aria-selected="false" tabindex="-1" data-preview-tab="projects">Projetos</button>
@@ -299,12 +338,12 @@
         <section class="roadmap-phase phase-seals" id="selos" aria-labelledby="phaseSealsTitle" hidden>
           <div class="phase-inner"><div class="phase-heading"><span class="phase-number">04</span><div><span class="phase-status">Planejada</span><h2 id="phaseSealsTitle">Mostre qual projeto sua empresa apoia</h2><p>Os selos Leafora permitirão que empresas mostrem seu apoio à natureza com uma ligação clara a projetos em funcionamento e auditados.</p></div></div>
             <div class="phase-body seal-layout"><div>
-                <p>Ao consultar o selo, um cliente poderá conhecer o projeto apoiado e o que a empresa contribuiu para realizar. Assim, a mensagem ambiental terá uma referência que qualquer pessoa poderá conferir.</p>
+                <p>Planejamos usar a Sui para vincular cada selo ao projeto, à empresa e às referências das evidências. Ao consultar o selo, um cliente poderá conhecer o apoio realizado e a declaração ambiental que foi verificada.</p>
                 <p>Um código QR levará à página do selo, com as evidências, o período de validade e o responsável pela verificação.</p>
                 <p>Essa página também mostrará se o selo foi renovado, suspenso ou revogado, preservando o histórico para consulta.</p>
                 <p class="phase-note">O selo identificará o apoio comprovado. Ele não significará, por si só, que a empresa compensou suas emissões ou se tornou neutra em carbono.</p>
               </div>
-              <figure class="seal-preview"><div class="seal-stamp"><span>LEAFORA</span><strong>Apoio<br>verificável.</strong><span>PROJETO · EVIDÊNCIA · IMPACTO</span></div><div class="seal-caption"><span>PRÉVIA DE SELO</span><strong>Uma marca. Uma trilha de comprovação.</strong><p>Projeto vinculado · auditoria · validade</p></div><figcaption>Conceito visual · não é uma certificação emitida</figcaption></figure>
+              <figure class="seal-preview"><img class="seal-concept" src="/assets/img/leafora-seal-concept.svg?v=3" alt="Modelo de selo ambiental Leafora" width="440" height="440" loading="lazy"><div class="seal-caption"><span>PRÉVIA DE SELO</span><strong>Uma marca. Uma trilha de comprovação.</strong><p>Projeto vinculado · auditoria · validade</p></div><figcaption>Conceito visual · não é uma certificação emitida</figcaption></figure>
             </div>
           </div>
         </section>
@@ -325,13 +364,13 @@
             <div class="phase-body"><div class="market-vision-copy"><p>O Leafora Market reunirá créditos de carbono e outros ativos ambientais que atendam aos critérios do mercado. Antes de negociar, você poderá consultar o projeto de origem, a verificação dos resultados e o histórico do ativo.</p><p>Também estudamos permitir a negociação de participações em projetos. Cada oferta precisará explicar quais direitos o comprador recebe e atender às regras aplicáveis.</p></div>
               <figure class="exchange-preview"><div class="exchange-top"><strong>Leafora <span>Market</span></strong><span class="concept-tag">Conceito · não operacional</span></div><div class="exchange-categories"><span>Ativos ambientais</span><span>Ofertas</span><span>Portfólio</span></div><div class="exchange-table-wrap"><table class="exchange-table"><caption class="visually-hidden">Categorias ilustrativas do futuro mercado, sem ofertas reais</caption><thead><tr><th>Ativo / categoria</th><th>Origem</th><th>Unidade</th><th>Disponibilidade</th></tr></thead><tbody><tr><td><span class="asset-monogram">CO<sub>2</sub></span><strong>Créditos de carbono<small>Redução ou remoção verificada</small></strong></td><td>Registro reconhecido</td><td>tCO<sub>2</sub>e</td><td><span class="market-pending">Planejada</span></td></tr><tr><td><span class="asset-monogram asset-bio">BIO</span><strong>Ativos de biodiversidade<small>Conforme metodologia aplicável</small></strong></td><td>Projeto verificado</td><td>A definir</td><td><span class="market-pending">Em estudo</span></td></tr><tr><td><span class="asset-monogram asset-project">PRJ</span><strong>Participações em projetos<small>Direitos definidos em contrato</small></strong></td><td>Oferta estruturada</td><td>Conforme oferta</td><td><span class="market-pending">Em estudo</span></td></tr></tbody></table></div><div class="exchange-bottom"><span><span class="live-dot" aria-hidden="true"></span>Rastreabilidade da origem à destinação</span><span>Prévia sem cotações ou ordens reais</span></div><figcaption class="visually-hidden">Representação visual de um produto futuro.</figcaption></figure>
               <div class="market-capabilities"><div><span>01</span><h3>Compare antes de comprar</h3><p>Você poderá comparar ofertas e consultar as informações de cada ativo antes de escolher uma compra.</p></div><div><span>02</span><h3>Acompanhe a transferência</h3><p>Depois da negociação, você poderá acompanhar a transferência e consultar o registro de quem possui o ativo.</p></div><div><span>03</span><h3>Registre o uso do crédito</h3><p>Quando um crédito for usado para compensar emissões, sua retirada de circulação será registrada para que ele não seja usado novamente.</p></div></div>
-              <p class="phase-note">Este mercado ainda está planejado. Ofertas com participação em resultados dependerão das regras aplicáveis, inclusive da CVM quando necessário. Os NFTs e pontos atuais não concedem esses direitos.</p>
+              <p class="phase-note">Este mercado ainda está planejado. Ofertas com participação em resultados dependerão das regras aplicáveis, inclusive da CVM quando necessário. Os pontos atuais e os NFTs previstos não concedem esses direitos.</p>
             </div>
           </div>
         </section>
 
-        <nav class="phase-pagination" aria-label="Continuar pelo roadmap"><a id="previousPhase" data-route hidden><span aria-hidden="true">←</span> Etapa anterior</a><span id="phasePosition" aria-live="polite">01 / 06</span><a id="nextPhase" href="/roadmap/#capture" data-route>Próxima: Capture <span aria-hidden="true">→</span></a></nav>
-        <section class="roadmap-faq" aria-labelledby="roadmapFaqTitle"><div><h2 id="roadmapFaqTitle">Dúvidas sobre a Leafora</h2></div><div class="faq-list"><details><summary>O que posso experimentar hoje?</summary><p>Você pode conhecer os projetos publicados, escolher um valor em USDC nas iniciativas abertas e confirmar o apoio na carteira. Depois, seus pontos aparecem no dashboard, separados por projeto.</p></details><details><summary>O aplicativo já está disponível?</summary><p>O aplicativo ainda não está disponível ao público. As telas mostram como planejamos o registro de campo. O acesso começará pelas equipes autorizadas de cada projeto, inicialmente no Android.</p></details><details><summary>Os pontos de participação são créditos de carbono?</summary><p>Não. Os AP registram quanto você apoiou em cada projeto. Créditos de carbono dependem de resultados medidos e verificados segundo um programa de certificação; apoiar uma iniciativa não equivale a compensar emissões.</p></details><details><summary>Quando chegam as próximas etapas?</summary><p>Ainda não temos datas confirmadas. Publicaremos as novidades à medida que os testes e os projetos-piloto mostrarem que cada recurso está pronto para ser usado.</p></details></div></section>
+        <nav class="phase-pagination" aria-label="Continuar pelo roadmap"><a id="previousPhase" data-route hidden><span class="phase-link-arrow" aria-hidden="true">←</span> <span class="phase-link-label">Etapa anterior</span></a><span id="phasePosition" aria-live="polite">01 / 06</span><a id="nextPhase" href="/roadmap/#capture" data-route><span class="phase-link-label">Próxima: Capture</span> <span class="phase-link-arrow" aria-hidden="true">→</span></a></nav>
+        <section class="roadmap-faq" aria-labelledby="roadmapFaqTitle"><div><h2 id="roadmapFaqTitle">Dúvidas sobre a Leafora</h2></div><div class="faq-list"><details><summary>Como funcionam os apoios hoje?</summary><p>Você pode conhecer os projetos publicados e, nas iniciativas habilitadas, confirmar apoios em USDC pela carteira. A integração usa a Stellar Testnet: os tokens não têm valor financeiro real. Após a confirmação da transação, os pontos aparecem no portfólio, separados por projeto.</p></details><details><summary>O aplicativo já está disponível?</summary><p>O aplicativo ainda não está disponível ao público. As telas mostram como planejamos o registro de campo. O acesso começará pelas equipes autorizadas de cada projeto, inicialmente no Android.</p></details><details><summary>Os pontos de participação são créditos de carbono?</summary><p>Não. Os AP registram seu apoio na Stellar. Os selos e NFTs planejados na Sui terão finalidades próprias e não serão, por si só, créditos de carbono. Créditos dependem de resultados medidos e verificados; apoiar uma iniciativa não equivale a compensar emissões.</p></details><details><summary>Quando chegam as próximas etapas?</summary><p>Ainda não temos datas confirmadas. Publicaremos as novidades conforme cada etapa estiver pronta, com a validação técnica, os recursos e as parcerias necessários.</p></details></div></section>
         <section class="roadmap-closing"><p class="eyebrow">O futuro se constrói no presente</p><h2>Comece por uma causa.</h2><a class="primary-action" href="/projects/" data-route>Conheça os projetos <span aria-hidden="true">↗</span></a></section>
       </div>
 
@@ -341,7 +380,7 @@
             <div>
               <p class="eyebrow">Área do apoiador</p>
               <h1>Seu portfólio Leafora</h1>
-              <p class="section-lead">Acompanhe seu total de pontos e consulte quanto você apoiou em cada projeto. As participações vêm dos registros públicos da blockchain.</p>
+              <p class="section-lead">Acompanhe seu total de pontos e consulte quanto você apoiou em cada projeto. As participações vêm dos registros públicos da rede Stellar.</p>
             </div>
 
           </div>
@@ -363,6 +402,7 @@
               </div>
               <div class="support-list" id="supportList"></div>
             </section>
+            <section class="leaf-rewards" id="leafRewards" aria-label="LEAF" hidden></section>
           </div>
         </section>
       </div>
@@ -382,13 +422,22 @@
       <p class="footer-copyright">© <span data-current-year>2026</span> Leafora. Todos os direitos reservados.</p>
     </footer>
 
-    <dialog id="supportDialog" class="support-dialog">
+    <dialog id="supportDialog" class="support-dialog" aria-labelledby="supportDialogTitle" aria-describedby="supportMessage">
       <form method="dialog" class="dialog-panel">
-        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">×</button>
-        <p class="eyebrow">Apoiar projeto</p>
-        <h2 id="supportTitle">Projeto</h2>
+        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar" title="Fechar"><svg class="dialog-icon" aria-hidden="true"><use href="/assets/icons/interface.svg#x"></use></svg></button>
+        <div class="dialog-brand"><img src="/assets/img/favicon.svg" alt="" width="24" height="24"><span>Leafora</span></div>
+        <h2 id="supportDialogTitle">Apoiar projeto</h2>
         <p id="supportMessage" class="dialog-description"></p>
+        <div class="support-project">
+          <img id="supportProjectImage" src="/assets/img/project-spring.png" alt="" width="48" height="48">
+          <div><h3 id="supportTitle">Projeto</h3><p id="supportProjectLocation"></p></div>
+        </div>
         <div id="tierOptions" class="tier-options"></div>
+        <dl class="support-details">
+          <div><dt>Carteira</dt><dd id="supportWallet"></dd></div>
+          <div><dt>Rede</dt><dd id="supportNetwork"></dd></div>
+          <div><dt>Taxa de rede</dt><dd>Em XLM, exibida na carteira</dd></div>
+        </dl>
         <label class="risk-check">
           <input id="riskAccepted" type="checkbox">
           <span>Entendo que este apoio não garante retorno, lucro, crédito de carbono ou resultado certificado.</span>
@@ -396,27 +445,36 @@
         <p class="form-status" id="supportStatus" role="status" aria-live="polite"></p>
         <menu class="dialog-actions">
           <button class="secondary-action" value="cancel" type="submit">Cancelar</button>
-          <button class="primary-action" id="confirmSupport" value="default" type="button">Confirmar apoio</button>
+          <button class="primary-action" id="confirmSupport" value="default" type="button"><span>Confirmar apoio</span><svg class="dialog-icon" aria-hidden="true"><use href="/assets/icons/interface.svg#arrow-right"></use></svg></button>
         </menu>
       </form>
     </dialog>
 
-    <dialog id="walletDialog" class="wallet-dialog">
+    <dialog id="walletDialog" class="wallet-dialog" aria-labelledby="walletDialogTitle" aria-describedby="walletDescription">
       <form method="dialog" class="dialog-panel">
-        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar">×</button>
-        <div class="dialog-network"><span class="network-pill">Stellar Testnet · USDC</span></div>
-        <h2>Conectar carteira</h2>
-        <p class="wallet-notice">Os apoios usam USDC na rede de testes Stellar, sem valor financeiro real. Sua carteira autoriza cada transação; você também precisa de XLM de teste para as taxas. Nunca informe sua frase de recuperação ou chave privada.</p>
-        <label class="risk-check">
-          <input id="walletRiskAccepted" type="checkbox">
-          <span>Entendo que este ambiente é para testes, sem valor financeiro real e sem promessa de retorno.</span>
-        </label>
-        <div id="walletList" class="wallet-list"></div>
+        <button class="close-dialog" value="cancel" type="submit" aria-label="Fechar" title="Fechar"><svg class="dialog-icon" aria-hidden="true"><use href="/assets/icons/interface.svg#x"></use></svg></button>
+        <div class="dialog-brand"><img src="/assets/img/favicon.svg" alt="" width="24" height="24"><span>Leafora</span></div>
+        <h2 id="walletDialogTitle">Conectar carteira</h2>
+        <p id="walletDescription" class="wallet-notice">Conecte sua carteira para apoiar projetos e acompanhar suas participações.</p>
+        <div class="wallet-environment">
+          <div class="wallet-network"><span class="network-dot" aria-hidden="true"></span><strong>Stellar Testnet</strong><span class="wallet-asset">USDC</span></div>
+          <p>Você usa USDC de teste para apoiar e XLM de teste para as taxas.</p>
+          <label class="risk-check">
+            <input id="walletRiskAccepted" type="checkbox">
+            <span>Entendo que os tokens de teste não têm valor financeiro.</span>
+          </label>
+        </div>
+        <p id="walletListLabel" class="wallet-list-label">Escolha sua carteira</p>
+        <div id="walletList" class="wallet-list" aria-labelledby="walletListLabel"></div>
         <p class="form-status" id="walletStatus" role="status" aria-live="polite"></p>
+        <button id="retryWallets" class="wallet-retry" type="button" hidden><svg class="dialog-icon" aria-hidden="true"><use href="/assets/icons/interface.svg#refresh"></use></svg><span>Buscar carteiras novamente</span></button>
+        <a id="installWallet" class="wallet-install" href="https://www.freighter.app/" target="_blank" rel="noopener noreferrer" hidden><span>Conheça a Freighter</span><svg class="dialog-icon" aria-hidden="true"><use href="/assets/icons/interface.svg#arrow-up-right"></use></svg></a>
+        <p class="wallet-security"><svg class="dialog-icon" aria-hidden="true"><use href="/assets/icons/interface.svg#shield-check"></use></svg><span>Você autoriza cada transação na carteira. Sua chave privada permanece com você.</span></p>
       </form>
     </dialog>
 
-    <script type="module" src="/assets/js/app.js"></script>
-    <script type="module" src="/assets/js/nature-art.js"></script>
+    <script type="module" src="/assets/js/app.js?v=2"></script>
+    <script type="module" src="/assets/js/footer-birds.js?v=6"></script>
+    <script type="module" src="/assets/js/tree-hero.js?v=1"></script>
   </body>
 </html>

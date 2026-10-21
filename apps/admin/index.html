@@ -8,6 +8,7 @@
     <meta name="leafora-public-origin" content="https://leafora.midnorth.com.br">
     <title>Leafora Panel</title>
     <link rel="stylesheet" href="/assets/admin.css">
+    <link rel="stylesheet" href="/assets/rewards.css">
   </head>
   <body>
     <header class="shell-header">
@@ -21,6 +22,7 @@
       <nav aria-label="Navegação do painel">
         <a href="#catalog">Projetos</a>
         <a href="#editor">Editor</a>
+        <a href="#rewards">LEAF</a>
       </nav>
     </header>
 
@@ -179,6 +181,43 @@
             <p id="stellarPublishStatus" class="status" role="status"></p>
           </form>
         </section>
+      </section>
+      <section class="rewards-workspace" id="rewards" aria-labelledby="rewardsTitle">
+        <div class="heading-row">
+          <div><p class="eyebrow">Recompensas</p><h2 id="rewardsTitle">LEAF</h2><small>Oferta planejada: 1.000.000.000 LEAF</small></div>
+          <div class="actions">
+            <button id="exportAllocations" type="button" class="ghost reward-export"><svg aria-hidden="true"><use href="/assets/reward-icons.svg#download"></use></svg>Exportar saldos por carteira</button>
+            <button id="refreshRewards" type="button" class="reward-icon-button" title="Atualizar recompensas" aria-label="Atualizar recompensas"><svg aria-hidden="true"><use href="/assets/reward-icons.svg#refresh"></use></svg></button>
+            <button id="exportRewards" type="button" class="reward-icon-button" title="Exportar backup" aria-label="Exportar backup"><svg aria-hidden="true"><use href="/assets/reward-icons.svg#download"></use></svg></button>
+          </div>
+        </div>
+        <p class="reward-policy">Recompensas acumuladas e bloqueadas até o lançamento oficial. Conversão de 1:1 em LEAF na mainnet. Nenhum token é enviado nesta fase.</p>
+        <p id="rewardsStatus" class="status" role="status">Sessão não carregada.</p>
+        <div class="reward-table-wrap"><table class="reward-table"><caption class="sr-only">Reservas contábeis de recompensas em LEAF</caption><thead><tr><th>Reserva</th><th>Alocação</th><th>Sem campanha</th><th>Recompensas bloqueadas</th><th>Sem recompensa atribuída</th></tr></thead><tbody id="rewardReserves"></tbody></table></div>
+        <div class="reward-forms">
+          <form id="rewardCampaignForm">
+            <h3>Nova campanha</h3>
+            <label>Identificador <input name="id" required pattern="[a-z0-9][a-z0-9_-]{1,79}" placeholder="beta-inicial"></label>
+            <label>Título <input name="title" required maxlength="160"></label>
+            <label>Reserva <select name="reserve"><option value="testers">Testadores iniciais</option><option value="users">Incentivos aos usuários</option><option value="community">Comunidade</option><option value="security">Segurança e bug bounty</option></select></label>
+            <label>Orçamento em LEAF <input name="amount" required inputmode="decimal"></label>
+            <label>Regras da campanha <textarea name="rules" required rows="3" maxlength="4000"></textarea></label>
+            <button class="primary" type="submit">Criar campanha</button>
+          </form>
+          <form id="rewardAwardForm">
+            <h3>Aprovar recompensa</h3>
+            <label>Campanha <select name="campaign" required></select></label>
+            <label>Carteira Stellar <input name="wallet" required pattern="G[A-Z2-7]{55}" spellcheck="false" autocomplete="off"></label>
+            <label>Identificador da atividade <input name="activity" required pattern="[a-z0-9][a-z0-9_-]{1,79}" placeholder="primeiro-apoio"></label>
+            <label>Quantidade em LEAF <input name="amount" required inputmode="decimal"></label>
+            <label>Referência da validação <input name="reference" required maxlength="500"></label>
+            <button class="primary" type="submit">Aprovar recompensa</button>
+          </form>
+        </div>
+        <h3>Campanhas</h3>
+        <div class="reward-table-wrap"><table class="reward-table"><thead><tr><th>Campanha</th><th>Orçamento</th><th>Aprovado</th><th>Situação</th><th>Ação</th></tr></thead><tbody id="rewardCampaigns"></tbody></table></div>
+        <h3>Últimas aprovações (até 200)</h3>
+        <div class="reward-table-wrap"><table class="reward-table"><thead><tr><th>Carteira / atividade</th><th>Campanha</th><th>LEAF</th><th>Situação</th><th>Ação</th></tr></thead><tbody id="rewardAwards"></tbody></table></div>
       </section>
     </main>
 

@@ -1,0 +1,26 @@
+.leaf-rewards { margin-top: 36px; padding-top: 24px; border-top: 1px solid #dce4df; min-width: 0; }
+.leaf-rewards-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.leaf-rewards-heading h2 { margin: 0; font-size: 22px; line-height: 1.3; letter-spacing: 0; }
+.leaf-rewards-refresh { display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; padding: 0; border: 1px solid #dce4df; border-radius: 6px; background: #fff; color: #175a41; cursor: pointer; }
+.leaf-rewards-refresh svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+.leaf-rewards-refresh:focus-visible { outline: 2px solid #167c55; outline-offset: 3px; }
+.leaf-rewards-refresh:disabled { opacity: .45; cursor: wait; }
+.leaf-rewards-lock { display: flex; align-items: center; gap: 8px; color: #43566a; font-size: 14px; line-height: 1.5; margin: 0 0 20px; }
+.leaf-rewards-lock svg { width: 17px; height: 17px; flex: 0 0 17px; }
+.leaf-rewards-note { color: #536760; font-size: 14px; line-height: 1.5; margin: 0 0 20px; }
+.leaf-rewards-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0 0 24px; }
+.leaf-rewards-totals dt { color: #536760; font-size: 13px; margin-bottom: 6px; }
+.leaf-rewards-totals dd { color: #173d30; font-size: 22px; font-weight: 700; margin: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.leaf-rewards-totals dd span, .leaf-rewards-totals small { color: #536760; font-size: 12px; font-weight: 500; }
+.leaf-rewards-table-wrap { overflow-x: auto; }
+.leaf-rewards-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.leaf-rewards-table th, .leaf-rewards-table td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e1e8e4; overflow-wrap: anywhere; }
+.leaf-rewards-table thead th { font-size: 12px; font-weight: 600; color: #536760; }
+.leaf-rewards-table td:nth-child(2) { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.leaf-rewards-table small { display: block; font-size: 12px; color: #536760; }
+.leaf-rewards-empty { color: #536760; font-size: 14px; }
+@media (max-width: 600px) {
+  .leaf-rewards-totals { grid-template-columns: 1fr; gap: 16px; }
+  .leaf-rewards-totals dd { font-size: 20px; }
+  .leaf-rewards-table { min-width: 500px; }
+}

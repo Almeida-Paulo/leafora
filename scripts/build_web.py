@@ -1,5 +1,6 @@
 """Render localized public pages with the Python standard library."""
 
+import hashlib
 import html
 import json
 import shutil
@@ -9,6 +10,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "apps" / "web-src"
 OUTPUT = ROOT / "apps" / "web"
+
+# Content-version external symbols so persistent tabs load new icon definitions.
+ICON_SPRITE = OUTPUT / "assets/icons/interface.svg"
+ICON_SPRITE_VERSION = hashlib.sha256(ICON_SPRITE.read_bytes()).hexdigest()[:12]
+ICON_SPRITE_URL = "/assets/icons/interface.svg?v=" + ICON_SPRITE_VERSION
 def unique_keys(pairs):
     result = {}
     for key, value in pairs:
@@ -70,6 +76,8 @@ class Page(HTMLParser):
                 attrs["aria-current"] = "true"
         elif "href" in attrs and "data-route" in attrs:
             attrs["href"] = localized_path(attrs["href"], self.language)
+        if self.language and attrs.get("src", "").split("?", 1)[0] == "/assets/img/leafora-seal-concept.svg":
+            attrs["src"] = attrs["src"].replace("leafora-seal-concept.svg", "leafora-seal-concept-en.svg", 1)
         for key in ("alt", "title", "aria-label", "placeholder"):
             if attrs.get(key):
                 attrs[key] = text(attrs[key], self.language)
@@ -79,8 +87,8 @@ class Page(HTMLParser):
             attrs["aria-current"] = "page"
         serialized = "".join(" " + key + ("" if value is None else '="' + html.escape(value, quote=True) + '"') for key, value in attrs.items())
         self.parts.append("<" + tag + serialized + ">")
-        if attrs.get("data-icon") in {"map", "wallet", "scan", "leaf"}:
-            self.parts.append('<svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg#' + attrs["data-icon"] + '"></use></svg>')
+        if attrs.get("data-icon") in {"map", "wallet", "scan", "leaf", "trees", "sprout", "wheat"}:
+            self.parts.append('<svg width="28" height="28" aria-hidden="true"><use href="' + ICON_SPRITE_URL + '#' + attrs["data-icon"] + '"></use></svg>')
         if tag not in VOID:
             self.stack.append(tag)
 

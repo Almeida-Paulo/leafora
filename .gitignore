@@ -67,3 +67,4 @@ sui_config/
 *.dump
 *.sql
 *.backup
+*.leafora-rewards.json

@@ -51,7 +51,7 @@ export function renderProjectCard(project) {
         <img src="${safeMediaUrl(project.image)}" alt="${escapeHtml(project.name)}">
       </a>
       <div class="project-body">
-        <div class="project-kicker"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(project.biome)}</span></div>
+        <div class="project-kicker"><span>${escapeHtml(project.biome)}</span></div>
         <h3><a href="${projectPath(project.id)}" data-route>${escapeHtml(project.name)}</a></h3>
         <p class="location">${escapeHtml(project.location)}</p>
         <div class="impact-line"><span>${t("Impacto esperado")}</span><strong>${escapeHtml(project.impact)}</strong></div>

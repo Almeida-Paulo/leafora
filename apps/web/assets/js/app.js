@@ -186,7 +186,14 @@ function setRoadmapStep(id) {
   if (index > 0) previous.href = links[index - 1].href;
   if (index < links.length - 1) {
     next.href = links[index + 1].href;
-    next.textContent = t("Próxima: {phase}", { phase: links[index + 1].querySelector("strong").textContent }) + " →";
+    const label = document.createElement("span");
+    label.className = "phase-link-label";
+    label.textContent = t("Próxima: {phase}", { phase: links[index + 1].querySelector("strong").textContent });
+    const arrow = document.createElement("span");
+    arrow.className = "phase-link-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    next.replaceChildren(label, arrow);
   }
   if ((previous.hidden && document.activeElement === previous) || (next.hidden && document.activeElement === next)) {
     current.focus({ preventScroll: true });
@@ -379,7 +386,7 @@ async function renderProjectDetail(slug, version) {
         <img src="${safeMediaUrl(project.image)}" alt="${escapeHtml(project.name)}">
       </div>
       <div class="project-detail-copy">
-        <div class="project-kicker"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(project.biome)}</span></div>
+        <div class="project-kicker"><span>${escapeHtml(project.biome)}</span></div>
         <h1>${escapeHtml(project.name)}</h1>
         <p class="detail-location">${escapeHtml(project.location)}</p>
         ${project.imageKind !== "capture" ? `<p class="image-provenance">${t("Imagem ilustrativa; ainda não é um registro de campo do Leafora Capture.")}</p>` : ""}
