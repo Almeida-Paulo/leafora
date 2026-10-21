@@ -47,7 +47,7 @@ a.primary-action{color:var(--paper);background:var(--accent-ink);border-color:va
 .section-heading .section-lead,.flow-intro p:not(.eyebrow){max-width:580px;margin-top:22px;font-size:17px;line-height:1.9}.market-section .section-heading>.text-action{margin-top:10px}
 .catalog-snapshot{margin-bottom:19px;padding-block:16px 0;font-size:14px}.catalog-snapshot>div{gap:24px}.catalog-snapshot b{font-weight:700}
 .catalog-funding-note,.catalog-image-note,.currency-note,.image-provenance,.source-language{font-size:14px;line-height:1.8}
-.project-grid{gap:28px}.project-card{border:0;border-radius:0;background:transparent;box-shadow:none}.project-media{aspect-ratio:1.52;border-radius:3px}.project-body{padding:21px 0 4px}
+.project-grid{gap:28px}.project-card{border:1px solid var(--line);border-radius:6px;background:transparent;box-shadow:none}.project-media{aspect-ratio:1.52;border-radius:3px}.project-body{padding:21px 20px 20px}
 .project-kicker,.location{font-family:var(--mono);font-size:14px;line-height:1.7}
 .project-body h3{margin-top:11px;font-family:var(--brand-font);font-size:29px;font-weight:500;line-height:1.15;letter-spacing:-.7px}.project-objective{font-size:16px;line-height:1.8}
 .status-badge,.chain-badge{min-height:23px;padding-inline:7px;border-radius:2px;font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.4px}
@@ -92,7 +92,7 @@ a.primary-action{color:var(--paper);background:var(--accent-ink);border-color:va
 .hero-raiz .primary-action:hover{color:var(--ink);border-color:var(--lime-soft);background:var(--lime-soft)}
 .topbar .wallet-button:not(.connected):not(.wrong-network):hover{color:var(--paper);border-color:var(--ink);background:var(--ink)}
 .hero-raiz .secondary-action:hover{color:var(--accent-ink);border-color:var(--brand-green);background:var(--wash-strong)}
-.project-card:hover{transform:none;border-color:transparent;box-shadow:none}.project-card:hover .project-media img{transform:scale(1.015)}
+.project-card:hover{transform:none;border-color:var(--line);box-shadow:none}.project-card:hover .project-media img{transform:scale(1.015)}
 }
 @media(max-width:1200px){
 .topbar{grid-template-columns:minmax(0,1fr) auto auto;gap:12px}.header-actions{grid-column:2;grid-row:1}.nav-toggle{grid-column:3;grid-row:1}
@@ -115,7 +115,7 @@ a.primary-action{color:var(--paper);background:var(--accent-ink);border-color:va
 
 .market-section,.catalog-section,.flow-section,.proof-section,.method-stage,.dashboard-shell,.project-page{width:calc(100% - 40px)}.market-section{padding-block:64px 60px}
 .section-heading h2,.flow-intro h2,.proof-copy h2,.method-label h2{font-size:35px;letter-spacing:-1.1px}.section-heading .section-lead,.flow-intro p:not(.eyebrow){font-size:16px;line-height:1.9}.market-section .section-heading>.text-action{margin-top:18px}
-.catalog-snapshot,.catalog-snapshot>div{font-size:13px}.catalog-snapshot>div{gap:12px}.project-body{padding-inline:0}.project-body h3{font-size:28px}
+.catalog-snapshot,.catalog-snapshot>div{font-size:13px}.catalog-snapshot>div{gap:12px}.project-body{padding-inline:16px}.project-body h3{font-size:28px}
 .flow-section{gap:32px;padding-block:58px 64px}.flow-list li{gap:15px}.flow-list strong{font-size:27px}
 .future-strip{padding-block:60px}.future-inner h2,.compact-future .future-inner h2{font-size:41px;letter-spacing:-1.4px}.future-inner p:not(.eyebrow){font-size:16px}
 .ecosystem-links{gap:32px;margin-top:35px}.ecosystem-links strong{font-size:27px}.ecosystem-links .ecosystem-description{font-size:14px}
