@@ -270,3 +270,29 @@ a.primary-action{color:var(--paper);background:var(--accent-ink);border-color:va
  .footer-birds{mask-image:linear-gradient(to bottom,transparent calc(var(--birds-copy-bottom,440px) + 4px),#000 calc(var(--birds-copy-bottom,440px) + 34px),#000 calc(100% - 28px),transparent 100%),linear-gradient(to right,transparent,#000 16px,#000 calc(100% - 16px),transparent);mask-composite:intersect}
  .footer-birds video{mask-image:linear-gradient(to right,transparent 5.556%,#000 10%,#000 90%,transparent 94.444%)}
 }
+
+/* Mobile art direction stays independent of the heading and desktop layout. */
+@media(max-width:760px){
+ .hero.hero-raiz{min-height:0;justify-content:flex-start;padding-top:112px}
+ .hero-raiz .hero-art [data-tree-canvas]{inset:auto;top:-40px;left:10%;width:80%;height:80%}
+ .hero-raiz .hero-copy>p.hero-description{left:50%;width:106.25%;max-width:532px;margin-inline:0;transform:translateX(-50%);font-size:17px;line-height:1.4}
+ .section-heading h2,.flow-intro h2,.proof-copy h2,.method-label h2,.phase-heading h2,.roadmap-faq h2,.roadmap-closing h2{font-size:32px;letter-spacing:0}
+ .page-intro h1,.roadmap-hero h1{font-size:39px;letter-spacing:0}
+ .home-editorial>h2{font-size:31px;letter-spacing:0}
+ .home-how .flow-list strong,.home-type-list h3{font-size:21px;letter-spacing:0}
+ .project-body h3{font-size:25px;letter-spacing:0}
+ .section-heading .section-lead,.flow-intro p:not(.eyebrow),.home-how .flow-list p,.home-type-list p,.method-steps p,.proof-copy p:not(.eyebrow),.phase-body p,.feature-list li,.faq-list p,.project-story>p:not(.eyebrow),.future-inner p:not(.eyebrow),.ecosystem-links .ecosystem-description,.footer-brand>p{font-size:17px;line-height:1.5}
+ .home-story-copy>p{line-height:1.45}
+ .home-photo figcaption,.home-types-note,.catalog-funding-note,.catalog-image-note,.project-kicker,.location,.impact-line span,.project-card-footer>span,.footer-copyright,.footer-network p{font-size:15px;line-height:1.45}
+ .catalog-snapshot,.catalog-snapshot>div,.funding-line{font-size:15px;line-height:1.45}
+ .impact-line strong{font-size:17px;line-height:1.45}
+ html:lang(en) .hero.hero-raiz{padding-top:132px}
+}
+@media(max-width:380px){
+ .hero.hero-raiz{padding-top:120px}
+ html:lang(en) .hero.hero-raiz{padding-top:138px}
+}
+@media(max-width:340px){
+ .hero.hero-raiz{padding-top:98px}
+ html:lang(en) .hero.hero-raiz{padding-top:116px}
+}
