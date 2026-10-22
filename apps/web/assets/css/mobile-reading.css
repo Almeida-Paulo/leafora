@@ -1,0 +1,186 @@
+/* A final mobile-only layer keeps reading sizes consistent across components. */
+@media (max-width: 760px) {
+  :root {
+    --muted: #4b4b4b;
+    --muted-light: #4b4b4b;
+  }
+
+  body { font-size: 18px; line-height: 1.5; }
+
+  .view p:not(:where(.capture-phone *)),
+  .hero-raiz .hero-copy > p.hero-description,
+  .section-heading .section-lead,
+  .flow-intro p:not(.eyebrow),
+  .home-how .flow-list p,
+  .proof-copy p:not(.eyebrow),
+  .proof-ledger dd,
+  .feature-list li,
+  .project-story > p:not(.eyebrow),
+  .future-inner p:not(.eyebrow),
+  .ecosystem-links .ecosystem-description,
+  .footer-brand > p,
+  .roadmap-page .roadmap-lead > p,
+  .roadmap-page .phase-heading p,
+  .roadmap-page .timeline-details p,
+  .roadmap-page .timeline-details .capture-features dd {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .roadmap-page .roadmap-lead > p,
+  .roadmap-page .phase-heading p,
+  .roadmap-page .timeline-details p {
+    color: var(--ink-soft);
+  }
+
+  .view .eyebrow,
+  .view .home-types-note,
+  .view .catalog-funding-note,
+  .view .catalog-image-note,
+  .view .currency-note,
+  .view .image-provenance,
+  .view .source-language,
+  .home-photo figcaption,
+  .catalog-snapshot,
+  .catalog-snapshot > div,
+  .market-summary span,
+  .project-kicker,
+  .view .location,
+  .view .detail-location,
+  .impact-line span,
+  .funding-line,
+  .funding-progress-line,
+  .project-card-footer > span,
+  .project-open,
+  .breadcrumb,
+  .project-facts dt,
+  .project-facts dd,
+  .view .funding-label,
+  .view .risk-caption,
+  .view .readiness-note,
+  .project-subnav a,
+  .tier-summary small,
+  .project-section-heading > p,
+  .milestone-index,
+  .milestone-status,
+  .evidence-status,
+  .evidence-primary p,
+  .evidence-row dt,
+  .evidence-row dd,
+  .anchoring-state,
+  .proof-ledger dt,
+  .filters button,
+  .sort-field span,
+  .catalog-meta > p,
+  .stat-card > span,
+  .stat-card small,
+  .stat-card a,
+  .allocation-table,
+  .allocation-table thead th,
+  .view .allocation-note,
+  .view .support-row p,
+  .support-row > div > span,
+  .footer-copyright,
+  .footer-network p,
+  .footer-network span,
+  .site-footer nav a,
+  .leaf-rewards-lock,
+  .leaf-rewards .leaf-rewards-note,
+  .leaf-rewards-totals dt,
+  .leaf-rewards-totals dd span,
+  .leaf-rewards-totals small,
+  .leaf-rewards-table,
+  .leaf-rewards-table thead th,
+  .leaf-rewards-table small,
+  .leaf-rewards .leaf-rewards-empty,
+  .roadmap-page .roadmap-context,
+  .roadmap-page .phase-status,
+  .roadmap-page .timeline-details .phase-note,
+  .roadmap-page .timeline-caution,
+  .roadmap-page .timeline-text > .text-action,
+  .roadmap-page .timeline-details .capture-features dt,
+  .roadmap-page .support-preview-label > span,
+  .roadmap-page .support-preview-label a,
+  .roadmap-page .support-preview figcaption,
+  .roadmap-page .capture-preview > figcaption,
+  .roadmap-page .preview-tabs button,
+  .verification-journey strong,
+  .verification-visual > figcaption,
+  .roadmap-page .seal-caption > span,
+  .roadmap-page .seal-caption p,
+  .roadmap-page .seal-preview figcaption,
+  .roadmap-page .passport-heading,
+  .roadmap-page .passport-heading > span:last-child,
+  .roadmap-page .credit-passport dt,
+  .roadmap-page .credit-passport dd,
+  .roadmap-page .concept-tag,
+  .roadmap-page .exchange-categories,
+  .roadmap-page .exchange-categories > span,
+  .roadmap-page .exchange-table :is(th, td),
+  .roadmap-page .exchange-table td strong,
+  .roadmap-page .exchange-table small,
+  .roadmap-page .market-pending,
+  .roadmap-page .exchange-bottom,
+  .roadmap-page .asset-monogram {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .hero-raiz .actions a { font-size: 16px; line-height: 1.4; }
+  .market-summary { display: flex; flex-wrap: wrap; }
+  .market-summary > span { flex: 1 0 auto; max-width: 100%; padding-inline: 6px; }
+  .filters button, .project-open, .project-subnav a { min-height: 44px; }
+  .project-card-footer { flex-wrap: wrap; gap: 12px; }
+  .project-card-footer > span { flex-basis: 100%; }
+  .impact-line strong, .funding-line strong { font-size: 18px; line-height: 1.5; }
+  .roadmap-page .timeline-details h3 { font-size: 20px; line-height: 1.4; }
+  .roadmap-page .support-preview figcaption { color: var(--paper); }
+
+  .roadmap-page .phase-meta { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 14px; }
+  .roadmap-page .phase-number {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 6px;
+    background: var(--brand-lime);
+    color: var(--ink);
+    font-family: var(--brand-font);
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .roadmap-page .phase-status { letter-spacing: 0; }
+  .roadmap-page .status-now { color: var(--accent-ink); }
+  html .roadmap-page .phase-number::before { content: none; }
+
+  :is(.wallet-dialog, .support-dialog) :is(.wallet-notice, .dialog-description),
+  .wallet-dialog .wallet-provider strong,
+  .support-project h3 {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .wallet-network,
+  .wallet-environment > p,
+  :is(.wallet-dialog, .support-dialog) .risk-check,
+  .wallet-list-label,
+  .wallet-dialog .wallet-provider small,
+  .wallet-searching,
+  .wallet-empty strong,
+  .wallet-dialog .wallet-empty p,
+  :is(.wallet-dialog, .support-dialog) .form-status,
+  .wallet-retry,
+  .wallet-install,
+  .wallet-security,
+  .support-project p,
+  .support-dialog .amount-label,
+  .support-presets button,
+  .support-allocation > div > span,
+  .support-allocation p,
+  .support-details,
+  .support-dialog .dialog-actions button {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}
