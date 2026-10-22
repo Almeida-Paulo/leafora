@@ -54,6 +54,22 @@ class WebContentTests(unittest.TestCase):
         self.assertEqual(len(phases), 6)
         self.assertTrue(all("hidden" not in attrs for attrs in phases))
 
+    def test_roadmap_connections_are_between_sections_without_a_navigation_rail(self):
+        expected = ["roadmap-phase", "timeline-connector"] * 5 + ["roadmap-phase"]
+        for prefix in ("", "en/"):
+            document = Structure((build.OUTPUT / prefix / "roadmap/index.html").read_text(encoding="utf-8"))
+            sequence = []
+            for _, attrs in document.elements:
+                classes = attrs.get("class", "").split()
+                self.assertNotIn("roadmap-nav", classes)
+                self.assertNotIn("roadmap-track", classes)
+                for name in ("roadmap-phase", "timeline-connector"):
+                    if name in classes:
+                        sequence.append(name)
+                        if name == "timeline-connector":
+                            self.assertEqual(attrs.get("aria-hidden"), "true")
+            self.assertEqual(sequence, expected)
+
     def test_sitemap_lists_only_public_pages_with_reciprocal_languages(self):
         root = ET.fromstring(sitemap.sitemap_document("https://example.org/", build.PAGES))
         urls = root.findall(f"{{{sitemap.SITEMAP}}}url")

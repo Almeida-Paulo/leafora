@@ -18,6 +18,7 @@ import { setupSupport, openWalletDialog, openSupportDialog, renderWalletState, r
 
 import { language, locale, routePath, t, translatedFilter, updateSeo } from "./i18n.js";
 import { formatUsd, fundingNote, totalUsd } from "./funding.js";
+import { setupRoadmapTimeline, selectRoadmapStep } from "./roadmap.js?v=2";
 
 
 const views = [...document.querySelectorAll("[data-view]")];
@@ -137,6 +138,7 @@ function bindEvents() {
 }
 
 function bindRoadmapPreview() {
+  setupRoadmapTimeline();
   const tabs = [...document.querySelectorAll("[data-preview-tab]")];
   const selectTab = (tab) => {
     tabs.forEach((item) => {
@@ -165,39 +167,7 @@ function bindRoadmapPreview() {
 }
 
 function setRoadmapStep(id) {
-  const links = [...document.querySelectorAll("[data-phase-link]")];
-  const index = Math.max(0, links.findIndex((link) => link.dataset.phaseLink === id));
-  const current = links[index];
-  if (!current) return;
-  links.forEach((link) => {
-    const selected = link === current;
-    if (selected) link.setAttribute("aria-current", "step");
-    else link.removeAttribute("aria-current");
-    document.getElementById(link.dataset.phaseLink).hidden = !selected;
-  });
-  const nav = current.parentElement;
-  const left = current.offsetLeft - nav.offsetLeft - (nav.clientWidth - current.clientWidth) / 2;
-  nav.scrollTo({ left: Math.max(0, left), behavior: "instant" });
-  setText("#phasePosition", `${String(index + 1).padStart(2, "0")} / ${String(links.length).padStart(2, "0")}`);
-  const previous = document.querySelector("#previousPhase");
-  const next = document.querySelector("#nextPhase");
-  previous.hidden = index === 0;
-  next.hidden = index === links.length - 1;
-  if (index > 0) previous.href = links[index - 1].href;
-  if (index < links.length - 1) {
-    next.href = links[index + 1].href;
-    const label = document.createElement("span");
-    label.className = "phase-link-label";
-    label.textContent = t("Próxima: {phase}", { phase: links[index + 1].querySelector("strong").textContent });
-    const arrow = document.createElement("span");
-    arrow.className = "phase-link-arrow";
-    arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "→";
-    next.replaceChildren(label, arrow);
-  }
-  if ((previous.hidden && document.activeElement === previous) || (next.hidden && document.activeElement === next)) {
-    current.focus({ preventScroll: true });
-  }
+  selectRoadmapStep(id);
 }
 
 function scrollToRoute(animate = true) {
@@ -208,7 +178,6 @@ function scrollToRoute(animate = true) {
   } catch (_error) {
     // A malformed fragment must not prevent navigation to the page itself.
   }
-  if (target?.classList.contains("roadmap-phase")) target = document.querySelector(".roadmap-nav");
   if (target && !target.closest("[hidden]")) {
     target.scrollIntoView({ block: "start", behavior: animate && !prefersReducedMotion() ? "smooth" : "instant" });
   } else {
@@ -331,13 +300,14 @@ function renderRoute({ scroll = true, focus = false } = {}) {
   if (route.view === "project") renderProjectDetail(route.slug, version);
   if (route.view === "dashboard") renderDashboard();
   if (focus) {
-    const heading = document.querySelector(`[data-view="${route.view}"] h1`);
+    const phase = route.view === "roadmap" ? document.getElementById(window.location.hash.slice(1))?.closest(".roadmap-phase") : null;
+    const heading = phase?.querySelector("h2") || document.querySelector(`[data-view="${route.view}"] h1`);
     if (heading) {
       heading.tabIndex = -1;
       heading.focus({ preventScroll: true });
     }
   }
-  if (scroll) scrollToRoute(false);
+  if (scroll) scrollToRoute(route.view === "roadmap" && Boolean(window.location.hash));
 }
 
 async function renderProjectDetail(slug, version) {
@@ -517,7 +487,7 @@ function navigateTo(href) {
   const url = new URL(href, window.location.origin);
   if (url.origin !== window.location.origin) return;
   window.history.pushState({}, "", `${url.pathname}${url.search}${url.hash}`);
-  renderRoute({ focus: !url.hash });
+  renderRoute({ focus: !url.hash || parseRoute(url.pathname).view === "roadmap" });
 }
 
 function shouldHandleRouteClick(event, link) {

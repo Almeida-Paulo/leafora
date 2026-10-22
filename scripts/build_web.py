@@ -87,7 +87,7 @@ class Page(HTMLParser):
             attrs["aria-current"] = "page"
         serialized = "".join(" " + key + ("" if value is None else '="' + html.escape(value, quote=True) + '"') for key, value in attrs.items())
         self.parts.append("<" + tag + serialized + ">")
-        if attrs.get("data-icon") in {"map", "wallet", "scan", "leaf", "trees", "sprout", "wheat"}:
+        if attrs.get("data-icon") in {"map", "wallet", "scan", "leaf", "trees", "sprout", "wheat", "shield-check", "qr-code", "check", "lock"}:
             self.parts.append('<svg width="28" height="28" aria-hidden="true"><use href="' + ICON_SPRITE_URL + '#' + attrs["data-icon"] + '"></use></svg>')
         if tag not in VOID:
             self.stack.append(tag)

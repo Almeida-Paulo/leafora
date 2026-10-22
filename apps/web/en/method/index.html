@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/assets/css/wallet.css">
     <link rel="stylesheet" href="/assets/css/rewards.css">
     <link rel="stylesheet" href="/assets/css/raiz.css?v=23">
+    <link rel="stylesheet" href="/assets/css/roadmap.css?v=2">
   <meta property="og:type" content="website">
 <meta property="og:site_name" content="Leafora">
 <meta property="og:title" content="How it works: project support, evidence and blockchain | Leafora">
@@ -151,7 +152,7 @@
               <video muted loop playsinline preload="none" disablepictureinpicture tabindex="-1"></video>
             </figure>
           <div class="future-inner">
-            <div class="future-copy"><h2 id="futureTitle">It goes beyond<br>your first contribution.</h2><p>Our next steps aim to connect field records on Sui with environmental labels and prepare projects for carbon credits under each program's requirements.</p><a class="primary-action" href="/en/roadmap/" data-route>Explore the roadmap <span aria-hidden="true">↗</span></a></div>
+            <div class="future-copy"><h2 id="futureTitle">It goes beyond<br>your first contribution.</h2><p>Our next steps aim to connect field records on the blockchain with environmental labels and prepare projects for carbon credits under each program's and project's requirements.</p><a class="primary-action" href="/en/roadmap/" data-route>Explore the roadmap <span aria-hidden="true">↗</span></a></div>
 
           </div>
         </section>
@@ -251,7 +252,7 @@
         </section>
       </div>
 
-      <div class="view" data-view="roadmap" hidden>
+      <div class="view roadmap-page" data-view="roadmap" hidden>
         <section class="roadmap-hero">
           <div class="roadmap-hero-inner">
             <h1>Roadmap</h1>
@@ -261,39 +262,38 @@
           </div>
         </section>
 
-        <nav class="roadmap-nav" aria-label="Roadmap stages">
-          <a href="/en/roadmap/#apoio" data-route data-phase-link="apoio" aria-controls="apoio"><span>01 <i aria-hidden="true">↗</i></span><strong>Support</strong><small>Current stage</small></a>
-          <a href="/en/roadmap/#capture" data-route data-phase-link="capture" aria-controls="capture"><span>02 <i aria-hidden="true">↗</i></span><strong>Capture</strong><small>Planned</small></a>
-          <a href="/en/roadmap/#verificacao" data-route data-phase-link="verificacao" aria-controls="verificacao"><span>03 <i aria-hidden="true">↗</i></span><strong>Verification</strong><small>Planned</small></a>
-          <a href="/en/roadmap/#selos" data-route data-phase-link="selos" aria-controls="selos"><span>04 <i aria-hidden="true">↗</i></span><strong>Labels</strong><small>Planned</small></a>
-          <a href="/en/roadmap/#creditos" data-route data-phase-link="creditos" aria-controls="creditos"><span>05 <i aria-hidden="true">↗</i></span><strong>Credits</strong><small>Planned</small></a>
-          <a href="/en/roadmap/#mercado" data-route data-phase-link="mercado" aria-controls="mercado"><span>06 <i aria-hidden="true">↗</i></span><strong>Market</strong><small>Future vision</small></a>
-        </nav>
-
         <p class="roadmap-context">Launch dates for the next stages have not been confirmed.</p>
 
+        <div class="roadmap-flow" data-roadmap-timeline>
         <section class="roadmap-phase phase-support" id="apoio" aria-labelledby="phaseSupportTitle">
           <div class="phase-inner">
-            <div class="phase-heading"><span class="phase-number">01</span><div><span class="phase-status status-now">Stellar Testnet</span><h2 id="phaseSupportTitle">Choose a project and take part</h2><p>You do not have to fund an entire project to help restore nature. Leafora aims to bring small contributions together and connect you with the people doing that work.</p></div></div>
+            <div class="phase-heading"><div class="phase-meta"><span class="phase-number" aria-hidden="true">01</span><span class="phase-status status-now">Stellar Testnet</span></div><h2 id="phaseSupportTitle">Choose a project and take part</h2><p>You do not have to fund an entire project to help restore nature. Leafora aims to bring small contributions together and connect you with the people doing that work.</p></div>
             <div class="phase-body two-columns">
-              <div>
+              <div class="timeline-text">
+                <div class="timeline-details">
                 <p>Before taking part, you can learn what the project aims to restore and how it plans to use the funds. The Leafora team selects which initiatives can be published.</p>
                 <p>For a project open for funding, choose an amount in USDC and confirm the contribution on the Stellar network through your wallet. The goal guides funding; contributions may exceed it until the deadline.</p>
                 <p>Each USDC contributed equals one allocation point (AP) in that project. Your portfolio shows recorded contributions and the progress of the initiatives you choose.</p>
                 <p class="phase-note">AP are recorded on Stellar by project and wallet. Participation NFTs are planned for a future stage on Sui; current points do not promise financial returns.</p>
+                </div>
+                <p class="timeline-caution">Test environment. Tokens have no financial value.</p>
                 <a class="text-action" href="/en/projects/" data-route>Explore projects <span aria-hidden="true">↗</span></a>
               </div>
-              <figure class="support-preview"><img src="/assets/img/project-spring.png" alt="Illustration of a spring restoration project" loading="lazy"><div class="support-preview-label"><span>ATLANTIC FOREST</span><strong>One contribution.<br>New roots.</strong><a href="/en/projects/" data-route>Explore the catalog <span aria-hidden="true">↗</span></a></div><figcaption>Nature, people and ongoing care.</figcaption></figure>
+              <figure class="support-preview timeline-visual"><img src="/assets/img/project-spring.png" alt="Illustration of a spring restoration project" width="1536" height="1024" loading="lazy"><div class="support-preview-label"><span>ATLANTIC FOREST</span><strong>One contribution.<br>New roots.</strong><a href="/en/projects/" data-route>Explore the catalog <span aria-hidden="true">↗</span></a></div><figcaption>Illustrative project image.</figcaption></figure>
             </div>
           </div>
         </section>
 
-        <section class="roadmap-phase phase-capture" id="capture" aria-labelledby="phaseCaptureTitle" hidden>
+        <div class="timeline-connector" aria-hidden="true"><svg viewbox="0 0 120 144" fill="none" focusable="false"><path class="connector-track" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path><path class="connector-progress" pathlength="1" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path></svg></div>
+
+        <section class="roadmap-phase phase-capture" id="capture" aria-labelledby="phaseCaptureTitle">
           <div class="phase-inner">
-            <div class="phase-heading"><span class="phase-number">02</span><div><span class="phase-status status-next">Planned app</span><h2 id="phaseCaptureTitle">Leafora Capture</h2><p>You will be able to follow the work through images that show where and when each activity was recorded.</p></div></div>
+            <div class="phase-heading"><div class="phase-meta"><span class="phase-number" aria-hidden="true">02</span><span class="phase-status status-next">Planned app</span></div><h2 id="phaseCaptureTitle">Leafora Capture</h2><p>You will be able to follow the work through images that show where and when each activity was recorded.</p></div>
             <div class="phase-body capture-layout">
-              <div class="capture-copy"><p>With Leafora Capture, authorized team members will be able to document a project on their phones. Photos and videos will be linked to the activity being followed, helping you see how it changes over time.</p><dl class="capture-features"><div><dt>Origin</dt><dd>Each record will identify the project and the person who captured it.</dd></div><div><dt>Context</dt><dd>The app will keep the capture location and time. You will also be able to see when the record's digital fingerprint was added to the Sui network.</dd></div><div><dt>Integrity</dt><dd>Images will be stored outside the blockchain. A digital fingerprint recorded on Sui will make it possible to check for changes.</dd></div><div><dt>Continuity</dt><dd>Without internet access, the team will be able to save records on the phone and send them once the connection returns, without creating duplicates.</dd></div></dl><p class="phase-note">The app will be released for Android first. Records will also be reviewed to assess whether they match the work carried out.</p></div>
-              <figure class="capture-preview">
+              <div class="capture-copy timeline-text">
+                <div class="timeline-details"><p>With Leafora Capture, authorized team members will be able to document a project on their phones. Photos and videos will be linked to the activity being followed, helping you see how it changes over time.</p><dl class="capture-features"><div><dt>Origin</dt><dd>Each record will identify the project and the person who captured it.</dd></div><div><dt>Context</dt><dd>The app will keep the capture location and time. You will also be able to see when the record's digital fingerprint was added to the Sui network.</dd></div><div><dt>Integrity</dt><dd>Images will be stored outside the blockchain. A digital fingerprint recorded on Sui will make it possible to check for changes.</dd></div><div><dt>Continuity</dt><dd>Without internet access, the team will be able to save records on the phone and send them once the connection returns, without creating duplicates.</dd></div></dl><p class="phase-note">The app will be released for Android first. Records will also be reviewed to assess whether they match the work carried out.</p></div>
+              </div>
+              <figure class="capture-preview timeline-visual">
                 <div class="preview-tabs" role="tablist" aria-label="Leafora Capture preview">
                   <button type="button" role="tab" id="tab-projects" aria-controls="preview-projects" aria-selected="false" tabindex="-1" data-preview-tab="projects">Projects</button>
                   <button type="button" role="tab" id="tab-camera" aria-controls="preview-camera" aria-selected="true" data-preview-tab="camera">Capture</button>
@@ -328,48 +328,67 @@
           </div>
         </section>
 
-        <section class="roadmap-phase phase-verification" id="verificacao" aria-labelledby="phaseVerificationTitle" hidden>
-          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">03</span><div><span class="phase-status">Planned</span><h2 id="phaseVerificationTitle">Understand how projects will be assessed</h2><p>To decide where to contribute, you need to understand both the proposal and what has been done. We want to make that assessment accessible and welcome more projects.</p></div></div>
-            <div class="phase-body verification-grid"><article><img src="/assets/img/project-cerrado.png" alt="" loading="lazy"><h3>More projects, with oversight</h3><p>Farmers, cooperatives and organizations will be able to submit their initiatives. The Leafora team will assess each proposal before authorizing publication and fundraising.</p></article><article><img src="/assets/img/hero-proof.png" alt="" loading="lazy"><h3>Following progress over time</h3><p>Comparing field photos with satellite images will help track changes in an area. Artificial intelligence may flag differences for a person to review.</p></article><article><img src="/assets/img/project-mangrove.png" alt="" loading="lazy"><h3>Independent verification</h3><p>Independent specialists will assess what has been substantiated and what still needs clarification. You will be able to consult each project's reports and reviews.</p></article></div>
-            <div class="phase-scope"><strong>Project focus areas</strong><p>Regenerative agriculture · degraded pasture rehabilitation · native forest restoration · water · biodiversity</p></div>
+        <div class="timeline-connector" aria-hidden="true"><svg viewbox="0 0 120 144" fill="none" focusable="false"><path class="connector-track" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path><path class="connector-progress" pathlength="1" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path></svg></div>
+
+        <section class="roadmap-phase phase-verification" id="verificacao" aria-labelledby="phaseVerificationTitle">
+          <div class="phase-inner"><div class="phase-heading"><div class="phase-meta"><span class="phase-number" aria-hidden="true">03</span><span class="phase-status">Planned</span></div><h2 id="phaseVerificationTitle">Understand how projects will be assessed</h2><p>To decide where to contribute, you need to understand both the proposal and what has been done. We want to make that assessment accessible and welcome more projects.</p></div>
+            <div class="phase-body two-columns"><div class="timeline-text">
+              <div class="timeline-details"><h3>More projects, with oversight</h3><p>Farmers, cooperatives and organizations will be able to submit their initiatives. The Leafora team will assess each proposal before authorizing publication and fundraising.</p><h3>Following progress over time</h3><p>Comparing field photos with satellite images will help track changes in an area. Artificial intelligence may flag differences for a person to review.</p><h3>Independent verification</h3><p>Independent specialists will assess what has been substantiated and what still needs clarification. You will be able to consult each project's reports and reviews.</p><h3>Project focus areas</h3><p>Regenerative agriculture · degraded pasture rehabilitation · native forest restoration · water · biodiversity</p></div>
+            </div><figure class="verification-visual timeline-visual"><img src="/assets/img/hero-proof.png" alt="Environmental monitoring concept" width="1716" height="916" loading="lazy"><div class="verification-journey"><div><span data-icon="map" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#map"></use></svg></span><strong>Field</strong></div><span aria-hidden="true">→</span><div><span data-icon="scan" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#scan"></use></svg></span><strong>Analysis</strong></div><span aria-hidden="true">→</span><div><span data-icon="shield-check" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#shield-check"></use></svg></span><strong>Review</strong></div></div><figcaption>Illustrative monitoring concept.</figcaption></figure></div>
           </div>
         </section>
 
-        <section class="roadmap-phase phase-seals" id="selos" aria-labelledby="phaseSealsTitle" hidden>
-          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">04</span><div><span class="phase-status">Planned</span><h2 id="phaseSealsTitle">Show which project your company supports</h2><p>Leafora labels will let companies show their support for nature through a clear connection to operating, audited projects.</p></div></div>
-            <div class="phase-body seal-layout"><div>
+        <div class="timeline-connector" aria-hidden="true"><svg viewbox="0 0 120 144" fill="none" focusable="false"><path class="connector-track" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path><path class="connector-progress" pathlength="1" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path></svg></div>
+
+        <section class="roadmap-phase phase-seals" id="selos" aria-labelledby="phaseSealsTitle">
+          <div class="phase-inner"><div class="phase-heading"><div class="phase-meta"><span class="phase-number" aria-hidden="true">04</span><span class="phase-status">Planned</span></div><h2 id="phaseSealsTitle">Show which project your company supports</h2><p>Leafora labels will let companies show their support for nature through a clear connection to operating, audited projects.</p></div>
+            <div class="phase-body seal-layout"><div class="timeline-text">
+                <div class="timeline-details">
                 <p>We plan to use Sui to link each label to the project, company and evidence references. By checking a label, a customer will be able to review the contribution and the environmental claim that was verified.</p>
                 <p>A QR code will open the label's page, showing its supporting evidence, validity period and who verified it.</p>
                 <p>The page will also show whether the label has been renewed, suspended or revoked, keeping its history available.</p>
                 <p class="phase-note">The label will identify a substantiated contribution. By itself, it will not mean the company has offset its emissions or become carbon neutral.</p>
+                </div>
               </div>
-              <figure class="seal-preview"><img class="seal-concept" src="/assets/img/leafora-seal-concept-en.svg?v=3" alt="Leafora environmental seal concept" width="440" height="440" loading="lazy"><div class="seal-caption"><span>LABEL PREVIEW</span><strong>One label. A traceable evidence trail.</strong><p>Linked project · audit · validity</p></div><figcaption>Visual concept · not an issued certification</figcaption></figure>
+              <figure class="seal-preview timeline-visual"><img class="seal-concept" src="/assets/img/leafora-seal-concept-en.svg?v=3" alt="Leafora environmental seal concept" width="440" height="440" loading="lazy"><div class="seal-caption"><span>LABEL PREVIEW</span><strong>One label. A traceable evidence trail.</strong><p>Linked project · audit · validity</p></div><figcaption>Visual concept · not an issued certification</figcaption></figure>
             </div>
           </div>
         </section>
 
-        <section class="roadmap-phase phase-credits" id="creditos" aria-labelledby="phaseCreditsTitle" hidden>
-          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">05</span><div><span class="phase-status">Planned</span><h2 id="phaseCreditsTitle">From environmental results to carbon credits</h2><p>Some projects may generate credits by demonstrating that they reduced or removed emissions. We want to help them gather the data and undergo the necessary assessments.</p></div></div>
-            <div class="phase-body two-columns"><div>
+        <div class="timeline-connector" aria-hidden="true"><svg viewbox="0 0 120 144" fill="none" focusable="false"><path class="connector-track" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path><path class="connector-progress" pathlength="1" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path></svg></div>
+
+        <section class="roadmap-phase phase-credits" id="creditos" aria-labelledby="phaseCreditsTitle">
+          <div class="phase-inner"><div class="phase-heading"><div class="phase-meta"><span class="phase-number" aria-hidden="true">05</span><span class="phase-status">Planned</span></div><h2 id="phaseCreditsTitle">From environmental results to carbon credits</h2><p>Some projects may generate credits by demonstrating that they reduced or removed emissions. We want to help them gather the data and undergo the necessary assessments.</p></div>
+            <div class="phase-body two-columns"><div class="timeline-text">
+                <div class="timeline-details">
                 <p>A planting photo alone does not generate a carbon credit. A project must demonstrate its results and meet a certification program's requirements.</p>
                 <p>The assessment considers what would happen without the project and whether its benefits can last. Field records help document this work.</p>
                 <p>If credits are issued, you will be able to see which project they came from and how they were verified. Their identifiers will be checked against the issuing registry to help prevent duplicates.</p>
-              </div><div class="credit-passport"><div class="passport-heading"><span>ASSET PASSPORT</span><span>Planned structure</span></div><dl><div><dt>Origin</dt><dd>Project + issuing registry</dd></div><div><dt>Quality</dt><dd>Methodology + verification</dd></div><div><dt>Identity</dt><dd>Batch + period + serial number</dd></div><div><dt>Lifecycle</dt><dd>Issuance → transfer → retirement</dd></div></dl></div></div>
-            <div class="standards-note"><strong>How results will be assessed</strong><p>We are studying references such as the GHG Protocol for emissions accounting and reporting, and certification programs such as Verra VCS and Gold Standard. The choice will depend on each project. Leafora does not currently claim certification or a partnership with these organizations.</p></div>
+                <h3>How results will be assessed</h3><p>We are studying references such as the GHG Protocol for emissions accounting and reporting, and certification programs such as Verra VCS and Gold Standard. The choice will depend on each project. Leafora does not currently claim certification or a partnership with these organizations.</p>
+                </div>
+              </div><div class="credit-passport timeline-visual"><div class="passport-heading"><span>ASSET PASSPORT</span><span>Planned structure</span></div><div class="passport-unit"><span data-icon="trees" aria-hidden="true"><svg width="28" height="28" aria-hidden="true"><use href="/assets/icons/interface.svg?v=9f97f5874a8e#trees"></use></svg></span><strong>tCO<sub>2</sub>e</strong></div><dl><div><dt>Origin</dt><dd>Project + issuing registry</dd></div><div><dt>Quality</dt><dd>Methodology + verification</dd></div><div><dt>Identity</dt><dd>Batch + period + serial number</dd></div><div><dt>Lifecycle</dt><dd>Issuance → transfer → retirement</dd></div></dl></div></div>
           </div>
         </section>
 
-        <section class="roadmap-phase phase-market" id="mercado" aria-labelledby="phaseMarketTitle" hidden>
-          <div class="phase-inner"><div class="phase-heading"><span class="phase-number">06</span><div><span class="phase-status">Planned marketplace</span><h2 id="phaseMarketTitle">Leafora Market</h2><p>People looking to buy carbon credits will be able to check their origin and compare offers in one place. Those who issued them will be able to find buyers.</p></div></div>
-            <div class="phase-body"><div class="market-vision-copy"><p>Leafora Market will bring together carbon credits and other environmental assets that meet its criteria. Before trading, you will be able to review the originating project, verification of its results and the asset's history.</p><p>We are also exploring trading participation rights in projects. Each offer will need to explain the buyer's rights and meet the applicable requirements.</p></div>
-              <figure class="exchange-preview"><div class="exchange-top"><strong>Leafora <span>Market</span></strong><span class="concept-tag">Concept · not operational</span></div><div class="exchange-categories"><span>Environmental assets</span><span>Offers</span><span>Portfolio</span></div><div class="exchange-table-wrap"><table class="exchange-table"><caption class="visually-hidden">Illustrative future marketplace categories, with no real offers</caption><thead><tr><th>Asset / category</th><th>Origin</th><th>Unit</th><th>Availability</th></tr></thead><tbody><tr><td><span class="asset-monogram">CO<sub>2</sub></span><strong>Carbon credits<small>Verified reduction or removal</small></strong></td><td>Recognized registry</td><td>tCO<sub>2</sub>e</td><td><span class="market-pending">Planned</span></td></tr><tr><td><span class="asset-monogram asset-bio">BIO</span><strong>Biodiversity assets<small>Subject to the applicable methodology</small></strong></td><td>Verified project</td><td>To be defined</td><td><span class="market-pending">Under study</span></td></tr><tr><td><span class="asset-monogram asset-project">PRJ</span><strong>Project participation rights<small>Contract-defined rights</small></strong></td><td>Structured offering</td><td>Per offering</td><td><span class="market-pending">Under study</span></td></tr></tbody></table></div><div class="exchange-bottom"><span><span class="live-dot" aria-hidden="true"></span>Traceability from origin to final use</span><span>Preview without real quotes or orders</span></div><figcaption class="visually-hidden">Visual representation of a future product.</figcaption></figure>
-              <div class="market-capabilities"><div><span>01</span><h3>Compare before buying</h3><p>You will be able to compare offers and review each asset's information before choosing to buy.</p></div><div><span>02</span><h3>Follow the transfer</h3><p>After a trade, you will be able to follow the transfer and check the record of who owns the asset.</p></div><div><span>03</span><h3>Record the use of a credit</h3><p>When a credit is used to offset emissions, its retirement will be recorded so it cannot be used again.</p></div></div>
-              <p class="phase-note">This marketplace is still planned. Profit-sharing offers will depend on applicable rules, including Brazil's CVM requirements where relevant. Current points and planned NFTs do not grant these rights.</p>
+        <div class="timeline-connector" aria-hidden="true"><svg viewbox="0 0 120 144" fill="none" focusable="false"><path class="connector-track" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path><path class="connector-progress" pathlength="1" d="M60 0 C60 36 94 36 94 72 S60 108 60 144"></path></svg></div>
+
+        <section class="roadmap-phase phase-market" id="mercado" aria-labelledby="phaseMarketTitle">
+          <div class="phase-inner"><div class="phase-heading"><div class="phase-meta"><span class="phase-number" aria-hidden="true">06</span><span class="phase-status">Future vision</span></div><h2 id="phaseMarketTitle">Leafora Market</h2><p>People looking to buy carbon credits will be able to check their origin and compare offers in one place. Those who issued them will be able to find buyers.</p></div>
+            <div class="phase-body two-columns"><div class="market-vision-copy timeline-text">
+              <div class="timeline-details"><p>Leafora Market will bring together carbon credits and other environmental assets that meet its criteria. Before trading, you will be able to review the originating project, verification of its results and the asset's history.</p><p>We are also exploring trading participation rights in projects. Each offer will need to explain the buyer's rights and meet the applicable requirements.</p><h3>Compare before buying</h3><p>You will be able to compare offers and review each asset's information before choosing to buy.</p><h3>Follow the transfer</h3><p>After a trade, you will be able to follow the transfer and check the record of who owns the asset.</p><h3>Record the use of a credit</h3><p>When a credit is used to offset emissions, its retirement will be recorded so it cannot be used again.</p><p class="phase-note">This marketplace is still planned. Profit-sharing offers will depend on applicable rules, including Brazil's CVM requirements where relevant. Current points and planned NFTs do not grant these rights.</p></div>
+              </div>
+              <figure class="exchange-preview timeline-visual">
+                <div class="exchange-top"><strong>Leafora <span>Market</span></strong><span class="concept-tag">Concept · not operational</span></div>
+                <div class="exchange-categories"><span>Environmental assets</span><span>Offers</span><span>Portfolio</span></div>
+                <div class="exchange-table-wrap"><table class="exchange-table"><caption class="visually-hidden">Illustrative future marketplace categories, with no real offers</caption><thead><tr><th>Asset / category</th><th>Status</th></tr></thead><tbody><tr><td><span class="asset-monogram">CO<sub>2</sub></span><strong>Carbon credits<small>Verified reduction or removal</small></strong></td><td><span class="market-pending">Planned</span></td></tr><tr><td><span class="asset-monogram asset-bio">BIO</span><strong>Biodiversity assets<small>Subject to the applicable methodology</small></strong></td><td><span class="market-pending">Under study</span></td></tr><tr><td><span class="asset-monogram asset-project">PRJ</span><strong>Project participation rights<small>Contract-defined rights</small></strong></td><td><span class="market-pending">Under study</span></td></tr></tbody></table></div>
+                <div class="exchange-bottom"><span>Traceability from origin to final use</span><span>Preview without real quotes or orders</span></div>
+                <figcaption class="visually-hidden">Visual representation of a future product.</figcaption>
+              </figure>
             </div>
           </div>
         </section>
 
-        <nav class="phase-pagination" aria-label="Continue through the roadmap"><a id="previousPhase" data-route hidden><span class="phase-link-arrow" aria-hidden="true">←</span> <span class="phase-link-label">Previous stage</span></a><span id="phasePosition" aria-live="polite">01 / 06</span><a id="nextPhase" href="/en/roadmap/#capture" data-route><span class="phase-link-label">Next: Capture</span> <span class="phase-link-arrow" aria-hidden="true">→</span></a></nav>
+        </div>
         <section class="roadmap-faq" aria-labelledby="roadmapFaqTitle"><div><h2 id="roadmapFaqTitle">Questions about Leafora</h2></div><div class="faq-list"><details><summary>How do contributions work today?</summary><p>You can explore published projects and confirm USDC contributions through your wallet for enabled initiatives. The integration uses Stellar Testnet: tokens have no real financial value. Once the transaction is confirmed, points appear in your portfolio, grouped by project.</p></details><details><summary>Is the app available yet?</summary><p>The app is not yet publicly available. The screens show our planned field-recording experience. Access will start with authorized project teams, initially on Android.</p></details><details><summary>Are allocation points carbon credits?</summary><p>No. AP record your contribution on Stellar. Labels and NFTs planned on Sui will have separate purposes and will not, by themselves, be carbon credits. Credits require measured and verified results; supporting an initiative does not offset emissions.</p></details><details><summary>When will the next stages launch?</summary><p>We have not confirmed launch dates yet. We will share updates as each stage is ready, with the necessary technical validation, resources and partnerships.</p></details></div></section>
         <section class="roadmap-closing"><p class="eyebrow">The future starts today</p><h2>Start with a cause.</h2><a class="primary-action" href="/en/projects/" data-route>Discover the projects <span aria-hidden="true">↗</span></a></section>
       </div>
@@ -473,7 +492,7 @@
       </form>
     </dialog>
 
-    <script type="module" src="/assets/js/app.js?v=2"></script>
+    <script type="module" src="/assets/js/app.js?v=4"></script>
     <script type="module" src="/assets/js/footer-birds.js?v=6"></script>
     <script type="module" src="/assets/js/tree-hero.js?v=1"></script>
   </body>
